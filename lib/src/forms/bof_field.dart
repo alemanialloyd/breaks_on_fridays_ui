@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart' show TextCapitalization, TextInputAction;
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../widgets/checkbox.dart';
@@ -53,9 +54,21 @@ class BoFTextField extends BoFField<String> {
   final String? initialValue;
 
   final Widget? placeholder;
-  final bool obscureText;
+  final Widget? leadingIcon;
+  final Widget? trailingIcon;
+  final bool? obscureText;
+  final bool showPasswordToggle;
+  final PasswordPeekMode passwordPeekMode;
+  final List<InputFeature>? features;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final TextCapitalization textCapitalization;
   final int? maxLines;
+  final int? maxLength;
+  final bool readOnly;
+  final bool autofocus;
+  final FocusNode? focusNode;
+  final ValueChanged<String>? onSubmitted;
 
   const BoFTextField({
     required super.name,
@@ -64,9 +77,21 @@ class BoFTextField extends BoFField<String> {
     super.validator,
     this.initialValue,
     this.placeholder,
-    this.obscureText = false,
+    this.leadingIcon,
+    this.trailingIcon,
+    this.obscureText,
+    this.showPasswordToggle = false,
+    this.passwordPeekMode = PasswordPeekMode.toggle,
+    this.features,
     this.keyboardType,
+    this.textInputAction,
+    this.textCapitalization = TextCapitalization.none,
     this.maxLines = 1,
+    this.maxLength,
+    this.readOnly = false,
+    this.autofocus = false,
+    this.focusNode,
+    this.onSubmitted,
   });
 
   @override
@@ -78,11 +103,23 @@ class BoFTextField extends BoFField<String> {
     return bofTextField(
       initialValue: initialValue,
       placeholder: placeholder,
+      leadingIcon: leadingIcon,
+      trailingIcon: trailingIcon,
       obscureText: obscureText,
+      showPasswordToggle: showPasswordToggle,
+      passwordPeekMode: passwordPeekMode,
+      features: features,
       keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      textCapitalization: textCapitalization,
       maxLines: maxLines,
+      maxLength: maxLength,
       enabled: enabled,
+      readOnly: readOnly,
+      autofocus: autofocus,
+      focusNode: focusNode,
       onChanged: onChanged,
+      onSubmitted: onSubmitted,
     );
   }
 }

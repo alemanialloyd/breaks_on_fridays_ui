@@ -120,6 +120,10 @@ BoF.button(
 stack the icon and label in a column. Icon-only buttons default to
 `ButtonDensity.icon` padding unless `density` is set explicitly.
 
+Content is centered (`alignment: Alignment.center`) by default — including
+icon+label buttons, which the underlying `Button` otherwise left-aligns.
+Pass an explicit `alignment` to override.
+
 ### BoF.container
 
 `BoF.container(child, {type, ...})` wraps shadcn_flutter's `OutlinedContainer`
@@ -508,9 +512,32 @@ Every field spec needs `name` (used as the key in the submitted values map),
 
 ```dart
 BoF.textField(placeholder: Text('Search'), onChanged: (v) => print(v));
+
+BoF.textField(
+  placeholder: Text('Email'),
+  leadingIcon: const Icon(Icons.email),
+  onChanged: (v) => print(v),
+);
+
+BoF.textField(
+  placeholder: Text('Password'),
+  showPasswordToggle: true, // starts obscured, adds a reveal/hide button
+  onChanged: (v) => print(v),
+);
 ```
 
-Params: `obscureText`, `keyboardType`, `maxLines`.
+Params: `leadingIcon`/`trailingIcon` (added via shadcn_flutter's
+`InputFeature.leading`/`InputFeature.trailing`), `obscureText`,
+`showPasswordToggle` (+ `passwordPeekMode`: `toggle` or `hold`), `features`
+(raw `List<InputFeature>` escape hatch for anything else — clear button,
+copy/paste, spinner, hint popup, etc.), `keyboardType`, `textInputAction`,
+`textCapitalization`, `maxLines`, `maxLength`, `readOnly`, `autofocus`,
+`focusNode`, `onSubmitted`.
+
+`obscureText` defaults to matching `showPasswordToggle` when left unset, so
+`showPasswordToggle: true` alone is enough for a normal password field; pass
+`obscureText: false` too if you want it to start revealed but stay
+toggleable.
 
 ### BoF.textAreaField
 

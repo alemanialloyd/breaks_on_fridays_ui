@@ -29,6 +29,10 @@ enum BoFIconPosition { left, right, top, bottom }
 /// - both → [icon] is placed relative to [label] according to
 ///   [iconPosition] (`left`/`right` use the button's native leading/trailing
 ///   slots; `top`/`bottom` stack them in a column).
+///
+/// [alignment] defaults to [Alignment.center] — unlike the underlying
+/// [Button], which left-aligns its content whenever `leading`/`trailing`
+/// (i.e. an icon) is present. Pass an explicit [alignment] to override.
 Widget bofButton(
   String? label, {
   Key? key,
@@ -39,7 +43,7 @@ Widget bofButton(
   VoidCallback? onPressed,
   bool? enabled,
   FocusNode? focusNode,
-  AlignmentGeometry? alignment,
+  AlignmentGeometry alignment = Alignment.center,
   ButtonSize size = ButtonSize.normal,
   ButtonDensity? density,
   ButtonShape shape = ButtonShape.rectangle,

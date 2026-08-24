@@ -427,4 +427,47 @@ void main() {
     expect(find.text('hello@example.com'), findsNothing);
     expect(controller.value<String>('email'), isNull);
   });
+
+  testWidgets(
+    'BoF.textField exposes a leading icon and password toggle',
+    (tester) async {
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: BoF.textField(
+              leadingIcon: const Icon(Icons.person),
+              showPasswordToggle: true,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byIcon(Icons.person), findsOneWidget);
+      // Starts obscured, so the "reveal" (eye) icon is shown.
+      expect(find.byIcon(LucideIcons.eye), findsOneWidget);
+
+      await tester.tap(find.byIcon(LucideIcons.eye));
+      await tester.pump();
+
+      // After revealing, the toggle swaps to the "hide" (eyeOff) icon.
+      expect(find.byIcon(LucideIcons.eyeOff), findsOneWidget);
+    },
+  );
+
+  testWidgets('BoF.button centers its content by default', (tester) async {
+    await tester.pumpWidget(
+      ShadcnApp(
+        home: Scaffold(
+          child: BoF.button(
+            'Next',
+            icon: const Icon(Icons.arrow_forward),
+            onPressed: () {},
+          ),
+        ),
+      ),
+    );
+
+    final button = tester.widget<Button>(find.byType(Button));
+    expect(button.alignment, Alignment.center);
+  });
 }

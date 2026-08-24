@@ -1,25 +1,57 @@
+import 'package:flutter/services.dart' show TextCapitalization, TextInputAction;
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// A single-line text input. Wraps shadcn_flutter's `TextField`.
+///
+/// [obscureText] defaults to matching [showPasswordToggle] when not set
+/// explicitly, so `showPasswordToggle: true` alone gives you a normal masked
+/// password field with a reveal button; pass `obscureText: false` too if you
+/// want it to start revealed but stay toggleable.
 Widget bofTextField({
   Key? key,
   String? initialValue,
   Widget? placeholder,
-  bool obscureText = false,
+  Widget? leadingIcon,
+  Widget? trailingIcon,
+  bool? obscureText,
+  bool showPasswordToggle = false,
+  PasswordPeekMode passwordPeekMode = PasswordPeekMode.toggle,
+  List<InputFeature>? features,
   TextInputType? keyboardType,
+  TextInputAction? textInputAction,
+  TextCapitalization textCapitalization = TextCapitalization.none,
   int? maxLines = 1,
+  int? maxLength,
   bool enabled = true,
+  bool readOnly = false,
+  bool autofocus = false,
+  FocusNode? focusNode,
   ValueChanged<String>? onChanged,
+  ValueChanged<String>? onSubmitted,
 }) {
+  final effectiveFeatures = <InputFeature>[
+    if (leadingIcon != null) InputFeature.leading(leadingIcon),
+    if (trailingIcon != null) InputFeature.trailing(trailingIcon),
+    if (showPasswordToggle) InputFeature.passwordToggle(mode: passwordPeekMode),
+    ...?features,
+  ];
   return TextField(
     key: key,
     initialValue: initialValue,
     placeholder: placeholder,
-    obscureText: obscureText,
+    obscureText: obscureText ?? showPasswordToggle,
+    features: effectiveFeatures,
     keyboardType: keyboardType,
+    textInputAction: textInputAction,
+    textCapitalization: textCapitalization,
     maxLines: maxLines,
+    maxLength: maxLength,
     enabled: enabled,
+    readOnly: readOnly,
+    autofocus: autofocus,
+    focusNode: focusNode,
     onChanged: onChanged,
+    onSubmitted: onSubmitted,
   );
 }
 
