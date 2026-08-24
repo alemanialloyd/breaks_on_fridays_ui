@@ -39,10 +39,15 @@ abstract class BoFField<T> {
 
   /// Builds the input widget for this field.
   ///
-  /// [onChanged] must be called whenever the user changes the value; it
-  /// reports the new value back to the enclosing [bofForm].
+  /// [value] is the field's current value in [BoFFormController] — the
+  /// spec's own [initialValue] on first build, or whatever was last set via
+  /// [BoFFormController.setValue] or [BoFFormController.reset] after a
+  /// programmatic change forces this field to remount. [onChanged] must be
+  /// called whenever the user changes the value; it reports the new value
+  /// back to the enclosing [bofForm].
   Widget buildInput(
     BuildContext context,
+    T? value,
     ValueChanged<T?> onChanged,
     bool enabled,
   );
@@ -97,11 +102,12 @@ class BoFTextField extends BoFField<String> {
   @override
   Widget buildInput(
     BuildContext context,
+    String? value,
     ValueChanged<String?> onChanged,
     bool enabled,
   ) {
     return bofTextField(
-      initialValue: initialValue,
+      initialValue: value,
       placeholder: placeholder,
       leadingIcon: leadingIcon,
       trailingIcon: trailingIcon,
@@ -147,11 +153,12 @@ class BoFTextAreaField extends BoFField<String> {
   @override
   Widget buildInput(
     BuildContext context,
+    String? value,
     ValueChanged<String?> onChanged,
     bool enabled,
   ) {
     return bofTextAreaField(
-      initialValue: initialValue,
+      initialValue: value,
       placeholder: placeholder,
       minHeight: minHeight,
       maxHeight: maxHeight,
@@ -185,11 +192,12 @@ class BoFNumberField extends BoFField<num> {
   @override
   Widget buildInput(
     BuildContext context,
+    num? value,
     ValueChanged<num?> onChanged,
     bool enabled,
   ) {
     return bofNumberField(
-      initialValue: initialValue,
+      initialValue: value,
       placeholder: placeholder,
       allowDecimal: allowDecimal,
       enabled: enabled,
@@ -214,11 +222,12 @@ class BoFCheckboxField extends BoFField<CheckboxState> {
   @override
   Widget buildInput(
     BuildContext context,
+    CheckboxState? value,
     ValueChanged<CheckboxState?> onChanged,
     bool enabled,
   ) {
     return bofCheckboxField(
-      initialValue: initialValue,
+      initialValue: value ?? initialValue,
       enabled: enabled,
       onChanged: onChanged,
     );
@@ -241,11 +250,12 @@ class BoFSwitchField extends BoFField<bool> {
   @override
   Widget buildInput(
     BuildContext context,
+    bool? value,
     ValueChanged<bool?> onChanged,
     bool enabled,
   ) {
     return bofSwitchField(
-      initialValue: initialValue,
+      initialValue: value ?? initialValue,
       enabled: enabled,
       onChanged: onChanged,
     );

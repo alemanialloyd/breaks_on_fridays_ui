@@ -28,11 +28,12 @@ class BoFColorField extends BoFField<Color> {
   @override
   Widget buildInput(
     BuildContext context,
+    Color? value,
     ValueChanged<Color?> onChanged,
     bool enabled,
   ) {
     return bofColorField(
-      initialValue: initialValue,
+      initialValue: value ?? initialValue,
       enabled: enabled,
       showAlpha: showAlpha,
       onChanged: onChanged,
@@ -58,11 +59,12 @@ class BoFPhoneField extends BoFField<PhoneNumber> {
   @override
   Widget buildInput(
     BuildContext context,
+    PhoneNumber? value,
     ValueChanged<PhoneNumber?> onChanged,
     bool enabled,
   ) {
     return bofPhoneField(
-      initialValue: initialValue,
+      initialValue: value,
       onChanged: onChanged,
     );
   }
@@ -91,11 +93,12 @@ class BoFSliderField extends BoFField<SliderValue> {
   @override
   Widget buildInput(
     BuildContext context,
+    SliderValue? value,
     ValueChanged<SliderValue?> onChanged,
     bool enabled,
   ) {
     return bofSliderField(
-      initialValue: initialValue,
+      initialValue: value ?? initialValue,
       enabled: enabled,
       min: min,
       max: max,
@@ -126,11 +129,12 @@ class BoFStarRatingField extends BoFField<double> {
   @override
   Widget buildInput(
     BuildContext context,
+    double? value,
     ValueChanged<double?> onChanged,
     bool enabled,
   ) {
     return bofStarRatingField(
-      initialValue: initialValue,
+      initialValue: value ?? initialValue,
       enabled: enabled,
       max: max,
       step: step,
@@ -160,12 +164,13 @@ class BoFOtpField extends BoFField<List<int?>> {
   @override
   Widget buildInput(
     BuildContext context,
+    List<int?>? value,
     ValueChanged<List<int?>?> onChanged,
     bool enabled,
   ) {
     return bofOtpField(
       length: length,
-      initialValue: initialValue,
+      initialValue: value,
       onChanged: onChanged,
     );
   }
@@ -193,12 +198,13 @@ class BoFAutoCompleteField extends BoFField<String> {
   @override
   Widget buildInput(
     BuildContext context,
+    String? value,
     ValueChanged<String?> onChanged,
     bool enabled,
   ) {
     return bofAutoCompleteField(
       suggestions: suggestions,
-      initialValue: initialValue,
+      initialValue: value,
       placeholder: placeholder,
       enabled: enabled,
       onChanged: onChanged,
@@ -231,13 +237,14 @@ class BoFChipInputField<T extends Object> extends BoFField<List<T>> {
   @override
   Widget buildInput(
     BuildContext context,
+    List<T>? value,
     ValueChanged<List<T>?> onChanged,
     bool enabled,
   ) {
     return bofChipInputField<T>(
       chipBuilder: chipBuilder,
       onChipSubmitted: onChipSubmitted,
-      initialValue: initialValue,
+      initialValue: value,
       enabled: enabled,
       onChanged: onChanged,
     );

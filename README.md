@@ -404,8 +404,19 @@ controller.errorOf('email');         // current ValidationResult?, or null
 controller.isValid;                  // true if no field currently has an error
 await controller.submit();           // validates every field, then calls onSubmit if valid
 controller.reset();                  // clears every field back to its initial value
+controller.setValue('email', 'a@b.com'); // sets a value AND updates the rendered field
 controller.addListener(() { ... });  // rebuild on any value/error change
 ```
+
+`setValue` is for *programmatic* changes — e.g. prefilling the form once an
+async fetch resolves, or a "same as shipping" checkbox that copies values
+into other fields. It updates the rendered widget, not just the tracked
+value. Under the hood this remounts just that one field with the new value
+(the same mechanism `reset()` uses) — cheap and always correct, at the cost
+of losing that field's focus/cursor position if it happened to be focused
+at that exact moment. It's scoped per-field: `setValue` on one field never
+touches (or interrupts typing in) any other field, since typing itself goes
+through a separate internal path that doesn't trigger a remount.
 
 `BoFFormController` is the "ref" for the form's *data* (values, errors,
 submit). If you also need the form's *widget location* — e.g. to scroll to

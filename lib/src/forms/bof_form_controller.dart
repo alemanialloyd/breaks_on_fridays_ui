@@ -18,6 +18,11 @@ class BoFFormController extends ChangeNotifier {
   /// back to its initial value. Set internally; do not assign this yourself.
   VoidCallback? resetHandler;
 
+  /// Callback wired up by the owning `bofForm` widget to push a
+  /// programmatic [setValue] call into the rendered field. Set internally;
+  /// do not assign this yourself.
+  void Function(String name, Object? value)? applyHandler;
+
   /// The current value of the field named [name], or null if unset.
   T? value<T>(String name) => _values[name] as T?;
 
@@ -30,8 +35,21 @@ class BoFFormController extends ChangeNotifier {
   /// Whether every field currently has no validation error.
   bool get isValid => _errors.values.every((e) => e is! InvalidResult);
 
+  /// Records a value the user just entered directly into the rendered
+  /// field. Called internally by `bofForm` — use [setValue] instead if you
+  /// want to change a field's value yourself, since this does not update
+  /// the rendered widget (it's already showing this value).
+  void reportChange(String name, Object? value) {
+    _values[name] = value;
+    notifyListeners();
+  }
+
+  /// Sets a field's value programmatically — e.g. prefilling the form after
+  /// an async fetch resolves, or syncing one field from another. Unlike a
+  /// value the user typed, this also updates the rendered widget to match.
   void setValue(String name, Object? value) {
     _values[name] = value;
+    applyHandler?.call(name, value);
     notifyListeners();
   }
 

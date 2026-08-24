@@ -9,7 +9,8 @@ import 'bof_form_controller.dart';
 /// [TextEditingController] (or any other controller) to create, wire up or
 /// dispose. Read submitted values from [onSubmit], or pass a [controller] to
 /// observe/drive the form programmatically, similar to a `useRef` for the
-/// whole form.
+/// whole form. Calling `controller.setValue(name, ...)` updates the
+/// rendered field too, not just the tracked value.
 ///
 /// See the package README for a full field-by-field reference.
 Widget bofForm(
@@ -48,29 +49,39 @@ class _BofForm extends StatefulWidget {
 
 class _BofFormState extends State<_BofForm> {
   late final BoFFormController _controller;
-  int _generation = 0;
+
+  // Bumped per-field to force Flutter to discard and remount that field's
+  // input widget — otherwise it would keep its own internal state (e.g.
+  // typed text) since it only reads its seed value once, on mount. Only
+  // bumped for *programmatic* changes (setValue/reset), never for the
+  // field's own onChanged, so typing never gets interrupted.
+  final Map<String, int> _fieldGenerations = {};
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? BoFFormController();
     for (final field in widget.fields) {
-      _controller.setValue(field.name, field.initialValue);
+      _controller.reportChange(field.name, field.initialValue);
     }
     _controller.submitHandler = _submit;
     _controller.resetHandler = _reset;
+    _controller.applyHandler = _applyValue;
+  }
+
+  void _applyValue(String name, Object? value) {
+    if (!mounted) return;
+    setState(() {
+      _fieldGenerations[name] = (_fieldGenerations[name] ?? 0) + 1;
+    });
   }
 
   void _reset() {
     if (!mounted) return;
     setState(() {
-      // Bumping the generation changes each field's key, forcing Flutter to
-      // discard and remount the underlying input widgets — otherwise they'd
-      // keep their own internal state (e.g. typed text) since they only
-      // read `initialValue` once, on their first build.
-      _generation++;
       for (final field in widget.fields) {
-        _controller.setValue(field.name, field.initialValue);
+        _fieldGenerations[field.name] = (_fieldGenerations[field.name] ?? 0) + 1;
+        _controller.reportChange(field.name, field.initialValue);
         _controller.setError(field.name, null);
       }
     });
@@ -83,6 +94,7 @@ class _BofFormState extends State<_BofForm> {
     } else {
       _controller.submitHandler = null;
       _controller.resetHandler = null;
+      _controller.applyHandler = null;
     }
     super.dispose();
   }
@@ -126,11 +138,12 @@ class _BofFormState extends State<_BofForm> {
       hint: field.hint,
       error: _controller.errorOf(field.name),
       child: KeyedSubtree(
-        key: ValueKey('${field.name}#$_generation'),
+        key: ValueKey('${field.name}#${_fieldGenerations[field.name] ?? 0}'),
         child: field.buildInput(
           context,
+          _controller.value(field.name),
           (value) {
-            _controller.setValue(field.name, value);
+            _controller.reportChange(field.name, value);
             _runValidator(field, FormValidationMode.changed);
             setState(() {});
           },

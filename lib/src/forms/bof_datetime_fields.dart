@@ -22,11 +22,12 @@ class BoFDatePickerField extends BoFField<DateTime> {
   @override
   Widget buildInput(
     BuildContext context,
+    DateTime? value,
     ValueChanged<DateTime?> onChanged,
     bool enabled,
   ) {
     return bofDatePickerField(
-      initialValue: initialValue,
+      initialValue: value,
       enabled: enabled,
       placeholder: placeholder,
       onChanged: onChanged,
@@ -50,11 +51,12 @@ class BoFDateInputField extends BoFField<DateTime> {
   @override
   Widget buildInput(
     BuildContext context,
+    DateTime? value,
     ValueChanged<DateTime?> onChanged,
     bool enabled,
   ) {
     return bofDateInputField(
-      initialValue: initialValue,
+      initialValue: value,
       enabled: enabled,
       onChanged: onChanged,
     );
@@ -80,11 +82,12 @@ class BoFTimePickerField extends BoFField<TimeOfDay> {
   @override
   Widget buildInput(
     BuildContext context,
+    TimeOfDay? value,
     ValueChanged<TimeOfDay?> onChanged,
     bool enabled,
   ) {
     return bofTimePickerField(
-      initialValue: initialValue,
+      initialValue: value,
       enabled: enabled,
       showSeconds: showSeconds,
       onChanged: onChanged,
@@ -111,11 +114,12 @@ class BoFTimeInputField extends BoFField<TimeOfDay> {
   @override
   Widget buildInput(
     BuildContext context,
+    TimeOfDay? value,
     ValueChanged<TimeOfDay?> onChanged,
     bool enabled,
   ) {
     return bofTimeInputField(
-      initialValue: initialValue,
+      initialValue: value,
       enabled: enabled,
       showSeconds: showSeconds,
       onChanged: onChanged,
@@ -139,11 +143,12 @@ class BoFDurationPickerField extends BoFField<Duration> {
   @override
   Widget buildInput(
     BuildContext context,
+    Duration? value,
     ValueChanged<Duration?> onChanged,
     bool enabled,
   ) {
     return bofDurationPickerField(
-      initialValue: initialValue,
+      initialValue: value ?? initialValue,
       enabled: enabled,
       onChanged: onChanged,
     );
@@ -169,11 +174,12 @@ class BoFDurationInputField extends BoFField<Duration> {
   @override
   Widget buildInput(
     BuildContext context,
+    Duration? value,
     ValueChanged<Duration?> onChanged,
     bool enabled,
   ) {
     return bofDurationInputField(
-      initialValue: initialValue,
+      initialValue: value,
       enabled: enabled,
       showSeconds: showSeconds,
       onChanged: onChanged,

@@ -3,7 +3,7 @@ description: >-
   A thin, opinionated layer of styled Flutter widgets on top of
   shadcn_flutter — buttons, forms, dialogs, and more, all through a single
   BoF entry point.
-version: 0.1.1
+version: 0.1.2
 homepage: https://github.com/alemanialloyd/breaks_on_fridays_ui
 
 environment:

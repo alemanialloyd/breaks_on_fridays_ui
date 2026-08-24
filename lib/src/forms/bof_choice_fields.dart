@@ -31,12 +31,13 @@ class BoFRadioGroupField<T extends Object> extends BoFField<T> {
   @override
   Widget buildInput(
     BuildContext context,
+    T? value,
     ValueChanged<T?> onChanged,
     bool enabled,
   ) {
     return bofRadioGroupField<T>(
       options: options,
-      initialValue: initialValue,
+      initialValue: value,
       card: card,
       direction: direction,
       enabled: enabled,
@@ -68,12 +69,13 @@ class BoFSelectField<T extends Object> extends BoFField<T> {
   @override
   Widget buildInput(
     BuildContext context,
+    T? value,
     ValueChanged<T?> onChanged,
     bool enabled,
   ) {
     return bofSelectField<T>(
       options: options,
-      initialValue: initialValue,
+      initialValue: value,
       placeholder: placeholder,
       filled: filled,
       enabled: enabled,
@@ -103,12 +105,13 @@ class BoFMultiSelectField<T extends Object> extends BoFField<Iterable<T>> {
   @override
   Widget buildInput(
     BuildContext context,
+    Iterable<T>? value,
     ValueChanged<Iterable<T>?> onChanged,
     bool enabled,
   ) {
     return bofMultiSelectField<T>(
       options: options,
-      initialValue: initialValue,
+      initialValue: value,
       placeholder: placeholder,
       enabled: enabled,
       onChanged: onChanged,
@@ -138,12 +141,13 @@ class BoFMultipleChoiceField<T extends Object> extends BoFField<T> {
   @override
   Widget buildInput(
     BuildContext context,
+    T? value,
     ValueChanged<T?> onChanged,
     bool enabled,
   ) {
     return bofMultipleChoiceField<T>(
       options: options,
-      initialValue: initialValue,
+      initialValue: value,
       allowUnselect: allowUnselect,
       enabled: enabled,
       onChanged: onChanged,
@@ -171,12 +175,13 @@ class BoFMultipleAnswerField<T extends Object> extends BoFField<Iterable<T>> {
   @override
   Widget buildInput(
     BuildContext context,
+    Iterable<T>? value,
     ValueChanged<Iterable<T>?> onChanged,
     bool enabled,
   ) {
     return bofMultipleAnswerField<T>(
       options: options,
-      initialValue: initialValue,
+      initialValue: value,
       enabled: enabled,
       onChanged: onChanged,
     );

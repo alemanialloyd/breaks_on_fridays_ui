@@ -470,4 +470,62 @@ void main() {
     final button = tester.widget<Button>(find.byType(Button));
     expect(button.alignment, Alignment.center);
   });
+
+  testWidgets(
+    'BoFFormController.setValue() pushes the change into the rendered field',
+    (tester) async {
+      final controller = BoFFormController();
+
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: BoF.form(
+              [BoFTextField(name: 'email', label: BoF.text('Email'))],
+              controller: controller,
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('prefilled@example.com'), findsNothing);
+
+      controller.setValue('email', 'prefilled@example.com');
+      await tester.pump();
+
+      expect(find.text('prefilled@example.com'), findsOneWidget);
+      expect(controller.value<String>('email'), 'prefilled@example.com');
+    },
+  );
+
+  testWidgets(
+    'setValue on one field does not disturb another field being typed into',
+    (tester) async {
+      final controller = BoFFormController();
+
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: BoF.form(
+              [
+                BoFTextField(name: 'name', label: BoF.text('Name')),
+                BoFCheckboxField(name: 'agree', label: BoF.text('Agree')),
+              ],
+              controller: controller,
+            ),
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextField), 'still typing');
+      await tester.pump();
+      expect(find.text('still typing'), findsOneWidget);
+
+      // Programmatically changing the *other* field shouldn't remount (and
+      // thus shouldn't clear) the text the user is mid-typing.
+      controller.setValue('agree', CheckboxState.checked);
+      await tester.pump();
+
+      expect(find.text('still typing'), findsOneWidget);
+    },
+  );
 }
