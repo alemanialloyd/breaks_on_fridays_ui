@@ -1,3 +1,20 @@
+## 0.1.1
+
+* `BoF.textField`/`BoFTextField`: added `leadingIcon`/`trailingIcon`,
+  `showPasswordToggle` (+ `passwordPeekMode`), a raw `features:
+  List<InputFeature>` escape hatch, and `textInputAction`,
+  `textCapitalization`, `maxLength`, `readOnly`, `autofocus`, `focusNode`,
+  `onSubmitted`.
+* `BoF.button`: content is now centered (`alignment: Alignment.center`) by
+  default, including icon+label buttons — the underlying `Button` otherwise
+  left-aligns whenever an icon is present. Pass an explicit `alignment` to
+  override.
+* Reviewed every widget wrapper; fixed a `key` handling bug in
+  `BoF.container`, a wrong-`Navigator`-context bug in `BoF.alertDialog`'s
+  default buttons, and made `BoFFormController.reset()` actually reset the
+  rendered field widgets instead of only clearing tracked values.
+* Added a `LICENSE` (MIT) ahead of the package going open source.
+
 ## 0.1.0
 
 Initial public release. A thin, opinionated layer of styled widgets on top
