@@ -79,11 +79,19 @@ Future<Object?> bofAlertDialog(
                 },
               ),
           ];
-      return AlertDialog(
-        leading: leading,
-        title: effectiveTitle,
-        content: effectiveContent,
-        actions: effectiveActions.isEmpty ? null : effectiveActions,
+      // Wrapped in Center: showDialog (Flutter's, not shadcn_flutter's own
+      // DialogRoute) hands the builder's widget straight to the Overlay with
+      // no centering of its own. AlertDialog sizes itself with
+      // MainAxisSize.min, but that only shrink-wraps under loose
+      // constraints — without a Center, the Overlay's tight constraints
+      // (most noticeable on web) stretch it to fill the whole screen.
+      return Center(
+        child: AlertDialog(
+          leading: leading,
+          title: effectiveTitle,
+          content: effectiveContent,
+          actions: effectiveActions.isEmpty ? null : effectiveActions,
+        ),
       );
     },
   );
