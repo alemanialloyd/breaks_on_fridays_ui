@@ -3,7 +3,9 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 /// A one-time-password / PIN input. Wraps shadcn_flutter's `InputOTP`.
 ///
 /// `InputOTP` has no `enabled` parameter upstream, so this cannot be
-/// disabled.
+/// disabled. It also has no controller of its own, so programmatic value
+/// updates aren't supported; changing [initialValue] only resets state via a
+/// new [key].
 Widget bofOtpField({
   Key? key,
   required int length,

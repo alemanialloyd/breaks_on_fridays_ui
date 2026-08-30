@@ -4,10 +4,14 @@ import '../forms/bof_option.dart';
 
 /// A single-choice radio group (or radio cards when [card] is true). Wraps
 /// shadcn_flutter's `ControlledRadioGroup` combined with `RadioItem`/`RadioCard`.
+///
+/// Pass [controller] to update the selection programmatically; when provided
+/// it takes precedence over [initialValue].
 Widget bofRadioGroupField<T extends Object>({
   Key? key,
   required List<BoFOption<T>> options,
   T? initialValue,
+  RadioGroupController<T?>? controller,
   bool card = false,
   Axis direction = Axis.vertical,
   bool enabled = true,
@@ -30,6 +34,7 @@ Widget bofRadioGroupField<T extends Object>({
   return ControlledRadioGroup<T>(
     key: key,
     initialValue: initialValue,
+    controller: controller,
     enabled: enabled,
     onChanged: onChanged,
     child: direction == Axis.horizontal

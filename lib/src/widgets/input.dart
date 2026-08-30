@@ -7,9 +7,13 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 /// explicitly, so `showPasswordToggle: true` alone gives you a normal masked
 /// password field with a reveal button; pass `obscureText: false` too if you
 /// want it to start revealed but stay toggleable.
+///
+/// Pass [controller] to update the text programmatically; when provided it
+/// takes precedence over [initialValue].
 Widget bofTextField({
   Key? key,
   String? initialValue,
+  TextEditingController? controller,
   Widget? placeholder,
   Widget? leadingIcon,
   Widget? trailingIcon,
@@ -38,6 +42,7 @@ Widget bofTextField({
   return TextField(
     key: key,
     initialValue: initialValue,
+    controller: controller,
     placeholder: placeholder,
     obscureText: obscureText ?? showPasswordToggle,
     features: effectiveFeatures,
@@ -56,9 +61,13 @@ Widget bofTextField({
 }
 
 /// A multi-line text input. Wraps shadcn_flutter's `TextArea`.
+///
+/// Pass [controller] to update the text programmatically; when provided it
+/// takes precedence over [initialValue].
 Widget bofTextAreaField({
   Key? key,
   String? initialValue,
+  TextEditingController? controller,
   Widget? placeholder,
   double minHeight = 100,
   double maxHeight = double.infinity,
@@ -68,6 +77,7 @@ Widget bofTextAreaField({
   return TextArea(
     key: key,
     initialValue: initialValue,
+    controller: controller,
     placeholder: placeholder,
     minHeight: minHeight,
     maxHeight: maxHeight,
@@ -80,9 +90,13 @@ Widget bofTextAreaField({
 ///
 /// shadcn_flutter has no dedicated number-input widget, so this wraps
 /// `TextField` with a numeric keyboard and parses the text to [num].
+///
+/// Pass [controller] to update the text programmatically; when provided it
+/// takes precedence over [initialValue].
 Widget bofNumberField({
   Key? key,
   num? initialValue,
+  TextEditingController? controller,
   Widget? placeholder,
   bool allowDecimal = true,
   bool enabled = true,
@@ -91,6 +105,7 @@ Widget bofNumberField({
   return TextField(
     key: key,
     initialValue: initialValue?.toString(),
+    controller: controller,
     placeholder: placeholder,
     enabled: enabled,
     keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),

@@ -357,6 +357,12 @@ it; it takes `initialValue`/`onChanged`/`enabled` directly, with no
 `label`/`hint`/`validator` (add those yourself if needed, or use `BoF.form`
 with a single field).
 
+Every standalone field also accepts an optional `controller` for updating its
+value programmatically — set `controller.value` and the field updates without
+a rebuild or a `BoFFormController`. When passed, it takes precedence over
+`initialValue`. The controller type differs per field; see each field's
+section below.
+
 ### BoF.form
 
 ```dart
@@ -550,6 +556,8 @@ copy/paste, spinner, hint popup, etc.), `keyboardType`, `textInputAction`,
 `obscureText: false` too if you want it to start revealed but stay
 toggleable.
 
+Controller: `TextEditingController`.
+
 ### BoF.textAreaField
 
 `BoFTextAreaField` — value type `String` — wraps `TextArea`.
@@ -558,7 +566,7 @@ toggleable.
 BoF.textAreaField(onChanged: (v) => print(v));
 ```
 
-Params: `minHeight`, `maxHeight`.
+Params: `minHeight`, `maxHeight`. Controller: `TextEditingController`.
 
 ### BoF.numberField
 
@@ -570,7 +578,8 @@ BoF.numberField(onChanged: (v) => print(v));
 ```
 
 shadcn_flutter has no dedicated number-input widget upstream; this parses
-the typed text to `num`.
+the typed text to `num`. Controller: `TextEditingController` (holds the raw
+text, not the parsed `num`).
 
 ### BoF.checkboxField
 
@@ -580,7 +589,8 @@ the typed text to `num`.
 BoF.checkboxField(onChanged: (v) => print(v));
 ```
 
-Tri-state: `checked` / `unchecked` / `indeterminate`.
+Tri-state: `checked` / `unchecked` / `indeterminate`. Controller:
+`CheckboxController`.
 
 ### BoF.switchField
 
@@ -589,6 +599,8 @@ Tri-state: `checked` / `unchecked` / `indeterminate`.
 ```dart
 BoF.switchField(onChanged: (v) => print(v));
 ```
+
+Controller: `SwitchController`.
 
 ### BoF.radioGroupField
 
@@ -606,6 +618,7 @@ BoF.radioGroupField<String>(
 ```
 
 Set `card: true` for card-style items instead of plain radio items.
+Controller: `RadioGroupController<T?>`.
 
 ### BoF.selectField
 
@@ -619,6 +632,8 @@ BoF.selectField<String>(
 );
 ```
 
+Controller: `SelectController<T>`.
+
 ### BoF.multiSelectField
 
 `BoFMultiSelectField<T>` — value type `Iterable<T>` — wraps
@@ -630,6 +645,8 @@ BoF.multiSelectField<String>(
   onChanged: (v) => print(v),
 );
 ```
+
+Controller: `MultiSelectController<T>`.
 
 ### BoF.multipleChoiceField
 
@@ -643,6 +660,8 @@ BoF.multipleChoiceField<String>(
 );
 ```
 
+Controller: `MultipleChoiceController<T>`.
+
 ### BoF.multipleAnswerField
 
 `BoFMultipleAnswerField<T>` — value type `Iterable<T>` — wraps
@@ -655,6 +674,8 @@ BoF.multipleAnswerField<String>(
 );
 ```
 
+Controller: `MultipleAnswerController<T>`.
+
 ### BoF.datePickerField
 
 `BoFDatePickerField` — value type `DateTime` — wraps `ControlledDatePicker`.
@@ -663,6 +684,8 @@ Popover/dialog calendar.
 ```dart
 BoF.datePickerField(onChanged: (v) => print(v));
 ```
+
+Controller: `DatePickerController`.
 
 ### BoF.dateInputField
 
@@ -673,6 +696,8 @@ typed entry (`mm/dd/yyyy`-style).
 BoF.dateInputField(onChanged: (v) => print(v));
 ```
 
+Controller: `DatePickerController`.
+
 ### BoF.timePickerField
 
 `BoFTimePickerField` — value type `TimeOfDay` — wraps `ControlledTimePicker`.
@@ -681,6 +706,8 @@ Popover/dialog.
 ```dart
 BoF.timePickerField(onChanged: (v) => print(v));
 ```
+
+Controller: `TimePickerController`.
 
 ### BoF.timeInputField
 
@@ -691,6 +718,10 @@ typed entry.
 BoF.timeInputField(onChanged: (v) => print(v));
 ```
 
+Controller: `ComponentController<TimeOfDay?>` (shadcn_flutter has no
+dedicated time controller class upstream — construct one with
+`ComponentValueController<TimeOfDay?>(...)`).
+
 ### BoF.durationPickerField
 
 `BoFDurationPickerField` — value type `Duration` — wraps `DurationPicker`.
@@ -699,6 +730,10 @@ Popover/dialog.
 ```dart
 BoF.durationPickerField(onChanged: (v) => print(v));
 ```
+
+Controller: `DurationPickerController`. `DurationPicker` itself has no
+controller support upstream (it's a plain value-driven widget), so this
+wraps it in a small internal adapter that syncs to the controller.
 
 ### BoF.durationInputField
 
@@ -709,6 +744,9 @@ Segmented typed entry.
 BoF.durationInputField(onChanged: (v) => print(v));
 ```
 
+Controller: `ComponentController<Duration?>` (construct one with
+`ComponentValueController<Duration?>(...)`).
+
 ### BoF.colorField
 
 `BoFColorField` — value type `Color` — wraps `ControlledColorInput`.
@@ -718,7 +756,9 @@ BoF.colorField(onChanged: (v) => print(v));
 ```
 
 Converts to/from shadcn's `ColorDerivative` internally, so callers only ever
-deal with plain `Color`.
+deal with plain `Color`. Controller: `ColorInputController` — note the
+controller itself deals in `ColorDerivative`, not `Color` (use
+`controller.setColor(color)` to update it).
 
 ### BoF.phoneField
 
@@ -729,6 +769,8 @@ BoF.phoneField(onChanged: (v) => print(v));
 ```
 
 The upstream widget has no `enabled` param, so this can't be disabled.
+Controller: `TextEditingController` — it manages the raw number text, not a
+`PhoneNumber`, since `PhoneInput` has no dedicated value controller upstream.
 
 ### BoF.sliderField
 
@@ -738,7 +780,7 @@ The upstream widget has no `enabled` param, so this can't be disabled.
 BoF.sliderField(min: 0, max: 1000, onChanged: (v) => print(v));
 ```
 
-Params: `min`, `max`, `divisions`.
+Params: `min`, `max`, `divisions`. Controller: `SliderController`.
 
 ### BoF.starRatingField
 
@@ -748,7 +790,7 @@ Params: `min`, `max`, `divisions`.
 BoF.starRatingField(onChanged: (v) => print(v));
 ```
 
-Params: `max`, `step`.
+Params: `max`, `step`. Controller: `StarRatingController`.
 
 ### BoF.otpField
 
@@ -759,7 +801,8 @@ BoF.otpField(length: 6, onChanged: (v) => print(v));
 ```
 
 Requires `length`. The upstream widget has no `enabled` param, so this can't
-be disabled.
+be disabled. It also has no controller of its own, so this field has no
+`controller` param — programmatic updates aren't supported.
 
 ### BoF.autoCompleteField
 
@@ -773,7 +816,9 @@ BoF.autoCompleteField(
 );
 ```
 
-Requires `suggestions`.
+Requires `suggestions`. Controller: `TextEditingController`, passed through
+to the inner `TextField` (`AutoComplete` itself has no controller of its
+own).
 
 ### BoF.chipInputField
 
@@ -788,3 +833,4 @@ BoF.chipInputField<String>(
 ```
 
 Requires `chipBuilder` and `onChipSubmitted` (parses typed text into a chip).
+Controller: `ChipEditingController<T>`.

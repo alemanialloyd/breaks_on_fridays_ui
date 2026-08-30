@@ -30,10 +30,14 @@ class BofChoiceChip<T> extends StatelessWidget {
 
 /// An inline single choice, rendered as tappable chips. Wraps
 /// shadcn_flutter's `ControlledMultipleChoice`.
+///
+/// Pass [controller] to update the selection programmatically; when provided
+/// it takes precedence over [initialValue].
 Widget bofMultipleChoiceField<T extends Object>({
   Key? key,
   required List<BoFOption<T>> options,
   T? initialValue,
+  MultipleChoiceController<T>? controller,
   bool allowUnselect = true,
   bool enabled = true,
   ValueChanged<T?>? onChanged,
@@ -41,6 +45,7 @@ Widget bofMultipleChoiceField<T extends Object>({
   return ControlledMultipleChoice<T>(
     key: key,
     initialValue: initialValue,
+    controller: controller,
     enabled: enabled,
     allowUnselect: allowUnselect,
     onChanged: onChanged,
@@ -61,16 +66,21 @@ Widget bofMultipleChoiceField<T extends Object>({
 
 /// An inline multi-choice, rendered as tappable chips. Wraps
 /// shadcn_flutter's `ControlledMultipleAnswer`.
+///
+/// Pass [controller] to update the selection programmatically; when provided
+/// it takes precedence over [initialValue].
 Widget bofMultipleAnswerField<T extends Object>({
   Key? key,
   required List<BoFOption<T>> options,
   Iterable<T>? initialValue,
+  MultipleAnswerController<T>? controller,
   bool enabled = true,
   ValueChanged<Iterable<T>?>? onChanged,
 }) {
   return ControlledMultipleAnswer<T>(
     key: key,
     initialValue: initialValue,
+    controller: controller,
     enabled: enabled,
     onChanged: onChanged,
     child: Wrap(
