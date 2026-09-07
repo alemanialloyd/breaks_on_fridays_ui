@@ -528,4 +528,77 @@ void main() {
       expect(find.text('still typing'), findsOneWidget);
     },
   );
+
+  testWidgets("BoF.datePickerField outlines today's cell and no other",
+      (tester) async {
+    await tester.pumpWidget(
+      ShadcnApp(
+        home: Scaffold(
+          child: Center(child: BoF.datePickerField(onChanged: (_) {})),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(OutlineButton));
+    await tester.pumpAndSettle();
+
+    bool cellHasBorder(Finder dayTextFinder) {
+      final cellFinder = find.ancestor(
+        of: dayTextFinder,
+        matching: find.byType(CalendarItem),
+      );
+      final decoratedBoxes = find.descendant(
+        of: cellFinder,
+        matching: find.byWidgetPredicate((w) => w is OverflowDecoratedBox),
+      );
+      for (final element in decoratedBoxes.evaluate()) {
+        final decoration = (element.widget as OverflowDecoratedBox).decoration;
+        if (decoration is BoxDecoration && decoration.border != null) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    final today = DateTime.now();
+    expect(cellHasBorder(find.text('${today.day}').first), isTrue);
+
+    final otherDay = today.day == 1 ? 2 : 1;
+    expect(cellHasBorder(find.text('$otherDay').first), isFalse);
+  });
+
+  testWidgets(
+    'BoF.dateInputField zero-pads single-digit month/day, including after '
+    'picking a date from the embedded calendar',
+    (tester) async {
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: Center(
+              child: BoF.dateInputField(
+                initialValue: DateTime(2026, 9, 7),
+                onChanged: (_) {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      List<String> segmentTexts() => find
+          .byType(EditableText)
+          .evaluate()
+          .map((e) => (e.widget as EditableText).controller.text)
+          .toList();
+
+      expect(segmentTexts(), ['09', '07', '2026']);
+
+      await tester.tap(find.byIcon(LucideIcons.calendarDays));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('7').first);
+      await tester.pumpAndSettle();
+
+      expect(segmentTexts(), ['09', '07', '2026']);
+    },
+  );
 }

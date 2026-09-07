@@ -10,6 +10,12 @@ class BoFDatePickerField extends BoFField<DateTime> {
 
   final Widget? placeholder;
 
+  final PromptMode mode;
+
+  final EdgeInsetsGeometry? popoverPadding;
+
+  final Widget? dialogTitle;
+
   const BoFDatePickerField({
     required super.name,
     required super.label,
@@ -17,6 +23,9 @@ class BoFDatePickerField extends BoFField<DateTime> {
     super.validator,
     this.initialValue,
     this.placeholder,
+    this.mode = PromptMode.popover,
+    this.popoverPadding,
+    this.dialogTitle,
   });
 
   @override
@@ -30,6 +39,9 @@ class BoFDatePickerField extends BoFField<DateTime> {
       initialValue: value,
       enabled: enabled,
       placeholder: placeholder,
+      mode: mode,
+      popoverPadding: popoverPadding,
+      dialogTitle: dialogTitle,
       onChanged: onChanged,
     );
   }
@@ -70,6 +82,12 @@ class BoFTimePickerField extends BoFField<TimeOfDay> {
 
   final bool showSeconds;
 
+  final PromptMode mode;
+
+  final EdgeInsetsGeometry? popoverPadding;
+
+  final Widget? dialogTitle;
+
   const BoFTimePickerField({
     required super.name,
     required super.label,
@@ -77,6 +95,9 @@ class BoFTimePickerField extends BoFField<TimeOfDay> {
     super.validator,
     this.initialValue,
     this.showSeconds = false,
+    this.mode = PromptMode.popover,
+    this.popoverPadding,
+    this.dialogTitle,
   });
 
   @override
@@ -90,6 +111,9 @@ class BoFTimePickerField extends BoFField<TimeOfDay> {
       initialValue: value,
       enabled: enabled,
       showSeconds: showSeconds,
+      mode: mode,
+      popoverPadding: popoverPadding,
+      dialogTitle: dialogTitle,
       onChanged: onChanged,
     );
   }
