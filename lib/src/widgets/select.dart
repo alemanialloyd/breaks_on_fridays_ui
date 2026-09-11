@@ -39,6 +39,7 @@ Widget bofSelectField<T extends Object>({
   bool filled = false,
   bool enabled = true,
   ValueChanged<T?>? onChanged,
+  BorderRadiusGeometry? borderRadius,
 }) {
   return ControlledSelect<T>(
     key: key,
@@ -48,6 +49,7 @@ Widget bofSelectField<T extends Object>({
     filled: filled,
     placeholder: placeholder,
     onChanged: onChanged,
+    borderRadius: borderRadius,
     itemBuilder: (context, value) => _buildSelectItem(options, context, value),
     popup: _buildSelectPopup(options),
   );
@@ -65,6 +67,7 @@ Widget bofMultiSelectField<T extends Object>({
   Widget? placeholder,
   bool enabled = true,
   ValueChanged<Iterable<T>?>? onChanged,
+  BorderRadiusGeometry? borderRadius,
 }) {
   return ControlledMultiSelect<T>(
     key: key,
@@ -73,6 +76,7 @@ Widget bofMultiSelectField<T extends Object>({
     enabled: enabled,
     placeholder: placeholder,
     onChanged: onChanged,
+    borderRadius: borderRadius,
     itemBuilder: (context, value) => _buildSelectItem(options, context, value),
     popup: _buildSelectPopup(options),
   );

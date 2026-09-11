@@ -32,6 +32,31 @@ class FormFieldsSection extends StatelessWidget {
           ),
         ),
         GalleryEntry(
+          title: 'Custom styling',
+          description:
+              'backgroundColor/fontSize/borderRadius on BoF.textField, and '
+              'trackColor/activeColor on BoF.sliderField.',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BoF.textField(
+                placeholder: const Text('Custom field'),
+                backgroundColor: Colors.blue.withValues(alpha: 0.08),
+                foregroundColor: Colors.blue[900],
+                fontSize: 16,
+                borderRadius: BorderRadius.circular(16),
+                onChanged: (_) {},
+              ),
+              const SizedBox(height: 12),
+              BoF.sliderField(
+                trackColor: Colors.gray[300],
+                activeColor: Colors.pink,
+                onChanged: (_) {},
+              ),
+            ],
+          ),
+        ),
+        GalleryEntry(
           title: 'BoF.textAreaField',
           child: BoF.textAreaField(onChanged: (_) {}),
         ),

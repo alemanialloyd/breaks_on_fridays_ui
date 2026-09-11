@@ -54,6 +54,38 @@ class CoreSection extends StatelessWidget {
           ),
         ),
         GalleryEntry(
+          title: 'Custom styling',
+          description:
+              'backgroundColor/foregroundColor/fontSize/borderRadius on '
+              'BoF.button, BoF.badge and BoF.chip.',
+          child: Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              BoF.button(
+                'Custom',
+                onPressed: () {},
+                backgroundColor: Colors.purple,
+                foregroundColor: Colors.white,
+                fontSize: 16,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              BoF.badge(
+                BoF.text('Featured'),
+                backgroundColor: Colors.amber,
+                foregroundColor: Colors.black,
+              ),
+              BoF.chip(
+                BoF.text('Rounded'),
+                backgroundColor: Colors.teal.withValues(alpha: 0.15),
+                foregroundColor: Colors.teal,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ],
+          ),
+        ),
+        GalleryEntry(
           title: 'BoF.alertDialog',
           description: 'Tap to open; confirms via the positive/negative buttons.',
           child: Builder(
@@ -73,18 +105,40 @@ class CoreSection extends StatelessWidget {
         ),
         GalleryEntry(
           title: 'BoF.form',
-          child: BoF.form(
-            [
-              BoFTextField(
-                name: 'email',
-                label: BoF.text('Email'),
-              ),
-              BoFCheckboxField(
-                name: 'agree',
-                label: BoF.text('I agree to the terms'),
-              ),
-            ],
-            onSubmit: (values) {},
+          description:
+              'BoFDateInputField masks input as mm/dd/yyyy and '
+              'NonNullValidator<DateTime>() rejects an incomplete date — '
+              'tap Submit without finishing the date to see it.',
+          child: Builder(
+            builder: (context) {
+              final controller = BoFFormController();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BoF.form(
+                    [
+                      BoFTextField(
+                        name: 'email',
+                        label: BoF.text('Email'),
+                      ),
+                      BoFDateInputField(
+                        name: 'birthday',
+                        label: BoF.text('Birthday'),
+                        validator: const NonNullValidator<DateTime>(),
+                      ),
+                      BoFCheckboxField(
+                        name: 'agree',
+                        label: BoF.text('I agree to the terms'),
+                      ),
+                    ],
+                    controller: controller,
+                    onSubmit: (values) {},
+                  ),
+                  const SizedBox(height: 12),
+                  BoF.button('Submit', onPressed: () => controller.submit()),
+                ],
+              );
+            },
           ),
         ),
       ],

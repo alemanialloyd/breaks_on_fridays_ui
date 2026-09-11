@@ -26,6 +26,9 @@ ToastOverlay bofToast(
   Duration entryDuration = const Duration(milliseconds: 500),
   Duration showDuration = const Duration(seconds: 5),
   VoidCallback? onClosed,
+  Color? backgroundColor,
+  Color? borderColor,
+  EdgeInsetsGeometry? padding,
 }) {
   return showToast(
     context: context,
@@ -40,6 +43,9 @@ ToastOverlay bofToast(
               title: title == null ? null : bofText(title),
               content: content ?? (message == null ? null : bofText(message)),
               destructive: destructive,
+              backgroundColor: backgroundColor,
+              borderColor: borderColor,
+              padding: padding,
               trailing: dismissible
                   ? bofButton(
                       null,

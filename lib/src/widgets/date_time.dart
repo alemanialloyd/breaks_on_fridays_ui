@@ -1,6 +1,42 @@
 import 'package:flutter/services.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+import '../extensions/style_override.dart';
+
+/// Wraps [child] (an `OutlineButton`-based picker trigger, e.g. from
+/// `ObjectFormField`) so [backgroundColor]/[foregroundColor]/[fontSize]/
+/// [borderRadius] restyle it, since these pickers have no such params of
+/// their own — their trigger button is only reachable through the theme
+/// system.
+Widget _stylePickerTrigger(
+  Widget child, {
+  required Color? backgroundColor,
+  required Color? foregroundColor,
+  required double? fontSize,
+  required BorderRadiusGeometry? borderRadius,
+}) {
+  if (backgroundColor == null &&
+      foregroundColor == null &&
+      fontSize == null &&
+      borderRadius == null) {
+    return child;
+  }
+  final override = bofButtonStyle(
+    ButtonVariance.outline,
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
+    fontSize: fontSize,
+    borderRadius: borderRadius,
+  );
+  return ComponentTheme<OutlineButtonTheme>(
+    data: OutlineButtonTheme(
+      decoration: (context, states, value) => override.decoration(context, states),
+      textStyle: (context, states, value) => override.textStyle(context, states),
+    ),
+    child: child,
+  );
+}
+
 /// A popover/dialog date picker. Wraps shadcn_flutter's `ControlledDatePicker`
 /// machinery, but swaps in [_BofCalendarView] for the calendar itself so
 /// today's date is outlined (see its doc comment for why).
@@ -13,6 +49,9 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 /// `AlertDialog`, which adds its own large content padding on top of the
 /// calendar's, and Cancel/Save actions that most date-field use cases don't
 /// need. Pass `mode: PromptMode.dialog` to opt back into that behavior.
+///
+/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
+/// [borderRadius] to override the trigger button's default styling.
 Widget bofDatePickerField({
   Key? key,
   DateTime? initialValue,
@@ -23,6 +62,10 @@ Widget bofDatePickerField({
   EdgeInsetsGeometry? popoverPadding,
   Widget? dialogTitle,
   ValueChanged<DateTime?>? onChanged,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  BorderRadiusGeometry? borderRadius,
 }) {
   return ControlledComponentAdapter<DateTime?>(
     key: key,
@@ -32,24 +75,30 @@ Widget bofDatePickerField({
     enabled: enabled,
     builder: (context, data) {
       final localizations = ShadcnLocalizations.of(context);
-      return ObjectFormField<DateTime>(
-        value: data.value,
-        onChanged: data.onChanged,
-        enabled: data.enabled,
-        placeholder: placeholder ?? Text(localizations.placeholderDatePicker),
-        trailing: const Icon(LucideIcons.calendarDays),
-        mode: mode,
-        popoverPadding: popoverPadding,
-        dialogTitle: dialogTitle,
-        builder: (context, value) {
-          return Text(localizations.formatDateTime(value, showTime: false));
-        },
-        editorBuilder: (context, handler) {
-          return _BofCalendarView(
-            initialValue: handler.value,
-            onChanged: (value) => handler.value = value,
-          );
-        },
+      return _stylePickerTrigger(
+        ObjectFormField<DateTime>(
+          value: data.value,
+          onChanged: data.onChanged,
+          enabled: data.enabled,
+          placeholder: placeholder ?? Text(localizations.placeholderDatePicker),
+          trailing: const Icon(LucideIcons.calendarDays),
+          mode: mode,
+          popoverPadding: popoverPadding,
+          dialogTitle: dialogTitle,
+          builder: (context, value) {
+            return Text(localizations.formatDateTime(value, showTime: false));
+          },
+          editorBuilder: (context, handler) {
+            return _BofCalendarView(
+              initialValue: handler.value,
+              onChanged: (value) => handler.value = value,
+            );
+          },
+        ),
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        fontSize: fontSize,
+        borderRadius: borderRadius,
       );
     },
   );
@@ -239,6 +288,11 @@ class _BofCalendarViewState extends State<_BofCalendarView> {
 ///
 /// Pass [controller] to update the value programmatically; when provided it
 /// takes precedence over [initialValue].
+///
+/// Unlike [bofDatePickerField], this field's surface colors/border are
+/// hardcoded upstream (`FormattedObjectInput`'s `OutlinedContainer`) with no
+/// styling surface — only its size (via `ComponentTheme<FormattedInputTheme>`,
+/// not exposed here) is themable.
 Widget bofDateInputField({
   Key? key,
   DateTime? initialValue,
@@ -429,6 +483,9 @@ class _BofDateInputState extends State<_BofDateInput> {
 /// Defaults to [PromptMode.popover] for the same reason as
 /// [bofDatePickerField]. Pass `mode: PromptMode.dialog` to opt back into the
 /// `AlertDialog` presentation.
+///
+/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
+/// [borderRadius] to override the trigger button's default styling.
 Widget bofTimePickerField({
   Key? key,
   TimeOfDay? initialValue,
@@ -439,17 +496,27 @@ Widget bofTimePickerField({
   EdgeInsetsGeometry? popoverPadding,
   Widget? dialogTitle,
   ValueChanged<TimeOfDay?>? onChanged,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  BorderRadiusGeometry? borderRadius,
 }) {
-  return ControlledTimePicker(
-    key: key,
-    initialValue: initialValue,
-    controller: controller,
-    enabled: enabled,
-    showSeconds: showSeconds,
-    mode: mode,
-    popoverPadding: popoverPadding,
-    dialogTitle: dialogTitle,
-    onChanged: onChanged,
+  return _stylePickerTrigger(
+    ControlledTimePicker(
+      key: key,
+      initialValue: initialValue,
+      controller: controller,
+      enabled: enabled,
+      showSeconds: showSeconds,
+      mode: mode,
+      popoverPadding: popoverPadding,
+      dialogTitle: dialogTitle,
+      onChanged: onChanged,
+    ),
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
+    fontSize: fontSize,
+    borderRadius: borderRadius,
   );
 }
 
@@ -457,6 +524,9 @@ Widget bofTimePickerField({
 ///
 /// Pass [controller] to update the value programmatically; when provided it
 /// takes precedence over [initialValue].
+///
+/// See [bofDateInputField]'s doc comment: this has no styling surface
+/// upstream either — use [bofTimePickerField] if you need custom colors.
 Widget bofTimeInputField({
   Key? key,
   TimeOfDay? initialValue,
@@ -481,19 +551,32 @@ Widget bofTimeInputField({
 /// a plain `value`-driven widget), so this wraps it in a small internal
 /// adapter that owns the current value. Pass [controller] to update the value
 /// programmatically; when provided it takes precedence over [initialValue].
+///
+/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
+/// [borderRadius] to override the trigger button's default styling.
 Widget bofDurationPickerField({
   Key? key,
   Duration initialValue = Duration.zero,
   DurationPickerController? controller,
   bool enabled = true,
   ValueChanged<Duration?>? onChanged,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  BorderRadiusGeometry? borderRadius,
 }) {
-  return _DurationPickerAdapter(
-    key: key,
-    initialValue: initialValue,
-    controller: controller,
-    enabled: enabled,
-    onChanged: onChanged,
+  return _stylePickerTrigger(
+    _DurationPickerAdapter(
+      key: key,
+      initialValue: initialValue,
+      controller: controller,
+      enabled: enabled,
+      onChanged: onChanged,
+    ),
+    backgroundColor: backgroundColor,
+    foregroundColor: foregroundColor,
+    fontSize: fontSize,
+    borderRadius: borderRadius,
   );
 }
 
@@ -567,6 +650,9 @@ class _DurationPickerAdapterState extends State<_DurationPickerAdapter> {
 ///
 /// Pass [controller] to update the value programmatically; when provided it
 /// takes precedence over [initialValue].
+///
+/// See [bofDateInputField]'s doc comment: this has no styling surface
+/// upstream either — use [bofDurationPickerField] if you need custom colors.
 Widget bofDurationInputField({
   Key? key,
   Duration? initialValue,

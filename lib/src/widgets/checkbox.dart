@@ -10,6 +10,11 @@ Widget bofCheckboxField({
   CheckboxController? controller,
   bool enabled = true,
   ValueChanged<CheckboxState>? onChanged,
+  Color? backgroundColor,
+  Color? activeColor,
+  Color? borderColor,
+  BorderRadiusGeometry? borderRadius,
+  double? size,
 }) {
   return ControlledCheckbox(
     key: key,
@@ -17,6 +22,11 @@ Widget bofCheckboxField({
     controller: controller,
     enabled: enabled,
     onChanged: onChanged,
+    backgroundColor: backgroundColor,
+    activeColor: activeColor,
+    borderColor: borderColor,
+    borderRadius: borderRadius,
+    size: size,
   );
 }
 
@@ -30,6 +40,11 @@ Widget bofSwitchField({
   SwitchController? controller,
   bool enabled = true,
   ValueChanged<bool>? onChanged,
+  Color? activeColor,
+  Color? inactiveColor,
+  Color? activeThumbColor,
+  Color? inactiveThumbColor,
+  BorderRadiusGeometry? borderRadius,
 }) {
   return ControlledSwitch(
     key: key,
@@ -37,5 +52,10 @@ Widget bofSwitchField({
     controller: controller,
     enabled: enabled,
     onChanged: onChanged,
+    activeColor: activeColor,
+    inactiveColor: inactiveColor,
+    activeThumbColor: activeThumbColor,
+    inactiveThumbColor: inactiveThumbColor,
+    borderRadius: borderRadius,
   );
 }

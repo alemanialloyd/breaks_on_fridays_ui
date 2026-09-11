@@ -30,6 +30,8 @@ import 'widgets/text.dart';
 import 'widgets/toast.dart';
 import 'widgets/tooltip.dart';
 
+export 'extensions/conditional.dart';
+export 'extensions/style_override.dart';
 export 'forms/bof_choice_fields.dart';
 export 'forms/bof_datetime_fields.dart';
 export 'forms/bof_field.dart';

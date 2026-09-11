@@ -10,6 +10,9 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 ///
 /// Pass [controller] to update the text programmatically; when provided it
 /// takes precedence over [initialValue].
+///
+/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
+/// [borderRadius] to override the field's default styling.
 Widget bofTextField({
   Key? key,
   String? initialValue,
@@ -32,6 +35,10 @@ Widget bofTextField({
   FocusNode? focusNode,
   ValueChanged<String>? onChanged,
   ValueChanged<String>? onSubmitted,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  BorderRadiusGeometry? borderRadius,
 }) {
   final effectiveFeatures = <InputFeature>[
     if (leadingIcon != null) InputFeature.leading(leadingIcon),
@@ -57,6 +64,11 @@ Widget bofTextField({
     focusNode: focusNode,
     onChanged: onChanged,
     onSubmitted: onSubmitted,
+    decoration: backgroundColor == null ? null : BoxDecoration(color: backgroundColor),
+    style: foregroundColor == null && fontSize == null
+        ? null
+        : TextStyle(color: foregroundColor, fontSize: fontSize),
+    borderRadius: borderRadius,
   );
 }
 
@@ -64,6 +76,9 @@ Widget bofTextField({
 ///
 /// Pass [controller] to update the text programmatically; when provided it
 /// takes precedence over [initialValue].
+///
+/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
+/// [borderRadius] to override the field's default styling.
 Widget bofTextAreaField({
   Key? key,
   String? initialValue,
@@ -73,6 +88,10 @@ Widget bofTextAreaField({
   double maxHeight = double.infinity,
   bool enabled = true,
   ValueChanged<String>? onChanged,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  BorderRadiusGeometry? borderRadius,
 }) {
   return TextArea(
     key: key,
@@ -83,6 +102,11 @@ Widget bofTextAreaField({
     maxHeight: maxHeight,
     enabled: enabled,
     onChanged: onChanged,
+    decoration: backgroundColor == null ? null : BoxDecoration(color: backgroundColor),
+    style: foregroundColor == null && fontSize == null
+        ? null
+        : TextStyle(color: foregroundColor, fontSize: fontSize),
+    borderRadius: borderRadius,
   );
 }
 
@@ -93,6 +117,9 @@ Widget bofTextAreaField({
 ///
 /// Pass [controller] to update the text programmatically; when provided it
 /// takes precedence over [initialValue].
+///
+/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
+/// [borderRadius] to override the field's default styling.
 Widget bofNumberField({
   Key? key,
   num? initialValue,
@@ -101,6 +128,10 @@ Widget bofNumberField({
   bool allowDecimal = true,
   bool enabled = true,
   ValueChanged<num?>? onChanged,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  BorderRadiusGeometry? borderRadius,
 }) {
   return TextField(
     key: key,
@@ -112,5 +143,10 @@ Widget bofNumberField({
     onChanged: onChanged == null
         ? null
         : (text) => onChanged(num.tryParse(text)),
+    decoration: backgroundColor == null ? null : BoxDecoration(color: backgroundColor),
+    style: foregroundColor == null && fontSize == null
+        ? null
+        : TextStyle(color: foregroundColor, fontSize: fontSize),
+    borderRadius: borderRadius,
   );
 }

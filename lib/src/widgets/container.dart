@@ -67,6 +67,9 @@ enum BoFContainerType {
 /// [BoFContainerType.outline]. The remaining parameters mirror
 /// [OutlinedContainer]'s full API; explicit [backgroundColor], [borderColor]
 /// and [borderWidth] values always take precedence over [type].
+///
+/// Pass [textStyle] to control the color/size of any [Text] inside [child]
+/// that doesn't set its own style.
 Widget bofContainer(
   Widget child, {
   Key? key,
@@ -84,6 +87,7 @@ Widget bofContainer(
   double? width,
   double? height,
   Duration? duration,
+  TextStyle? textStyle,
 }) {
   return Builder(
     key: key,
@@ -94,7 +98,7 @@ Widget bofContainer(
         theme.colorScheme,
         1 * theme.scaling,
       );
-      return OutlinedContainer(
+      final container = OutlinedContainer(
         backgroundColor: backgroundColor ?? resolved.background,
         borderColor: borderColor ?? resolved.border,
         borderWidth: borderWidth ?? resolved.borderWidth,
@@ -110,6 +114,9 @@ Widget bofContainer(
         duration: duration,
         child: child,
       );
+      return textStyle == null
+          ? container
+          : DefaultTextStyle.merge(style: textStyle, child: container);
     },
   );
 }

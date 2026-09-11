@@ -4,6 +4,9 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 ///
 /// Pass [controller] to update the value programmatically; when provided it
 /// takes precedence over [initialValue].
+/// [trackColor] styles the inactive track and [activeColor] the filled
+/// portion; both apply via the theme system since `Slider` has no direct
+/// color params of its own.
 Widget bofSliderField({
   Key? key,
   SliderValue initialValue = const SliderValue.single(0),
@@ -13,8 +16,11 @@ Widget bofSliderField({
   int? divisions,
   bool enabled = true,
   ValueChanged<SliderValue>? onChanged,
+  Color? trackColor,
+  Color? activeColor,
+  double? trackHeight,
 }) {
-  return ControlledSlider(
+  final slider = ControlledSlider(
     key: key,
     initialValue: initialValue,
     controller: controller,
@@ -23,5 +29,16 @@ Widget bofSliderField({
     max: max,
     divisions: divisions,
     onChanged: onChanged,
+  );
+  if (trackColor == null && activeColor == null && trackHeight == null) {
+    return slider;
+  }
+  return ComponentTheme<SliderTheme>(
+    data: SliderTheme(
+      trackColor: trackColor,
+      valueColor: activeColor,
+      trackHeight: trackHeight,
+    ),
+    child: slider,
   );
 }

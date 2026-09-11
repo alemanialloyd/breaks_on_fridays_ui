@@ -7,6 +7,10 @@ import '../forms/bof_option.dart';
 ///
 /// Pass [controller] to update the selection programmatically; when provided
 /// it takes precedence over [initialValue].
+///
+/// [color], [hoverColor], [borderWidth] and [borderRadius] only affect
+/// [RadioCard] (i.e. when [card] is true) — plain [RadioItem]s have no
+/// styling surface upstream.
 Widget bofRadioGroupField<T extends Object>({
   Key? key,
   required List<BoFOption<T>> options,
@@ -16,6 +20,10 @@ Widget bofRadioGroupField<T extends Object>({
   Axis direction = Axis.vertical,
   bool enabled = true,
   ValueChanged<T?>? onChanged,
+  Color? color,
+  Color? hoverColor,
+  double? borderWidth,
+  BorderRadiusGeometry? borderRadius,
 }) {
   final items = [
     for (final option in options)
@@ -31,7 +39,7 @@ Widget bofRadioGroupField<T extends Object>({
               trailing: option.label,
             ),
   ];
-  return ControlledRadioGroup<T>(
+  final group = ControlledRadioGroup<T>(
     key: key,
     initialValue: initialValue,
     controller: controller,
@@ -40,5 +48,21 @@ Widget bofRadioGroupField<T extends Object>({
     child: direction == Axis.horizontal
         ? Row(mainAxisSize: MainAxisSize.min, children: items)
         : Column(crossAxisAlignment: CrossAxisAlignment.start, children: items),
+  );
+  if (!card ||
+      (color == null &&
+          hoverColor == null &&
+          borderWidth == null &&
+          borderRadius == null)) {
+    return group;
+  }
+  return ComponentTheme<RadioCardTheme>(
+    data: RadioCardTheme(
+      color: color,
+      hoverColor: hoverColor,
+      borderWidth: borderWidth,
+      borderRadius: borderRadius,
+    ),
+    child: group,
   );
 }

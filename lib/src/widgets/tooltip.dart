@@ -5,6 +5,10 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 ///
 /// The common case is a plain [message] string; pass [builder] instead for a
 /// fully custom tooltip widget (it overrides [message]).
+///
+/// [backgroundColor], [borderRadius], [padding] and [textStyle] style the
+/// default [message] bubble; they're ignored when [builder] is provided
+/// since the caller owns that widget's styling directly.
 Widget bofTooltip(
   Widget child, {
   Key? key,
@@ -15,6 +19,10 @@ Widget bofTooltip(
   Duration waitDuration = const Duration(milliseconds: 500),
   Duration showDuration = const Duration(milliseconds: 200),
   Duration minDuration = Duration.zero,
+  Color? backgroundColor,
+  BorderRadiusGeometry? borderRadius,
+  EdgeInsetsGeometry? padding,
+  TextStyle? textStyle,
 }) {
   assert(
     message != null || builder != null,
@@ -22,7 +30,13 @@ Widget bofTooltip(
   );
   return Tooltip(
     key: key,
-    tooltip: builder ?? (context) => TooltipContainer(child: Text(message!)),
+    tooltip: builder ??
+        (context) => TooltipContainer(
+              backgroundColor: backgroundColor,
+              borderRadius: borderRadius,
+              padding: padding,
+              child: Text(message!, style: textStyle),
+            ),
     alignment: alignment,
     anchorAlignment: anchorAlignment,
     waitDuration: waitDuration,

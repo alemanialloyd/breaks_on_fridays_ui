@@ -9,6 +9,9 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 /// Pass [controller] to update the value programmatically; when provided it
 /// takes precedence over [initialValue]. Note the controller itself deals in
 /// `ColorDerivative` (via `ColorInputController.setColor`), not [Color].
+///
+/// `ControlledColorInput` has no background/border/text style params
+/// upstream, so this widget has no styling surface to expose.
 Widget bofColorField({
   Key? key,
   Color initialValue = const Color(0xFF000000),

@@ -1,5 +1,7 @@
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+import '../extensions/style_override.dart';
+
 /// The visual style of a [bofButton].
 ///
 /// Mirrors shadcn_flutter's named [Button] constructors.
@@ -33,6 +35,12 @@ enum BoFIconPosition { left, right, top, bottom }
 /// [alignment] defaults to [Alignment.center] — unlike the underlying
 /// [Button], which left-aligns its content whenever `leading`/`trailing`
 /// (i.e. an icon) is present. Pass an explicit [alignment] to override.
+///
+/// Pass [backgroundColor], [foregroundColor], [fontSize], [fontWeight],
+/// [borderRadius], [borderColor], [borderWidth] and/or [padding] to
+/// override individual pieces of [type]'s default styling while keeping its
+/// hover/press/disabled behavior for everything else. [borderRadius] has no
+/// effect when [shape] is [ButtonShape.circle].
 Widget bofButton(
   String? label, {
   Key? key,
@@ -47,6 +55,14 @@ Widget bofButton(
   ButtonSize size = ButtonSize.normal,
   ButtonDensity? density,
   ButtonShape shape = ButtonShape.rectangle,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  FontWeight? fontWeight,
+  BorderRadiusGeometry? borderRadius,
+  Color? borderColor,
+  double? borderWidth,
+  EdgeInsetsGeometry? padding,
   bool disableTransition = false,
   ValueChanged<bool>? onHover,
   ValueChanged<bool>? onFocus,
@@ -109,7 +125,17 @@ Widget bofButton(
   return Button(
     key: key,
     style: ButtonStyle(
-      variance: _variance(type),
+      variance: bofButtonStyle(
+        _variance(type),
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        borderRadius: borderRadius,
+        borderColor: borderColor,
+        borderWidth: borderWidth,
+        padding: padding,
+      ),
       size: size,
       density: density ?? (label == null ? ButtonDensity.icon : ButtonDensity.normal),
       shape: shape,

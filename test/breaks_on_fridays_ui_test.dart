@@ -454,6 +454,62 @@ void main() {
     },
   );
 
+  testWidgets(
+    'BoF.button resolves backgroundColor/foregroundColor/fontSize/borderRadius',
+    (tester) async {
+      const bg = Color(0xFF123456);
+      const fg = Color(0xFFABCDEF);
+      const radius = BorderRadius.all(Radius.circular(2));
+
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: BoF.button(
+              'Styled',
+              onPressed: () {},
+              backgroundColor: bg,
+              foregroundColor: fg,
+              fontSize: 22,
+              borderRadius: radius,
+            ),
+          ),
+        ),
+      );
+
+      final button = tester.widget<Button>(find.byType(Button));
+      const states = <WidgetState>{};
+      final context = tester.element(find.byType(Button));
+      final decoration = button.style.decoration(context, states);
+      final textStyle = button.style.textStyle(context, states);
+
+      expect(decoration, isA<BoxDecoration>());
+      expect((decoration as BoxDecoration).color, bg);
+      expect(decoration.borderRadius, radius);
+      expect(textStyle.color, fg);
+      expect(textStyle.fontSize, 22);
+    },
+  );
+
+  testWidgets(
+    'BoF.textField resolves backgroundColor/fontSize',
+    (tester) async {
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: BoF.textField(
+              backgroundColor: const Color(0xFF001122),
+              fontSize: 20,
+            ),
+          ),
+        ),
+      );
+
+      final field = tester.widget<TextField>(find.byType(TextField));
+      expect(field.decoration?.color, const Color(0xFF001122));
+      expect(field.style?.fontSize, 20);
+    },
+  );
+
   testWidgets('BoF.button centers its content by default', (tester) async {
     await tester.pumpWidget(
       ShadcnApp(

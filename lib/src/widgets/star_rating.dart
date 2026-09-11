@@ -12,6 +12,9 @@ Widget bofStarRatingField({
   double step = 0.5,
   bool enabled = true,
   ValueChanged<double>? onChanged,
+  Color? activeColor,
+  Color? backgroundColor,
+  double? starSize,
 }) {
   return ControlledStarRating(
     key: key,
@@ -21,5 +24,8 @@ Widget bofStarRatingField({
     max: max,
     step: step,
     onChanged: onChanged,
+    activeColor: activeColor,
+    backgroundColor: backgroundColor,
+    starSize: starSize,
   );
 }

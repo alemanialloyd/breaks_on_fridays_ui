@@ -5,6 +5,8 @@ accessed through a single `BoF` entry point.
 
 ## Glossary
 
+- [Custom styling](#custom-styling)
+
 **Core**
 
 - [BoF.text](#boftext)
@@ -72,6 +74,60 @@ void main() => runApp(
       ),
     );
 ```
+
+## Custom styling
+
+Most `BoF.*` widgets accept direct `backgroundColor`/`foregroundColor`/
+`fontSize`/`borderRadius` params (plus a few extras per widget — border
+color/width, font weight, padding, track colors, etc.) to override individual
+pieces of their default styling, without having to build a whole
+shadcn_flutter theme object yourself:
+
+```dart
+BoF.button(
+  'Custom',
+  onPressed: () {},
+  backgroundColor: Colors.purple,
+  foregroundColor: Colors.white,
+  fontSize: 16,
+  borderRadius: BorderRadius.circular(20),
+);
+
+BoF.textField(
+  placeholder: const Text('Search'),
+  backgroundColor: Colors.blue.withValues(alpha: 0.08),
+  foregroundColor: Colors.blue[900],
+  borderRadius: BorderRadius.circular(16),
+  onChanged: (v) {},
+);
+```
+
+Two widget families exist internally in shadcn_flutter, and this package's
+override params bridge both the same way:
+
+- **Button-family widgets** (`BoF.button`, `BoF.badge`, `BoF.chip`, the chips
+  rendered by `BoF.multipleChoiceField`/`BoF.multipleAnswerField`) resolve
+  their look through a single `AbstractButtonStyle`. `bofButtonStyle(base,
+  {backgroundColor, foregroundColor, fontSize, fontWeight, borderRadius,
+  borderColor, borderWidth, padding})` — exported alongside `BoF` — builds an
+  override of that style, keeping `base`'s hover/press/disabled behavior for
+  anything you don't override. It's what each of those widgets' convenience
+  params use internally, and it's public so you can build your own
+  `AbstractButtonStyle` the same way (e.g. for `BoF.badge`'s `style` param).
+- **Direct-param widgets** (`BoF.textField`, `BoF.checkboxField`,
+  `BoF.card`, `BoF.container`, `BoF.starRatingField`, etc.) already take
+  plain `Color`/`TextStyle`/`BorderRadiusGeometry` fields on the underlying
+  shadcn_flutter widget, so their `BoF.*` wrapper just forwards them
+  directly — no extra machinery needed.
+
+A few widgets have no styling surface at all upstream (their shadcn_flutter
+implementation hardcodes colors with no theme or constructor override):
+`BoF.colorField`, `BoF.phoneField`, `BoF.dateInputField`,
+`BoF.timeInputField`, `BoF.durationInputField`, and per-cell colors on
+`BoF.otpField` (only its `spacing`/`height` are themable). Their doc comments
+call this out; where a picker/dialog counterpart exists (e.g.
+`BoF.datePickerField` for `BoF.dateInputField`), prefer that if custom colors
+matter.
 
 ## Core
 

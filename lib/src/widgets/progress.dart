@@ -11,8 +11,9 @@ Widget bofProgress({
   bool disableAnimation = false,
   Color? color,
   Color? backgroundColor,
+  BorderRadiusGeometry? borderRadius,
 }) {
-  return Progress(
+  final bar = Progress(
     key: key,
     progress: progress,
     min: min,
@@ -21,6 +22,12 @@ Widget bofProgress({
     color: color,
     backgroundColor: backgroundColor,
   );
+  return borderRadius == null
+      ? bar
+      : ComponentTheme<ProgressTheme>(
+          data: ProgressTheme(borderRadius: borderRadius),
+          child: bar,
+        );
 }
 
 /// A circular progress indicator. Wraps shadcn_flutter's
