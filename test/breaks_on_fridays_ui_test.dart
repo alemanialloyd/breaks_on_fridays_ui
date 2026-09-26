@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
