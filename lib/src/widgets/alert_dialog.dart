@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' show showDialog;
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import 'button.dart';
@@ -45,13 +44,14 @@ Future<Object?> bofAlertDialog(
   final effectiveContent =
       contentWidget ?? (content == null ? null : bofText(content));
 
-  return showDialog<Object?>(
+  return showGeneralDialog<Object?>(
     context: context,
     barrierDismissible: barrierDismissible,
+    barrierLabel: 'Dismiss',
     builder: (dialogContext) {
       // Built with dialogContext (not the outer context) so the default
       // buttons pop the dialog's own route, even if the caller's context
-      // sits inside a different Navigator than the one showDialog used.
+      // sits inside a different Navigator than the route used here.
       final effectiveActions = actions ??
           [
             if (negativeText != null)
@@ -79,18 +79,17 @@ Future<Object?> bofAlertDialog(
                 },
               ),
           ];
-      // Wrapped in Center: showDialog (Flutter's, not shadcn_flutter's own
-      // DialogRoute) hands the builder's widget straight to the Overlay with
-      // no centering of its own. AlertDialog sizes itself with
-      // MainAxisSize.min, but that only shrink-wraps under loose
-      // constraints — without a Center, the Overlay's tight constraints
-      // (most noticeable on web) stretch it to fill the whole screen.
-      return Center(
-        child: AlertDialog(
-          leading: leading,
-          title: effectiveTitle,
-          content: effectiveContent,
-          actions: effectiveActions.isEmpty ? null : effectiveActions,
+      // The general route works under ShadcnApp without requiring Material
+      // localizations. Center keeps the dialog shrink-wrapped on web, while
+      // SafeArea prevents it from overlapping system UI on mobile.
+      return SafeArea(
+        child: Center(
+          child: AlertDialog(
+            leading: leading,
+            title: effectiveTitle,
+            content: effectiveContent,
+            actions: effectiveActions.isEmpty ? null : effectiveActions,
+          ),
         ),
       );
     },
