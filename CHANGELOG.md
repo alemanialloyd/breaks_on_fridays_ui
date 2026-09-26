@@ -1,3 +1,7 @@
+## 0.1.7
+
+* Automated patch version release.
+
 ## 0.1.6
 
 * Added per-item accordion header/content decoration and padding, plus a divider-height override for borderless accordions.
