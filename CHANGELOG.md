@@ -1,3 +1,7 @@
+## 0.1.11
+
+* Automated patch version release.
+
 ## 0.1.10
 
 * Automated patch version release.
