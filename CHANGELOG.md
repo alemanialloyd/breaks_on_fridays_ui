@@ -1,3 +1,7 @@
+## 0.1.13
+
+* Default `centerContent` to true in button widget
+
 ## 0.1.12
 
 * Automated patch version release.
