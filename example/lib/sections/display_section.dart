@@ -113,10 +113,28 @@ class DisplaySection extends StatelessWidget {
         ),
         GalleryEntry(
           title: 'BoF.accordion',
-          child: BoF.accordion(items: [
-            BoFAccordionItem(title: BoF.text('Section 1'), content: BoF.text('Body 1')),
-            BoFAccordionItem(title: BoF.text('Section 2'), content: BoF.text('Body 2')),
-          ]),
+          description: 'Custom header/content containers with separators removed.',
+          child: BoF.accordion(
+            dividerHeight: 0,
+            items: [
+              BoFAccordionItem(
+                title: BoF.text('Section 1'),
+                content: BoF.text('Body 1'),
+                headerDecoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                headerPadding: const EdgeInsets.symmetric(horizontal: 12),
+                contentPadding: const EdgeInsets.all(12),
+              ),
+              BoFAccordionItem(
+                title: BoF.text('Section 2'),
+                content: BoF.text('Body 2'),
+                headerPadding: const EdgeInsets.symmetric(horizontal: 12),
+                contentPadding: const EdgeInsets.all(12),
+              ),
+            ],
+          ),
         ),
         GalleryEntry(
           title: 'BoF.card',

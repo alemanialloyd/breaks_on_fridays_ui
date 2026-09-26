@@ -177,8 +177,23 @@ stack the icon and label in a column. Icon-only buttons default to
 `ButtonDensity.icon` padding unless `density` is set explicitly.
 
 Content is centered (`alignment: Alignment.center`) by default — including
-icon+label buttons, which the underlying `Button` otherwise left-aligns.
-Pass an explicit `alignment` to override.
+the button's child area. For a full-width button with a horizontal icon and
+label, set `centerContent: true` to center both widgets together horizontally
+and vertically instead of placing the icon in the native edge slot:
+
+```dart
+SizedBox(
+  width: double.infinity,
+  child: BoF.button(
+    'Continue',
+    icon: const Icon(Icons.arrow_forward),
+    centerContent: true,
+    onPressed: next,
+  ),
+);
+```
+
+Pass an explicit `alignment` to position the resulting content group elsewhere.
 
 ### BoF.container
 
@@ -349,13 +364,22 @@ BoF.alert(title: BoF.text('Error'), destructive: true);
 
 ```dart
 BoF.accordion(items: [
-  BoFAccordionItem(title: BoF.text('Section 1'), content: BoF.text('Body 1')),
+  BoFAccordionItem(
+    title: BoF.text('Section 1'),
+    content: BoF.text('Body 1'),
+    headerDecoration: BoxDecoration(color: Colors.blueGrey.shade50),
+    headerPadding: const EdgeInsets.symmetric(horizontal: 12),
+    contentPadding: const EdgeInsets.all(12),
+  ),
   BoFAccordionItem(title: BoF.text('Section 2'), content: BoF.text('Body 2')),
-]);
+], dividerHeight: 0); // removes the separators
 ```
 
-Takes `List<BoFAccordionItem>` (`title`, `content`, `expanded`); only one
-item should set `expanded: true`.
+Each `BoFAccordionItem` accepts `headerDecoration`, `headerPadding`,
+`contentDecoration`, and `contentPadding` for styling its two containers.
+`dividerHeight` styles the separators for the whole accordion; use
+`dividerHeight: 0` for a borderless accordion. Only one item should set
+`expanded: true`.
 
 ### BoF.card
 

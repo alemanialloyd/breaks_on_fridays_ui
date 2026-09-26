@@ -38,6 +38,15 @@ class CoreSection extends StatelessWidget {
                 iconPosition: BoFIconPosition.right,
                 onPressed: () {},
               ),
+              SizedBox(
+                width: 240,
+                child: BoF.button(
+                  'Centered full width',
+                  icon: const Icon(Icons.check),
+                  centerContent: true,
+                  onPressed: () {},
+                ),
+              ),
             ],
           ),
         ),

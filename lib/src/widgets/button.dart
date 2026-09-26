@@ -35,6 +35,8 @@ enum BoFIconPosition { left, right, top, bottom }
 /// [alignment] defaults to [Alignment.center] — unlike the underlying
 /// [Button], which left-aligns its content whenever `leading`/`trailing`
 /// (i.e. an icon) is present. Pass an explicit [alignment] to override.
+/// Set [centerContent] to true to keep a horizontal icon and label together as
+/// one centered group, including when the button expands to full width.
 ///
 /// Pass [backgroundColor], [foregroundColor], [fontSize], [fontWeight],
 /// [borderRadius], [borderColor], [borderWidth] and/or [padding] to
@@ -52,6 +54,7 @@ Widget bofButton(
   bool? enabled,
   FocusNode? focusNode,
   AlignmentGeometry alignment = Alignment.center,
+  bool centerContent = false,
   ButtonSize size = ButtonSize.normal,
   ButtonDensity? density,
   ButtonShape shape = ButtonShape.rectangle,
@@ -104,11 +107,27 @@ Widget bofButton(
     final gap = Gap(iconGap ?? 4);
     switch (iconPosition) {
       case BoFIconPosition.left:
-        leading = icon;
-        child = Text(label);
+        if (centerContent) {
+          child = Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [icon, gap, Text(label)],
+          );
+        } else {
+          leading = icon;
+          child = Text(label);
+        }
       case BoFIconPosition.right:
-        trailing = icon;
-        child = Text(label);
+        if (centerContent) {
+          child = Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [Text(label), gap, icon],
+          );
+        } else {
+          trailing = icon;
+          child = Text(label);
+        }
       case BoFIconPosition.top:
         child = Column(
           mainAxisSize: MainAxisSize.min,

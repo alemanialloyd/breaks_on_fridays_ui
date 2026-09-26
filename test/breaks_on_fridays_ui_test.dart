@@ -527,6 +527,85 @@ void main() {
     expect(button.alignment, Alignment.center);
   });
 
+  testWidgets('BoF.button can center an icon and label as one group', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ShadcnApp(
+        home: Scaffold(
+          child: SizedBox(
+            width: 300,
+            child: BoF.button(
+              'Next',
+              icon: const Icon(Icons.arrow_forward),
+              centerContent: true,
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final button = tester.widget<Button>(find.byType(Button));
+    expect(button.leading, isNull);
+    expect(button.trailing, isNull);
+    final content = tester.widget<Row>(
+      find.descendant(of: find.byType(Button), matching: find.byType(Row)).first,
+    );
+    expect(content.mainAxisSize, MainAxisSize.min);
+    expect(content.crossAxisAlignment, CrossAxisAlignment.center);
+  });
+
+  testWidgets('BoF.accordion styles header and content containers', (
+    tester,
+  ) async {
+    const headerColor = Color(0xFF112233);
+    const contentColor = Color(0xFF445566);
+
+    await tester.pumpWidget(
+      ShadcnApp(
+        home: Scaffold(
+          child: BoF.accordion(
+            dividerHeight: 0,
+            items: [
+              BoFAccordionItem(
+                title: const Text('Styled header'),
+                content: const Text('Styled content'),
+                expanded: true,
+                headerDecoration: const BoxDecoration(color: headerColor),
+                contentDecoration: const BoxDecoration(color: contentColor),
+                headerPadding: const EdgeInsets.all(4),
+                contentPadding: const EdgeInsets.all(8),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final headerContainer = tester.widget<Container>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Container &&
+            widget.decoration is BoxDecoration &&
+            (widget.decoration! as BoxDecoration).color == headerColor,
+      ),
+    );
+    final contentContainer = tester.widget<Container>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is Container &&
+            widget.decoration is BoxDecoration &&
+            (widget.decoration! as BoxDecoration).color == contentColor,
+      ),
+    );
+    expect((headerContainer.decoration as BoxDecoration).color, headerColor);
+    expect((contentContainer.decoration as BoxDecoration).color, contentColor);
+    expect(headerContainer.padding, const EdgeInsets.all(4));
+    expect(contentContainer.padding, const EdgeInsets.all(8));
+  });
+
   testWidgets(
     'BoFFormController.setValue() pushes the change into the rendered field',
     (tester) async {

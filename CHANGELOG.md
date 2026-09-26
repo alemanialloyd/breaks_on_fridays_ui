@@ -1,5 +1,7 @@
 ## 0.1.6
 
+* Added per-item accordion header/content decoration and padding, plus a divider-height override for borderless accordions.
+* Added `centerContent` to `BoF.button` so an icon and label can remain centered together in full-width buttons.
 * Added `ConditionalWidget.when`/`unless`/`whenNotNull` extension for conditional widget-chaining (e.g. `Text(...).when(isSelected, (t) => t.bold)`).
 * Added `backgroundColor`, `foregroundColor`, `fontSize`, `borderRadius` and other per-widget style overrides across most `BoF` widgets (`button`, `badge`, `chip`, `card`, `container`, `avatar`, text/checkbox/select/slider/star-rating fields, date/time pickers, tooltip, progress, alert/toast, otp, radio group), via the new shared `bofButtonStyle` helper.
 * Documented the handful of widgets with no styling surface upstream (`colorField`, `phoneField`, the segmented date/time/duration input fields).

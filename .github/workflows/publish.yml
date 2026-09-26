@@ -1,0 +1,138 @@
+name: Release to pub.dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: Version increment
+        required: true
+        default: patch
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+concurrency:
+  group: pub-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  bump-version:
+    name: Bump version and create tag
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Require release token
+        env:
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        run: |
+          if [ -z "$RELEASE_TOKEN" ]; then
+            echo "Add a RELEASE_TOKEN repository secret so the pushed tag can start the publishing run."
+            exit 1
+          fi
+
+      - name: Check out the default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          token: ${{ secrets.RELEASE_TOKEN }}
+
+      - name: Set up Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Bump package version
+        env:
+          VERSION_BUMP: ${{ inputs.version_bump }}
+        run: dart pub bump "$VERSION_BUMP"
+
+      - name: Read new version
+        id: version
+        shell: bash
+        run: |
+          version=$(sed -n 's/^version:[[:space:]]*//p' pubspec.yaml)
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Unexpected version in pubspec.yaml: $version"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Add changelog entry
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          changelog=$(mktemp)
+          printf '## %s\n\n* Automated %s version release.\n\n' "$VERSION" "${{ inputs.version_bump }}" > "$changelog"
+          cat CHANGELOG.md >> "$changelog"
+          mv "$changelog" CHANGELOG.md
+
+      - name: Commit and tag release
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pubspec.yaml CHANGELOG.md
+          git commit -m "chore(release): v${VERSION}"
+          git tag -a "v${VERSION}" -m "Release v${VERSION}"
+          git push origin "HEAD:${{ github.event.repository.default_branch }}" "v${VERSION}"
+
+  publish:
+    name: Publish package
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: pub.dev
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+
+      # setup-dart provisions the short-lived pub.dev OIDC credential.
+      - name: Set up Dart publishing credentials
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Verify tag matches package version
+        shell: bash
+        run: |
+          package_version=$(sed -n 's/^version:[[:space:]]*//p' pubspec.yaml)
+          tag_version="${GITHUB_REF_NAME#v}"
+          if [ "$package_version" != "$tag_version" ]; then
+            echo "Tag v${tag_version} does not match pubspec version ${package_version}."
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+      - name: Validate package
+        run: flutter pub publish --dry-run
+
+      - name: Publish to pub.dev
+        run: flutter pub publish --force
