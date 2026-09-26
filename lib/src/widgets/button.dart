@@ -54,7 +54,7 @@ Widget bofButton(
   bool? enabled,
   FocusNode? focusNode,
   AlignmentGeometry alignment = Alignment.center,
-  bool centerContent = false,
+  bool centerContent = true,
   ButtonSize size = ButtonSize.normal,
   ButtonDensity? density,
   ButtonShape shape = ButtonShape.rectangle,
