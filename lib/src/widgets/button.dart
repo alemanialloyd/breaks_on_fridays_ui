@@ -104,7 +104,7 @@ Widget bofButton(
   } else if (label == null) {
     child = icon;
   } else {
-    final gap = Gap(iconGap ?? 4);
+    final gap = Gap(iconGap ?? 8);
     switch (iconPosition) {
       case BoFIconPosition.left:
         if (centerContent) {
