@@ -1,3 +1,7 @@
+## 0.1.14
+
+* Increase default button icon gap to 8
+
 ## 0.1.13
 
 * Default `centerContent` to true in button widget
