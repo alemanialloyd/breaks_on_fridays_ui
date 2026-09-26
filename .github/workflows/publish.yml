@@ -12,6 +12,10 @@ on:
           - patch
           - minor
           - major
+      release_notes:
+        description: Changelog entries, one per line (without bullets)
+        required: true
+        type: string
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
@@ -71,10 +75,24 @@ jobs:
       - name: Add changelog entry
         env:
           VERSION: ${{ steps.version.outputs.version }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
         run: |
+          if [[ ! "$RELEASE_NOTES" =~ [^[:space:]] ]]; then
+            echo "Release notes cannot be empty."
+            exit 1
+          fi
+
           changelog=$(mktemp)
-          printf '## %s\n\n* Automated %s version release.\n\n' "$VERSION" "${{ inputs.version_bump }}" > "$changelog"
-          cat CHANGELOG.md >> "$changelog"
+          {
+            printf '## %s\n\n' "$VERSION"
+            while IFS= read -r note || [ -n "$note" ]; do
+              if [[ "$note" =~ [^[:space:]] ]]; then
+                printf '* %s\n' "$note"
+              fi
+            done <<< "$RELEASE_NOTES"
+            printf '\n'
+            cat CHANGELOG.md
+          } > "$changelog"
           mv "$changelog" CHANGELOG.md
 
       - name: Commit and tag release
