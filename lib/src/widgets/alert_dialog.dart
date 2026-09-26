@@ -48,7 +48,7 @@ Future<Object?> bofAlertDialog(
     context: context,
     barrierDismissible: barrierDismissible,
     barrierLabel: 'Dismiss',
-    builder: (dialogContext) {
+    pageBuilder: (dialogContext, _, _) {
       // Built with dialogContext (not the outer context) so the default
       // buttons pop the dialog's own route, even if the caller's context
       // sits inside a different Navigator than the route used here.
