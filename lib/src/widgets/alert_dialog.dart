@@ -24,6 +24,9 @@ import 'text.dart';
 /// default positive/negative buttons reuses [BoFButtonType] (the same enum
 /// [bofButton] uses) via [positiveType]/[negativeType], rather than
 /// introducing a separate enum for it.
+///
+/// Use [padding] to override the dialog's internal content padding and
+/// [trailing] to add a widget at the end of its header.
 Future<Object?> bofAlertDialog(
   BuildContext context, {
   String? title,
@@ -38,6 +41,8 @@ Future<Object?> bofAlertDialog(
   BoFButtonType positiveType = BoFButtonType.primary,
   BoFButtonType negativeType = BoFButtonType.outline,
   Widget? leading,
+  Widget? trailing,
+  EdgeInsetsGeometry? padding,
   bool barrierDismissible = true,
 }) {
   final effectiveTitle = titleWidget ?? (title == null ? null : bofText(title));
@@ -86,9 +91,11 @@ Future<Object?> bofAlertDialog(
         child: Center(
           child: AlertDialog(
             leading: leading,
+            trailing: trailing,
             title: effectiveTitle,
             content: effectiveContent,
             actions: effectiveActions.isEmpty ? null : effectiveActions,
+            padding: padding,
           ),
         ),
       );

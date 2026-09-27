@@ -254,6 +254,21 @@ BoF.alertDialog(
 );
 ```
 
+Use `padding` to override the dialog's internal padding, and `trailing` to
+place a widget at the end of its header (for example, an icon or dismiss
+control):
+
+```dart
+BoF.alertDialog(
+  context,
+  title: 'Storage almost full',
+  content: 'Free up space to keep syncing files.',
+  trailing: const Icon(Icons.warning_amber_rounded),
+  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+  positiveText: 'Manage storage',
+);
+```
+
 ## Display & layout
 
 Thin wrappers over more of shadcn_flutter's components, each exposing its

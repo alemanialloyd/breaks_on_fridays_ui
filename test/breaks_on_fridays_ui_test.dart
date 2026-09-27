@@ -240,6 +240,8 @@ void main() {
                   context,
                   title: 'Delete item',
                   content: 'This cannot be undone.',
+                  trailing: const Icon(Icons.warning_amber_rounded),
+                  padding: const EdgeInsets.all(32),
                   positiveText: 'Delete',
                   negativeText: 'Cancel',
                 );
@@ -252,6 +254,12 @@ void main() {
 
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
+    expect(
+      tester.widget<AlertDialog>(find.byType(AlertDialog)).padding,
+      const EdgeInsets.all(32),
+    );
 
     expect(find.text('Delete item'), findsOneWidget);
     expect(find.text('This cannot be undone.'), findsOneWidget);

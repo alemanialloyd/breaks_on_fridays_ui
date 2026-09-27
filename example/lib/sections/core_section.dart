@@ -105,6 +105,11 @@ class CoreSection extends StatelessWidget {
                 context,
                 title: 'Delete item',
                 content: 'This action cannot be undone.',
+                trailing: const Icon(Icons.warning_amber_rounded),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 24,
+                ),
                 positiveText: 'Delete',
                 negativeText: 'Cancel',
                 positiveType: BoFButtonType.destructive,
