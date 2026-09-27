@@ -1,3 +1,7 @@
+## 0.1.15
+
+* Exposed `padding` and `trailing` on `BoF.alertDialog`.
+
 ## 0.1.14
 
 * Increase default button icon gap to 8
