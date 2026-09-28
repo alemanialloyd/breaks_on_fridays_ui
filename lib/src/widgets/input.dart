@@ -46,29 +46,31 @@ Widget bofTextField({
     if (showPasswordToggle) InputFeature.passwordToggle(mode: passwordPeekMode),
     ...?features,
   ];
-  return TextField(
-    key: key,
-    initialValue: initialValue,
-    controller: controller,
-    placeholder: placeholder,
-    obscureText: obscureText ?? showPasswordToggle,
-    features: effectiveFeatures,
-    keyboardType: keyboardType,
-    textInputAction: textInputAction,
-    textCapitalization: textCapitalization,
-    maxLines: maxLines,
-    maxLength: maxLength,
-    enabled: enabled,
-    readOnly: readOnly,
-    autofocus: autofocus,
-    focusNode: focusNode,
-    onChanged: onChanged,
-    onSubmitted: onSubmitted,
-    decoration: backgroundColor == null ? null : BoxDecoration(color: backgroundColor),
-    style: foregroundColor == null && fontSize == null
-        ? null
-        : TextStyle(color: foregroundColor, fontSize: fontSize),
-    borderRadius: borderRadius,
+  return _TextFieldBackground(
+    color: backgroundColor,
+    child: TextField(
+      key: key,
+      initialValue: initialValue,
+      controller: controller,
+      placeholder: placeholder,
+      obscureText: obscureText ?? showPasswordToggle,
+      features: effectiveFeatures,
+      keyboardType: keyboardType,
+      textInputAction: textInputAction,
+      textCapitalization: textCapitalization,
+      maxLines: maxLines,
+      maxLength: maxLength,
+      enabled: enabled,
+      readOnly: readOnly,
+      autofocus: autofocus,
+      focusNode: focusNode,
+      onChanged: onChanged,
+      onSubmitted: onSubmitted,
+      style: foregroundColor == null && fontSize == null
+          ? null
+          : TextStyle(color: foregroundColor, fontSize: fontSize),
+      borderRadius: borderRadius,
+    ),
   );
 }
 
@@ -93,20 +95,22 @@ Widget bofTextAreaField({
   double? fontSize,
   BorderRadiusGeometry? borderRadius,
 }) {
-  return TextArea(
-    key: key,
-    initialValue: initialValue,
-    controller: controller,
-    placeholder: placeholder,
-    minHeight: minHeight,
-    maxHeight: maxHeight,
-    enabled: enabled,
-    onChanged: onChanged,
-    decoration: backgroundColor == null ? null : BoxDecoration(color: backgroundColor),
-    style: foregroundColor == null && fontSize == null
-        ? null
-        : TextStyle(color: foregroundColor, fontSize: fontSize),
-    borderRadius: borderRadius,
+  return _TextFieldBackground(
+    color: backgroundColor,
+    child: TextArea(
+      key: key,
+      initialValue: initialValue,
+      controller: controller,
+      placeholder: placeholder,
+      minHeight: minHeight,
+      maxHeight: maxHeight,
+      enabled: enabled,
+      onChanged: onChanged,
+      style: foregroundColor == null && fontSize == null
+          ? null
+          : TextStyle(color: foregroundColor, fontSize: fontSize),
+      borderRadius: borderRadius,
+    ),
   );
 }
 
@@ -133,20 +137,54 @@ Widget bofNumberField({
   double? fontSize,
   BorderRadiusGeometry? borderRadius,
 }) {
-  return TextField(
-    key: key,
-    initialValue: initialValue?.toString(),
-    controller: controller,
-    placeholder: placeholder,
-    enabled: enabled,
-    keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
-    onChanged: onChanged == null
-        ? null
-        : (text) => onChanged(num.tryParse(text)),
-    decoration: backgroundColor == null ? null : BoxDecoration(color: backgroundColor),
-    style: foregroundColor == null && fontSize == null
-        ? null
-        : TextStyle(color: foregroundColor, fontSize: fontSize),
-    borderRadius: borderRadius,
+  return _TextFieldBackground(
+    color: backgroundColor,
+    child: TextField(
+      key: key,
+      initialValue: initialValue?.toString(),
+      controller: controller,
+      placeholder: placeholder,
+      enabled: enabled,
+      keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
+      onChanged: onChanged == null
+          ? null
+          : (text) => onChanged(num.tryParse(text)),
+      style: foregroundColor == null && fontSize == null
+          ? null
+          : TextStyle(color: foregroundColor, fontSize: fontSize),
+      borderRadius: borderRadius,
+    ),
   );
+}
+
+/// Applies a field-local fill without replacing shadcn's decoration.
+///
+/// `TextField.decoration` is a complete decoration override, so using it for a
+/// color alone also removes the border, radius, and any component-theme
+/// styling. A filled shadcn field gets its color from `colorScheme.muted`; this
+/// scopes that color to one field and retains the surrounding text-field theme.
+class _TextFieldBackground extends StatelessWidget {
+  const _TextFieldBackground({required this.color, required this.child});
+
+  final Color? color;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    if (color == null) return child;
+
+    final theme = Theme.of(context);
+    final fieldTheme = ComponentTheme.maybeOf<TextFieldTheme>(context);
+    return Theme(
+      data: theme.copyWith(
+        colorScheme: () => theme.colorScheme.copyWith(muted: () => color!),
+      ),
+      child: ComponentTheme<TextFieldTheme>(
+        data: (fieldTheme ?? const TextFieldTheme()).copyWith(
+          filled: () => true,
+        ),
+        child: child,
+      ),
+    );
+  }
 }

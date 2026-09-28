@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 
 void main() {
-  testWidgets('BoF.text, BoF.button and BoF.container render', (
-    tester,
-  ) async {
+  testWidgets('BoF.text, BoF.button and BoF.container render', (tester) async {
     await tester.pumpWidget(
       ShadcnApp(
         home: Scaffold(
@@ -14,10 +12,7 @@ void main() {
             children: [
               BoF.text('Title'),
               BoF.button('Press Me', onPressed: () {}),
-              BoF.container(
-                BoF.text('Card'),
-                type: BoFContainerType.outline,
-              ),
+              BoF.container(BoF.text('Card'), type: BoFContainerType.outline),
             ],
           ),
         ),
@@ -31,9 +26,7 @@ void main() {
 
   testWidgets('BoF.card renders', (tester) async {
     await tester.pumpWidget(
-      ShadcnApp(
-        home: Scaffold(child: BoF.card(BoF.text('Card body'))),
-      ),
+      ShadcnApp(home: Scaffold(child: BoF.card(BoF.text('Card body')))),
     );
 
     expect(find.text('Card body'), findsOneWidget);
@@ -292,9 +285,7 @@ void main() {
                   ],
                 ),
                 BoF.selectField<String>(
-                  options: const [
-                    BoFOption(value: 'a', label: Text('A')),
-                  ],
+                  options: const [BoFOption(value: 'a', label: Text('A'))],
                 ),
                 BoF.sliderField(),
               ],
@@ -381,33 +372,32 @@ void main() {
     expect(submitted!.containsKey('plan'), isTrue);
   });
 
-  testWidgets(
-    'BoF.form works with a GlobalKey alongside BoFFormController',
-    (tester) async {
-      final formKey = GlobalKey();
-      final controller = BoFFormController();
+  testWidgets('BoF.form works with a GlobalKey alongside BoFFormController', (
+    tester,
+  ) async {
+    final formKey = GlobalKey();
+    final controller = BoFFormController();
 
-      await tester.pumpWidget(
-        ShadcnApp(
-          home: Scaffold(
-            child: SingleChildScrollView(
-              child: BoF.form(
-                [BoFTextField(name: 'email', label: BoF.text('Email'))],
-                key: formKey,
-                controller: controller,
-              ),
+    await tester.pumpWidget(
+      ShadcnApp(
+        home: Scaffold(
+          child: SingleChildScrollView(
+            child: BoF.form(
+              [BoFTextField(name: 'email', label: BoF.text('Email'))],
+              key: formKey,
+              controller: controller,
             ),
           ),
         ),
-      );
+      ),
+    );
 
-      expect(formKey.currentContext, isNotNull);
-      expect(
-        () => Scrollable.ensureVisible(formKey.currentContext!),
-        returnsNormally,
-      );
-    },
-  );
+    expect(formKey.currentContext, isNotNull);
+    expect(
+      () => Scrollable.ensureVisible(formKey.currentContext!),
+      returnsNormally,
+    );
+  });
 
   testWidgets('BoFFormController.reset() clears the rendered field state', (
     tester,
@@ -417,10 +407,9 @@ void main() {
     await tester.pumpWidget(
       ShadcnApp(
         home: Scaffold(
-          child: BoF.form(
-            [BoFTextField(name: 'email', label: BoF.text('Email'))],
-            controller: controller,
-          ),
+          child: BoF.form([
+            BoFTextField(name: 'email', label: BoF.text('Email')),
+          ], controller: controller),
         ),
       ),
     );
@@ -437,31 +426,30 @@ void main() {
     expect(controller.value<String>('email'), isNull);
   });
 
-  testWidgets(
-    'BoF.textField exposes a leading icon and password toggle',
-    (tester) async {
-      await tester.pumpWidget(
-        ShadcnApp(
-          home: Scaffold(
-            child: BoF.textField(
-              leadingIcon: const Icon(Icons.person),
-              showPasswordToggle: true,
-            ),
+  testWidgets('BoF.textField exposes a leading icon and password toggle', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      ShadcnApp(
+        home: Scaffold(
+          child: BoF.textField(
+            leadingIcon: const Icon(Icons.person),
+            showPasswordToggle: true,
           ),
         ),
-      );
+      ),
+    );
 
-      expect(find.byIcon(Icons.person), findsOneWidget);
-      // Starts obscured, so the "reveal" (eye) icon is shown.
-      expect(find.byIcon(LucideIcons.eye), findsOneWidget);
+    expect(find.byIcon(Icons.person), findsOneWidget);
+    // Starts obscured, so the "reveal" (eye) icon is shown.
+    expect(find.byIcon(LucideIcons.eye), findsOneWidget);
 
-      await tester.tap(find.byIcon(LucideIcons.eye));
-      await tester.pump();
+    await tester.tap(find.byIcon(LucideIcons.eye));
+    await tester.pump();
 
-      // After revealing, the toggle swaps to the "hide" (eyeOff) icon.
-      expect(find.byIcon(LucideIcons.eyeOff), findsOneWidget);
-    },
-  );
+    // After revealing, the toggle swaps to the "hide" (eyeOff) icon.
+    expect(find.byIcon(LucideIcons.eyeOff), findsOneWidget);
+  });
 
   testWidgets(
     'BoF.button resolves backgroundColor/foregroundColor/fontSize/borderRadius',
@@ -499,25 +487,49 @@ void main() {
     },
   );
 
-  testWidgets(
-    'BoF.textField resolves backgroundColor/fontSize',
-    (tester) async {
-      await tester.pumpWidget(
-        ShadcnApp(
-          home: Scaffold(
+  testWidgets('BoF.textField backgroundColor preserves the themed decoration', (
+    tester,
+  ) async {
+    const border = Border.fromBorderSide(
+      BorderSide(color: Color(0xFF445566), width: 3),
+    );
+    const radius = BorderRadius.all(Radius.circular(18));
+
+    await tester.pumpWidget(
+      ShadcnApp(
+        home: Scaffold(
+          child: ComponentTheme<TextFieldTheme>(
+            data: const TextFieldTheme(
+              border: border,
+              borderRadius: radius,
+              padding: EdgeInsets.all(14),
+            ),
             child: BoF.textField(
               backgroundColor: const Color(0xFF001122),
               fontSize: 20,
             ),
           ),
         ),
-      );
+      ),
+    );
 
-      final field = tester.widget<TextField>(find.byType(TextField));
-      expect(field.decoration?.color, const Color(0xFF001122));
-      expect(field.style?.fontSize, 20);
-    },
-  );
+    final field = tester.widget<TextField>(find.byType(TextField));
+    expect(field.decoration, isNull);
+    expect(field.style?.fontSize, 20);
+
+    final decoratedField = tester.widget<DecoratedBox>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is DecoratedBox &&
+            widget.decoration is BoxDecoration &&
+            (widget.decoration as BoxDecoration).color ==
+                const Color(0xFF001122),
+      ),
+    );
+    final decoration = decoratedField.decoration as BoxDecoration;
+    expect(decoration.border, border);
+    expect(decoration.borderRadius, radius);
+  });
 
   testWidgets('BoF.button centers its content by default', (tester) async {
     await tester.pumpWidget(
@@ -559,7 +571,9 @@ void main() {
     expect(button.leading, isNull);
     expect(button.trailing, isNull);
     final content = tester.widget<Row>(
-      find.descendant(of: find.byType(Button), matching: find.byType(Row)).first,
+      find
+          .descendant(of: find.byType(Button), matching: find.byType(Row))
+          .first,
     );
     expect(content.mainAxisSize, MainAxisSize.min);
     expect(content.crossAxisAlignment, CrossAxisAlignment.center);
@@ -623,10 +637,9 @@ void main() {
       await tester.pumpWidget(
         ShadcnApp(
           home: Scaffold(
-            child: BoF.form(
-              [BoFTextField(name: 'email', label: BoF.text('Email'))],
-              controller: controller,
-            ),
+            child: BoF.form([
+              BoFTextField(name: 'email', label: BoF.text('Email')),
+            ], controller: controller),
           ),
         ),
       );
@@ -649,13 +662,10 @@ void main() {
       await tester.pumpWidget(
         ShadcnApp(
           home: Scaffold(
-            child: BoF.form(
-              [
-                BoFTextField(name: 'name', label: BoF.text('Name')),
-                BoFCheckboxField(name: 'agree', label: BoF.text('Agree')),
-              ],
-              controller: controller,
-            ),
+            child: BoF.form([
+              BoFTextField(name: 'name', label: BoF.text('Name')),
+              BoFCheckboxField(name: 'agree', label: BoF.text('Agree')),
+            ], controller: controller),
           ),
         ),
       );
@@ -673,8 +683,9 @@ void main() {
     },
   );
 
-  testWidgets("BoF.datePickerField outlines today's cell and no other",
-      (tester) async {
+  testWidgets("BoF.datePickerField outlines today's cell and no other", (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ShadcnApp(
         home: Scaffold(

@@ -117,8 +117,11 @@ override params bridge both the same way:
 - **Direct-param widgets** (`BoF.textField`, `BoF.checkboxField`,
   `BoF.card`, `BoF.container`, `BoF.starRatingField`, etc.) already take
   plain `Color`/`TextStyle`/`BorderRadiusGeometry` fields on the underlying
-  shadcn_flutter widget, so their `BoF.*` wrapper just forwards them
-  directly — no extra machinery needed.
+  shadcn_flutter widget, so their `BoF.*` wrapper usually forwards them
+  directly. Text-field backgrounds are the exception: shadcn's `decoration`
+  replaces the entire field decoration, so BoF applies `backgroundColor` as a
+  field-local filled theme. This preserves the inherited border, corner radius,
+  padding, and other text-field theming.
 
 A few widgets have no styling surface at all upstream (their shadcn_flutter
 implementation hardcodes colors with no theme or constructor override):
@@ -652,6 +655,10 @@ copy/paste, spinner, hint popup, etc.), `keyboardType`, `textInputAction`,
 toggleable.
 
 Controller: `TextEditingController`.
+
+`backgroundColor` changes only the fill. It preserves shadcn's border and
+rounded corners, including values inherited from `TextFieldTheme`. The same is
+true for `BoF.textAreaField` and `BoF.numberField`.
 
 ### BoF.textAreaField
 
