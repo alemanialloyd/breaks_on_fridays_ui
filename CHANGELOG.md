@@ -1,3 +1,7 @@
+## 0.1.16
+
+* Preserve text field borders and decorations when applying background color
+
 ## 0.1.15
 
 * Exposed `padding` and `trailing` on `BoF.alertDialog`.
