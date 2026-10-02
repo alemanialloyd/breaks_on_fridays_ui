@@ -1,3 +1,7 @@
+## 0.1.20
+
+* Use prefixed Flutter icon imports so analysis passes whether shadcn_flutter exports `Icons` or not.
+
 ## 0.1.19
 
 * Import Flutter icons explicitly for compatibility with newer shadcn_flutter exports.
