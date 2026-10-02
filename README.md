@@ -400,7 +400,7 @@ Same animate/`animated: false` behavior as `BoF.progress`.
 BoF.skeleton(BoF.text('Loading...'), enabled: isLoading);
 ```
 
-Wraps any widget with shadcn_flutter's `Skeletonizer`; toggle `enabled`
+Wraps any widget with `skeletonizer` loading placeholders; toggle `enabled`
 based on your loading state.
 
 ### BoF.alert

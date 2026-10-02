@@ -1,9 +1,38 @@
-import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:skeletonizer/skeletonizer.dart' as skeleton;
 
 import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 
 void main() {
+  testWidgets(
+    'BoF.skeleton renders enabled and disabled loading placeholders',
+    (tester) async {
+      for (final enabled in [true, false]) {
+        await tester.pumpWidget(
+          ShadcnApp(
+            home: Scaffold(
+              child: BoF.skeleton(
+                BoF.text('Loading content'),
+                enabled: enabled,
+              ),
+            ),
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 500));
+        final placeholder = find.byWidgetPredicate(
+          (widget) => widget is skeleton.Skeletonizer,
+        );
+        expect(placeholder, findsOneWidget);
+        expect(
+          tester.widget<skeleton.Skeletonizer>(placeholder).enabled,
+          enabled,
+        );
+        expect(find.text('Loading content'), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      }
+    },
+  );
+
   testWidgets('BoF.text, BoF.button and BoF.container render', (tester) async {
     await tester.pumpWidget(
       ShadcnApp(
