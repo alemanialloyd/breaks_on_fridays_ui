@@ -1,3 +1,7 @@
+## 0.1.17
+
+* Exposed `leadingGap`, `trailingGap`, `borderColor`, and `borderWidth` on `BoF.badge`.
+
 ## 0.1.16
 
 * Preserve text field borders and decorations when applying background color
