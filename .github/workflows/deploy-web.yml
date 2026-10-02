@@ -1,0 +1,66 @@
+name: Deploy web app to Firebase Hosting
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: firebase-hosting-live
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Build and deploy documentation
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: example
+
+    steps:
+      - name: Check Firebase configuration
+        working-directory: .
+        env:
+          FIREBASE_PROJECT_ID: ${{ vars.FIREBASE_PROJECT_ID }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_PROJECT_ID" ]; then
+            echo "::error::Add the FIREBASE_PROJECT_ID repository variable in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::Add the FIREBASE_SERVICE_ACCOUNT repository secret containing the deployment service account JSON key."
+            exit 1
+          fi
+
+      - name: Check out selected source
+        uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: '3.44.2'
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze documentation app
+        run: flutter analyze
+
+      - name: Test documentation app
+        run: flutter test
+
+      - name: Build web app
+        run: flutter build web --release --no-pub --no-web-resources-cdn
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ vars.FIREBASE_PROJECT_ID }}
+          channelId: live
+          entryPoint: .

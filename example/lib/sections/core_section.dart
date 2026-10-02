@@ -30,9 +30,21 @@ class CoreSection extends StatelessWidget {
             runSpacing: 12,
             children: [
               BoF.button('Save', onPressed: () {}),
-              BoF.button('Cancel', type: BoFButtonType.outline, onPressed: () {}),
-              BoF.button('Delete', type: BoFButtonType.destructive, onPressed: () {}),
-              BoF.button(null, icon: const Icon(material.Icons.add), onPressed: () {}),
+              BoF.button(
+                'Cancel',
+                type: BoFButtonType.outline,
+                onPressed: () {},
+              ),
+              BoF.button(
+                'Delete',
+                type: BoFButtonType.destructive,
+                onPressed: () {},
+              ),
+              BoF.button(
+                null,
+                icon: const Icon(material.Icons.add),
+                onPressed: () {},
+              ),
               BoF.button(
                 'Next',
                 icon: const Icon(material.Icons.arrow_forward),
@@ -57,9 +69,15 @@ class CoreSection extends StatelessWidget {
             spacing: 12,
             runSpacing: 12,
             children: [
-              BoF.container(BoF.text('Outline'), type: BoFContainerType.outline),
+              BoF.container(
+                BoF.text('Outline'),
+                type: BoFContainerType.outline,
+              ),
               BoF.container(BoF.text('Filled'), type: BoFContainerType.filled),
-              BoF.container(BoF.text('Danger'), type: BoFContainerType.destructive),
+              BoF.container(
+                BoF.text('Danger'),
+                type: BoFContainerType.destructive,
+              ),
             ],
           ),
         ),
@@ -97,7 +115,8 @@ class CoreSection extends StatelessWidget {
         ),
         GalleryEntry(
           title: 'BoF.alertDialog',
-          description: 'Tap to open; confirms via the positive/negative buttons.',
+          description:
+              'Tap to open; confirms via the positive/negative buttons.',
           child: Builder(
             builder: (context) => BoF.button(
               'Delete item',
@@ -128,39 +147,55 @@ class CoreSection extends StatelessWidget {
               'BoFDateInputField masks input as mm/dd/yyyy and '
               'NonNullValidator<DateTime>() rejects an incomplete date — '
               'tap Submit without finishing the date to see it.',
-          child: Builder(
-            builder: (context) {
-              final controller = BoFFormController();
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  BoF.form(
-                    [
-                      BoFTextField(
-                        name: 'email',
-                        label: BoF.text('Email'),
-                      ),
-                      BoFDateInputField(
-                        name: 'birthday',
-                        label: BoF.text('Birthday'),
-                        validator: const NonNullValidator<DateTime>(),
-                      ),
-                      BoFCheckboxField(
-                        name: 'agree',
-                        label: BoF.text('I agree to the terms'),
-                      ),
-                    ],
-                    controller: controller,
-                    onSubmit: (values) {},
-                  ),
-                  const SizedBox(height: 12),
-                  BoF.button('Submit', onPressed: () => controller.submit()),
-                ],
-              );
-            },
-          ),
+          child: const _FormDemo(),
         ),
       ],
     );
   }
+}
+
+class _FormDemo extends StatefulWidget {
+  const _FormDemo();
+
+  @override
+  State<_FormDemo> createState() => _FormDemoState();
+}
+
+class _FormDemoState extends State<_FormDemo> {
+  final controller = BoFFormController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      BoF.form(
+        [
+          BoFTextField(name: 'email', label: BoF.text('Email')),
+          BoFDateInputField(
+            name: 'birthday',
+            label: BoF.text('Birthday'),
+            validator: const NonNullValidator<DateTime>(),
+          ),
+          BoFCheckboxField(
+            name: 'agree',
+            label: BoF.text('I agree to the terms'),
+          ),
+        ],
+        controller: controller,
+        onSubmit: (values) => BoF.toast(
+          context,
+          title: 'Form submitted',
+          message: 'The example values passed validation.',
+        ),
+      ),
+      const SizedBox(height: 12),
+      BoF.button('Submit', onPressed: () => controller.submit()),
+    ],
+  );
 }

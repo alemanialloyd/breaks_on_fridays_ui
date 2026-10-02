@@ -1,5 +1,5 @@
 name: example
-description: "Visual gallery for breaks_on_fridays_ui widgets."
+description: "Documentation and interactive examples for breaks_on_fridays_ui."
 publish_to: 'none'
 version: 1.0.0+1
 
