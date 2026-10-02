@@ -298,6 +298,23 @@ BoF.badge(BoF.text('New'), type: BoFBadgeType.destructive);
 Accepts an `AbstractButtonStyle? style` to fully override its appearance —
 the same escape-hatch shape as `BoF.button`.
 
+Use `leadingGap`/`trailingGap` to customize spacing around `leading`/`trailing`
+widgets (null keeps theme defaults), and `borderColor`/`borderWidth` to override
+the border. An explicit `style` takes precedence over border overrides.
+
+```dart
+BoF.badge(
+  BoF.text('Verified'),
+  type: BoFBadgeType.outline,
+  leading: const Icon(Icons.check),
+  trailing: const Icon(Icons.star),
+  leadingGap: 8,
+  trailingGap: 12,
+  borderColor: Colors.teal,
+  borderWidth: 2,
+);
+```
+
 ### BoF.chip
 
 ```dart

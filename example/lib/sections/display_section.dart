@@ -26,6 +26,16 @@ class DisplaySection extends StatelessWidget {
             children: [
               BoF.badge(BoF.text('New')),
               BoF.badge(BoF.text('Alert'), type: BoFBadgeType.destructive),
+              BoF.badge(
+                BoF.text('Verified'),
+                type: BoFBadgeType.outline,
+                leading: const Icon(Icons.check),
+                trailing: const Icon(Icons.star),
+                leadingGap: 8,
+                trailingGap: 12,
+                borderColor: Colors.teal,
+                borderWidth: 2,
+              ),
             ],
           ),
         ),
