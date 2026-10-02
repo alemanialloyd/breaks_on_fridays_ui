@@ -16,7 +16,10 @@ class FormFieldsSection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BoF.textField(placeholder: const Text('Search'), onChanged: (_) {}),
+              BoF.textField(
+                placeholder: const Text('Search'),
+                onChanged: (_) {},
+              ),
               const SizedBox(height: 12),
               BoF.textField(
                 placeholder: const Text('Email'),
@@ -45,10 +48,39 @@ class FormFieldsSection extends StatelessWidget {
                 backgroundColor: Colors.blue.withValues(alpha: 0.08),
                 foregroundColor: Colors.blue[900],
                 fontSize: 16,
+                fontWeight: FontWeight.w500,
+                filled: true,
+                borderColor: Colors.blue,
+                borderWidth: 2,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+                cursorColor: Colors.blue,
                 borderRadius: BorderRadius.circular(16),
                 onChanged: (_) {},
               ),
               const SizedBox(height: 12),
+              BoF.form([
+                BoFTextField(
+                  name: 'styledEmail',
+                  label: BoF.text('Same styling in a form'),
+                  placeholder: const Text('Email'),
+                  backgroundColor: Colors.blue.withValues(alpha: 0.08),
+                  foregroundColor: Colors.blue[900],
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  filled: true,
+                  borderRadius: BorderRadius.circular(16),
+                  borderColor: Colors.blue,
+                  borderWidth: 2,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                  cursorColor: Colors.blue,
+                ),
+              ]),
               BoF.sliderField(
                 trackColor: Colors.gray[300],
                 activeColor: Colors.pink,

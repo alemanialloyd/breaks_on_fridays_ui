@@ -1,4 +1,5 @@
-import 'package:flutter/services.dart' show TextCapitalization, TextInputAction;
+import 'package:flutter/services.dart'
+    show TextCapitalization, TextInputAction, TextInputFormatter;
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../widgets/checkbox.dart';
@@ -54,6 +55,8 @@ abstract class BoFField<T> {
 }
 
 /// A single-line text field. Maps to shadcn_flutter's `TextField`.
+/// Shares appearance and input configuration with [bofTextField]. Values are
+/// managed by `BoFFormController` rather than an external text controller.
 class BoFTextField extends BoFField<String> {
   @override
   final String? initialValue;
@@ -70,6 +73,32 @@ class BoFTextField extends BoFField<String> {
   final TextCapitalization textCapitalization;
   final int? maxLines;
   final int? maxLength;
+  final int? minLines;
+  final bool expands;
+  final List<TextInputFormatter>? inputFormatters;
+  final bool enabled;
+  final ValueChanged<String>? onChanged;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextStyle? style;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final TextDirection? textDirection;
+  final bool? filled;
+  final BorderRadiusGeometry? borderRadius;
+  final Border? border;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
+  final BoxDecoration? decoration;
+  final Color? selectionColor;
+  final Color? cursorColor;
+  final double cursorWidth;
+  final double? cursorHeight;
+  final Radius cursorRadius;
+  final bool? showCursor;
   final bool readOnly;
   final bool autofocus;
   final FocusNode? focusNode;
@@ -93,6 +122,32 @@ class BoFTextField extends BoFField<String> {
     this.textCapitalization = TextCapitalization.none,
     this.maxLines = 1,
     this.maxLength,
+    this.minLines,
+    this.expands = false,
+    this.inputFormatters,
+    this.enabled = true,
+    this.onChanged,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.style,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.textDirection,
+    this.filled,
+    this.borderRadius,
+    this.border,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
+    this.decoration,
+    this.selectionColor,
+    this.cursorColor,
+    this.cursorWidth = 2,
+    this.cursorHeight,
+    this.cursorRadius = const Radius.circular(2),
+    this.showCursor,
     this.readOnly = false,
     this.autofocus = false,
     this.focusNode,
@@ -120,12 +175,39 @@ class BoFTextField extends BoFField<String> {
       textCapitalization: textCapitalization,
       maxLines: maxLines,
       maxLength: maxLength,
-      enabled: enabled,
+      minLines: minLines,
+      expands: expands,
+      inputFormatters: inputFormatters,
+      enabled: enabled && this.enabled,
       readOnly: readOnly,
       autofocus: autofocus,
       focusNode: focusNode,
-      onChanged: onChanged,
+      onChanged: (text) {
+        onChanged(text);
+        this.onChanged?.call(text);
+      },
       onSubmitted: onSubmitted,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      textDirection: textDirection,
+      filled: filled,
+      borderRadius: borderRadius,
+      border: border,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
+      decoration: decoration,
+      selectionColor: selectionColor,
+      cursorColor: cursorColor,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      showCursor: showCursor,
     );
   }
 }

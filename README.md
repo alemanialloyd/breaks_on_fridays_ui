@@ -688,9 +688,52 @@ toggleable.
 
 Controller: `TextEditingController`.
 
-`backgroundColor` changes only the fill. It preserves shadcn's border and
-rounded corners, including values inherited from `TextFieldTheme`. The same is
-true for `BoF.textAreaField` and `BoF.numberField`.
+`BoFTextField` and `BoF.textField` share the same styling parameters:
+
+- Surface: `backgroundColor`, `filled`, `borderRadius`, `borderColor`,
+  `borderWidth`, `border`, `padding`, and `decoration`.
+- Text: `foregroundColor`, `fontSize`, `fontWeight`, `style`, `textAlign`,
+  `textAlignVertical`, and `textDirection`.
+- Cursor and selection: `cursorColor`, `cursorWidth`, `cursorHeight`,
+  `cursorRadius`, `showCursor`, and `selectionColor`.
+
+Null styling values retain theme defaults. `backgroundColor` enables a fill
+unless `filled: false` is supplied. Border overrides preserve inherited sides
+and any color/width that you leave unset; `borderColor`/`borderWidth` override
+the corresponding values in an explicit `border`. `decoration` is a complete
+surface override and takes precedence over fill, border, and radius options.
+`foregroundColor`/`fontSize`/`fontWeight` override the corresponding properties
+of `style`.
+
+Both APIs also accept `minLines`, `expands`, `inputFormatters`, `enabled`, and
+`onChanged`, alongside the input options above. For expanding fields, pass
+`maxLines: null` and `minLines: null` within a bounded-height parent.
+
+```dart
+BoFTextField(
+  name: 'email',
+  label: BoF.text('Email'),
+  placeholder: const Text('you@example.com'),
+  backgroundColor: Colors.blue.withValues(alpha: 0.08),
+  filled: true,
+  borderRadius: BorderRadius.circular(12),
+  borderColor: Colors.blue,
+  borderWidth: 2,
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  cursorColor: Colors.blue,
+);
+// Use the same appearance options with BoF.textField(...).
+```
+
+The form spec adds `name`, `label`, `hint`, and `validator`; its value is managed
+by `BoFFormController`. Its `onChanged` runs after the form records the edit,
+and `enabled: false` disables that input. The standalone API additionally
+accepts `key` and `TextEditingController`; it has no form metadata.
+
+`backgroundColor` also preserves the inherited border and rounded corners in
+`BoF.textAreaField` and `BoF.numberField`.
 
 ### BoF.textAreaField
 

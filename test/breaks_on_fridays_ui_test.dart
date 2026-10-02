@@ -1,10 +1,199 @@
 import 'package:flutter/material.dart' as material show Icons;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/services.dart' show FilteringTextInputFormatter;
 import 'package:skeletonizer/skeletonizer.dart' as skeleton;
 
 import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 
 void main() {
+  testWidgets(
+    'standalone and form text fields share appearance and report edits',
+    (tester) async {
+      const fill = Color(0xFF112233);
+      const radius = BorderRadius.all(Radius.circular(16));
+      const padding = EdgeInsets.symmetric(horizontal: 18, vertical: 12);
+      const border = Border.fromBorderSide(
+        BorderSide(color: Color(0xFF445566), width: 3),
+      );
+      final controller = BoFFormController();
+      addTearDown(controller.dispose);
+      String? changed;
+      String? standaloneChanged;
+      final formatters = [FilteringTextInputFormatter.digitsOnly];
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: ComponentTheme<TextFieldTheme>(
+              data: const TextFieldTheme(border: border),
+              child: Column(
+                children: [
+                  BoF.textField(
+                    backgroundColor: fill,
+                    filled: true,
+                    borderRadius: radius,
+                    borderWidth: 2,
+                    padding: padding,
+                    style: const TextStyle(fontSize: 10, letterSpacing: 2),
+                    foregroundColor: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    textAlign: TextAlign.end,
+                    textAlignVertical: TextAlignVertical.center,
+                    cursorColor: Colors.white,
+                    selectionColor: Colors.teal,
+                    cursorWidth: 3,
+                    cursorHeight: 20,
+                    cursorRadius: const Radius.circular(3),
+                    showCursor: true,
+                    inputFormatters: formatters,
+                    onChanged: (value) => standaloneChanged = value,
+                  ),
+                  BoF.form([
+                    BoFTextField(
+                      name: 'amount',
+                      label: BoF.text('Amount'),
+                      backgroundColor: fill,
+                      filled: true,
+                      borderRadius: radius,
+                      borderWidth: 2,
+                      padding: padding,
+                      style: const TextStyle(fontSize: 10, letterSpacing: 2),
+                      foregroundColor: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      textAlign: TextAlign.end,
+                      textAlignVertical: TextAlignVertical.center,
+                      cursorColor: Colors.white,
+                      selectionColor: Colors.teal,
+                      cursorWidth: 3,
+                      cursorHeight: 20,
+                      cursorRadius: const Radius.circular(3),
+                      showCursor: true,
+                      inputFormatters: formatters,
+                      onChanged: (value) {
+                        expect(controller.value('amount'), value);
+                        changed = value;
+                      },
+                    ),
+                  ], controller: controller),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      final fields = find.byType(TextField);
+      for (final field in tester.widgetList<TextField>(fields)) {
+        expect(field.padding, padding);
+        expect(field.style?.fontSize, 18);
+        expect(field.style?.letterSpacing, 2);
+        expect(field.style?.fontWeight, FontWeight.w600);
+        expect(field.textAlign, TextAlign.end);
+        expect(field.textAlignVertical, TextAlignVertical.center);
+        expect(field.cursorColor, Colors.white);
+        expect(field.cursorWidth, 3);
+        expect(field.cursorHeight, 20);
+        expect(field.cursorRadius, const Radius.circular(3));
+        expect(field.showCursor, true);
+      }
+      final surfaces = find.byWidgetPredicate(
+        (widget) =>
+            widget is DecoratedBox &&
+            widget.decoration is BoxDecoration &&
+            (widget.decoration as BoxDecoration).color == fill,
+      );
+      expect(surfaces, findsNWidgets(2));
+      for (final surface in tester.widgetList<DecoratedBox>(surfaces)) {
+        final decoration = surface.decoration as BoxDecoration;
+        expect(decoration.borderRadius, radius);
+        expect((decoration.border as Border).top.color, border.top.color);
+        expect((decoration.border as Border).top.width, 2);
+      }
+      await tester.enterText(fields.at(0), 'a12');
+      await tester.pump();
+      expect(
+        tester
+            .widget<EditableText>(
+              find.descendant(
+                of: fields.at(0),
+                matching: find.byType(EditableText),
+              ),
+            )
+            .selectionColor,
+        Colors.teal,
+      );
+      expect(standaloneChanged, '12');
+      await tester.enterText(fields.at(1), 'b34');
+      await tester.pump();
+      expect(
+        tester
+            .widget<EditableText>(
+              find.descendant(
+                of: fields.at(1),
+                matching: find.byType(EditableText),
+              ),
+            )
+            .selectionColor,
+        Colors.teal,
+      );
+      expect(changed, '34');
+      expect(controller.value('amount'), '34');
+      controller.setValue('amount', '56');
+      await tester.pump();
+      expect(find.text('56'), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'text field decoration and explicit unfilled state take precedence',
+    (tester) async {
+      const decoration = BoxDecoration(color: Color(0xFFabcdef));
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: Column(
+              children: [
+                BoF.textField(backgroundColor: Colors.blue, filled: false),
+                BoF.form([
+                  BoFTextField(
+                    name: 'custom',
+                    label: BoF.text('Custom'),
+                    backgroundColor: Colors.blue,
+                    borderColor: Colors.red,
+                    borderWidth: 4,
+                    decoration: decoration,
+                    enabled: false,
+                  ),
+                ]),
+              ],
+            ),
+          ),
+        ),
+      );
+      final fields = tester
+          .widgetList<TextField>(find.byType(TextField))
+          .toList();
+      expect(fields.first.filled, false);
+      expect(fields.last.decoration, decoration);
+      expect(fields.last.enabled, false);
+      expect(
+        find.byWidgetPredicate(
+          (widget) =>
+              widget is DecoratedBox &&
+              widget.decoration is BoxDecoration &&
+              (widget.decoration as BoxDecoration).color == Colors.blue,
+        ),
+        findsNothing,
+      );
+      expect(
+        find.byWidgetPredicate(
+          (widget) => widget is DecoratedBox && widget.decoration == decoration,
+        ),
+        findsOneWidget,
+      );
+    },
+  );
+
   testWidgets(
     'BoF.skeleton renders enabled and disabled loading placeholders',
     (tester) async {
@@ -211,7 +400,11 @@ void main() {
         home: Scaffold(
           child: Column(
             children: [
-              BoF.button(null, icon: const Icon(material.Icons.add), onPressed: () {}),
+              BoF.button(
+                null,
+                icon: const Icon(material.Icons.add),
+                onPressed: () {},
+              ),
               BoF.button('Save', onPressed: () {}),
               BoF.button(
                 'Next',

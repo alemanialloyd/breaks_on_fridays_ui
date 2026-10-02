@@ -1,4 +1,5 @@
-import 'package:flutter/services.dart' show TextCapitalization, TextInputAction;
+import 'package:flutter/services.dart'
+    show TextCapitalization, TextInputAction, TextInputFormatter;
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// A single-line text input. Wraps shadcn_flutter's `TextField`.
@@ -11,8 +12,10 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 /// Pass [controller] to update the text programmatically; when provided it
 /// takes precedence over [initialValue].
 ///
-/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
-/// [borderRadius] to override the field's default styling.
+/// Appearance options are shared with `BoFTextField`. Null values retain
+/// inherited defaults. [backgroundColor] implies a fill unless [filled] is
+/// explicitly false. Individual text overrides take precedence over [style];
+/// [decoration] replaces the entire surface, including fill, border and radius.
 Widget bofTextField({
   Key? key,
   String? initialValue,
@@ -28,7 +31,10 @@ Widget bofTextField({
   TextInputAction? textInputAction,
   TextCapitalization textCapitalization = TextCapitalization.none,
   int? maxLines = 1,
+  int? minLines,
+  bool expands = false,
   int? maxLength,
+  List<TextInputFormatter>? inputFormatters,
   bool enabled = true,
   bool readOnly = false,
   bool autofocus = false,
@@ -38,7 +44,24 @@ Widget bofTextField({
   Color? backgroundColor,
   Color? foregroundColor,
   double? fontSize,
+  FontWeight? fontWeight,
+  TextStyle? style,
+  TextAlign textAlign = TextAlign.start,
+  TextAlignVertical? textAlignVertical,
+  TextDirection? textDirection,
+  bool? filled,
   BorderRadiusGeometry? borderRadius,
+  Border? border,
+  Color? borderColor,
+  double? borderWidth,
+  EdgeInsetsGeometry? padding,
+  BoxDecoration? decoration,
+  Color? selectionColor,
+  Color? cursorColor,
+  double cursorWidth = 2,
+  double? cursorHeight,
+  Radius cursorRadius = const Radius.circular(2),
+  bool? showCursor,
 }) {
   final effectiveFeatures = <InputFeature>[
     if (leadingIcon != null) InputFeature.leading(leadingIcon),
@@ -46,8 +69,12 @@ Widget bofTextField({
     if (showPasswordToggle) InputFeature.passwordToggle(mode: passwordPeekMode),
     ...?features,
   ];
-  return _TextFieldBackground(
+  final input = _TextFieldBackground(
     color: backgroundColor,
+    filled: filled,
+    border: border,
+    borderColor: borderColor,
+    borderWidth: borderWidth,
     child: TextField(
       key: key,
       initialValue: initialValue,
@@ -59,19 +86,43 @@ Widget bofTextField({
       textInputAction: textInputAction,
       textCapitalization: textCapitalization,
       maxLines: maxLines,
+      minLines: minLines,
+      expands: expands,
       maxLength: maxLength,
+      inputFormatters: inputFormatters,
       enabled: enabled,
       readOnly: readOnly,
       autofocus: autofocus,
       focusNode: focusNode,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
-      style: foregroundColor == null && fontSize == null
-          ? null
-          : TextStyle(color: foregroundColor, fontSize: fontSize),
+      style: foregroundColor == null && fontSize == null && fontWeight == null
+          ? style
+          : (style ?? const TextStyle()).copyWith(
+              color: foregroundColor,
+              fontSize: fontSize,
+              fontWeight: fontWeight,
+            ),
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      textDirection: textDirection,
+      filled: filled,
       borderRadius: borderRadius,
+      padding: padding,
+      decoration: decoration,
+      cursorColor: cursorColor,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      showCursor: showCursor,
     ),
   );
+  return selectionColor == null
+      ? input
+      : DefaultSelectionStyle.merge(
+          selectionColor: selectionColor,
+          child: input,
+        );
 }
 
 /// A multi-line text input. Wraps shadcn_flutter's `TextArea`.
@@ -164,24 +215,62 @@ Widget bofNumberField({
 /// styling. A filled shadcn field gets its color from `colorScheme.muted`; this
 /// scopes that color to one field and retains the surrounding text-field theme.
 class _TextFieldBackground extends StatelessWidget {
-  const _TextFieldBackground({required this.color, required this.child});
+  const _TextFieldBackground({
+    required this.color,
+    required this.child,
+    this.filled,
+    this.border,
+    this.borderColor,
+    this.borderWidth,
+  });
 
   final Color? color;
+  final bool? filled;
+  final Border? border;
+  final Color? borderColor;
+  final double? borderWidth;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    if (color == null) return child;
+    if (color == null &&
+        filled == null &&
+        border == null &&
+        borderColor == null &&
+        borderWidth == null) {
+      return child;
+    }
 
     final theme = Theme.of(context);
     final fieldTheme = ComponentTheme.maybeOf<TextFieldTheme>(context);
+    var effectiveBorder = border ?? fieldTheme?.border;
+    if (borderColor != null || borderWidth != null) {
+      final base =
+          effectiveBorder ??
+          Border.all(
+            color: theme.colorScheme.border,
+            strokeAlign: BorderSide.strokeAlignCenter,
+          );
+      BorderSide overrideSide(BorderSide side) =>
+          side.copyWith(color: borderColor, width: borderWidth);
+      effectiveBorder = Border(
+        top: overrideSide(base.top),
+        bottom: overrideSide(base.bottom),
+        left: overrideSide(base.left),
+        right: overrideSide(base.right),
+      );
+    }
     return Theme(
-      data: theme.copyWith(
-        colorScheme: () => theme.colorScheme.copyWith(muted: () => color!),
-      ),
+      data: color == null
+          ? theme
+          : theme.copyWith(
+              colorScheme: () =>
+                  theme.colorScheme.copyWith(muted: () => color!),
+            ),
       child: ComponentTheme<TextFieldTheme>(
         data: (fieldTheme ?? const TextFieldTheme()).copyWith(
-          filled: () => true,
+          filled: () => filled ?? (color != null ? true : fieldTheme?.filled),
+          border: () => effectiveBorder,
         ),
         child: child,
       ),
