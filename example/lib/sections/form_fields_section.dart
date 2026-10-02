@@ -1,4 +1,5 @@
-import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
+import 'package:flutter/material.dart' show Icons;
+import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart' hide Icons;
 
 import '../gallery_section.dart';
 

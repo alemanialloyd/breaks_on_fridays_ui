@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:skeletonizer/skeletonizer.dart' as skeleton;
 
-import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
+import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart' hide Icons;
 
 void main() {
   testWidgets(
@@ -320,9 +321,15 @@ void main() {
     await tester.tap(find.text('Open styled dialog'));
     await tester.pumpAndSettle();
     final surface = tester.widget<ModalContainer>(find.byType(ModalContainer));
-    final backdrop = tester.widget<ModalBackdrop>(find.byType(ModalBackdrop));
+    final backdropPaint = tester.widget<CustomPaint>(
+      find.byWidgetPredicate(
+        (widget) =>
+            widget is CustomPaint && widget.painter is SurfaceBarrierPainter,
+      ),
+    );
+    final backdrop = backdropPaint.painter! as SurfaceBarrierPainter;
     expect(surface.borderRadius, radius);
-    expect(backdrop.borderRadius, radius);
+    expect(backdrop.borderRadius, radius.resolve(TextDirection.ltr));
     expect(surface.surfaceBlur, 8);
     expect(surface.surfaceOpacity, 0.9);
     expect(backdrop.barrierColor, const Color(0x66000000));
