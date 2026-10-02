@@ -1,3 +1,7 @@
+## 0.1.22
+
+* Standardized `BoFTextField` and `BoF.textField` appearance options, including fill, borders, padding, text styles, alignment, cursors, and custom decorations. Added matching multiline layout, input formatter, enabled, and change callback options to the text-field APIs.
+
 ## 0.1.21
 
 * Automated patch version release.
