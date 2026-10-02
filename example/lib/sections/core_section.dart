@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart' show Icons;
-import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart' hide Icons;
+import 'package:flutter/material.dart' as material show Icons;
+import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 
 import '../gallery_section.dart';
 
@@ -32,10 +32,10 @@ class CoreSection extends StatelessWidget {
               BoF.button('Save', onPressed: () {}),
               BoF.button('Cancel', type: BoFButtonType.outline, onPressed: () {}),
               BoF.button('Delete', type: BoFButtonType.destructive, onPressed: () {}),
-              BoF.button(null, icon: const Icon(Icons.add), onPressed: () {}),
+              BoF.button(null, icon: const Icon(material.Icons.add), onPressed: () {}),
               BoF.button(
                 'Next',
-                icon: const Icon(Icons.arrow_forward),
+                icon: const Icon(material.Icons.arrow_forward),
                 iconPosition: BoFIconPosition.right,
                 onPressed: () {},
               ),
@@ -43,7 +43,7 @@ class CoreSection extends StatelessWidget {
                 width: 240,
                 child: BoF.button(
                   'Centered full width',
-                  icon: const Icon(Icons.check),
+                  icon: const Icon(material.Icons.check),
                   centerContent: true,
                   onPressed: () {},
                 ),
@@ -110,7 +110,7 @@ class CoreSection extends StatelessWidget {
                 surfaceOpacity: 0.9,
                 barrierColor: Colors.black.withValues(alpha: 0.4),
                 content: 'This action cannot be undone.',
-                trailing: const Icon(Icons.warning_amber_rounded),
+                trailing: const Icon(material.Icons.warning_amber_rounded),
                 padding: const EdgeInsets.symmetric(
                   horizontal: 32,
                   vertical: 24,

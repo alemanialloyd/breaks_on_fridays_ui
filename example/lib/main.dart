@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart' show Icons;
-import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart' hide Icons;
+import 'package:flutter/material.dart' as material show Icons;
+import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 
 import 'sections/core_section.dart';
 import 'sections/display_section.dart';
@@ -32,7 +32,7 @@ class _GalleryAppState extends State<GalleryApp> {
             trailing: [
               BoF.button(
                 null,
-                icon: Icon(_isDark ? Icons.light_mode : Icons.dark_mode),
+                icon: Icon(_isDark ? material.Icons.light_mode : material.Icons.dark_mode),
                 type: BoFButtonType.ghost,
                 onPressed: () => setState(() => _isDark = !_isDark),
               ),

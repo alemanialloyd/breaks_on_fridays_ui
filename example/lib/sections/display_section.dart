@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart' show Icons;
-import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart' hide Icons;
+import 'package:flutter/material.dart' as material show Icons;
+import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 
 import '../gallery_section.dart';
 
@@ -30,8 +30,8 @@ class DisplaySection extends StatelessWidget {
               BoF.badge(
                 BoF.text('Verified'),
                 type: BoFBadgeType.outline,
-                leading: const Icon(Icons.check),
-                trailing: const Icon(Icons.star),
+                leading: const Icon(material.Icons.check),
+                trailing: const Icon(material.Icons.star),
                 leadingGap: 8,
                 trailingGap: 12,
                 borderColor: Colors.teal,
@@ -44,7 +44,7 @@ class DisplaySection extends StatelessWidget {
           title: 'BoF.chip',
           child: BoF.chip(
             BoF.text('Filter'),
-            trailing: BoF.chipButton(child: const Icon(Icons.close), onPressed: () {}),
+            trailing: BoF.chipButton(child: const Icon(material.Icons.close), onPressed: () {}),
           ),
         ),
         GalleryEntry(
@@ -82,7 +82,7 @@ class DisplaySection extends StatelessWidget {
           title: 'BoF.popover',
           description: 'Hover or long-press to reveal.',
           child: BoF.popover(
-            const Icon(Icons.info_outline),
+            const Icon(material.Icons.info_outline),
             content: BoF.text('Popover content'),
           ),
         ),

@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart' show Icons;
+import 'package:flutter/material.dart' as material show Icons;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:skeletonizer/skeletonizer.dart' as skeleton;
 
-import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart' hide Icons;
+import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 
 void main() {
   testWidgets(
@@ -157,7 +157,7 @@ void main() {
                   BoF.chip(
                     BoF.text('Filter'),
                     trailing: BoF.chipButton(
-                      child: const Icon(Icons.close),
+                      child: const Icon(material.Icons.close),
                       onPressed: () {},
                     ),
                   ),
@@ -211,23 +211,23 @@ void main() {
         home: Scaffold(
           child: Column(
             children: [
-              BoF.button(null, icon: const Icon(Icons.add), onPressed: () {}),
+              BoF.button(null, icon: const Icon(material.Icons.add), onPressed: () {}),
               BoF.button('Save', onPressed: () {}),
               BoF.button(
                 'Next',
-                icon: const Icon(Icons.arrow_forward),
+                icon: const Icon(material.Icons.arrow_forward),
                 iconPosition: BoFIconPosition.right,
                 onPressed: () {},
               ),
               BoF.button(
                 'Up',
-                icon: const Icon(Icons.arrow_upward),
+                icon: const Icon(material.Icons.arrow_upward),
                 iconPosition: BoFIconPosition.top,
                 onPressed: () {},
               ),
               BoF.button(
                 'Down',
-                icon: const Icon(Icons.arrow_downward),
+                icon: const Icon(material.Icons.arrow_downward),
                 iconPosition: BoFIconPosition.bottom,
                 onPressed: () {},
               ),
@@ -237,14 +237,14 @@ void main() {
       ),
     );
 
-    expect(find.byIcon(Icons.add), findsOneWidget);
+    expect(find.byIcon(material.Icons.add), findsOneWidget);
     expect(find.text('Save'), findsOneWidget);
     expect(find.text('Next'), findsOneWidget);
-    expect(find.byIcon(Icons.arrow_forward), findsOneWidget);
+    expect(find.byIcon(material.Icons.arrow_forward), findsOneWidget);
     expect(find.text('Up'), findsOneWidget);
-    expect(find.byIcon(Icons.arrow_upward), findsOneWidget);
+    expect(find.byIcon(material.Icons.arrow_upward), findsOneWidget);
     expect(find.text('Down'), findsOneWidget);
-    expect(find.byIcon(Icons.arrow_downward), findsOneWidget);
+    expect(find.byIcon(material.Icons.arrow_downward), findsOneWidget);
   });
 
   testWidgets('BoF.alertDialog shows and resolves via the positive button', (
@@ -263,7 +263,7 @@ void main() {
                   context,
                   title: 'Delete item',
                   content: 'This cannot be undone.',
-                  trailing: const Icon(Icons.warning_amber_rounded),
+                  trailing: const Icon(material.Icons.warning_amber_rounded),
                   padding: const EdgeInsets.all(32),
                   positiveText: 'Delete',
                   negativeText: 'Cancel',
@@ -278,7 +278,7 @@ void main() {
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
 
-    expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
+    expect(find.byIcon(material.Icons.warning_amber_rounded), findsOneWidget);
     expect(
       tester.widget<AlertDialog>(find.byType(AlertDialog)).padding,
       const EdgeInsets.all(32),
@@ -507,14 +507,14 @@ void main() {
       ShadcnApp(
         home: Scaffold(
           child: BoF.textField(
-            leadingIcon: const Icon(Icons.person),
+            leadingIcon: const Icon(material.Icons.person),
             showPasswordToggle: true,
           ),
         ),
       ),
     );
 
-    expect(find.byIcon(Icons.person), findsOneWidget);
+    expect(find.byIcon(material.Icons.person), findsOneWidget);
     // Starts obscured, so the "reveal" (eye) icon is shown.
     expect(find.byIcon(LucideIcons.eye), findsOneWidget);
 
@@ -611,7 +611,7 @@ void main() {
         home: Scaffold(
           child: BoF.button(
             'Next',
-            icon: const Icon(Icons.arrow_forward),
+            icon: const Icon(material.Icons.arrow_forward),
             onPressed: () {},
           ),
         ),
@@ -632,7 +632,7 @@ void main() {
             width: 300,
             child: BoF.button(
               'Next',
-              icon: const Icon(Icons.arrow_forward),
+              icon: const Icon(material.Icons.arrow_forward),
               centerContent: true,
               onPressed: () {},
             ),

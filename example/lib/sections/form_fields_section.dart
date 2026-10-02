@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart' show Icons;
-import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart' hide Icons;
+import 'package:flutter/material.dart' as material show Icons;
+import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 
 import '../gallery_section.dart';
 
@@ -20,7 +20,7 @@ class FormFieldsSection extends StatelessWidget {
               const SizedBox(height: 12),
               BoF.textField(
                 placeholder: const Text('Email'),
-                leadingIcon: const Icon(Icons.email),
+                leadingIcon: const Icon(material.Icons.email),
                 onChanged: (_) {},
               ),
               const SizedBox(height: 12),
