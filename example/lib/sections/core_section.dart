@@ -17,6 +17,7 @@ class CoreSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BoF.text('Title').h1,
+              BoF.text('Heading without a border').h2,
               BoF.text('Section').h3,
               BoF.text('Body copy').muted,
               BoF.text('Emphasis').bold.large,

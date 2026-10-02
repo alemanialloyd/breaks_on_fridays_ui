@@ -46,7 +46,7 @@ class BoFRadioGroupField<T extends Object> extends BoFField<T> {
   }
 }
 
-/// A single-selection dropdown. Maps to shadcn_flutter's `ControlledSelect`.
+/// A single-selection dropdown sized to its widest option or placeholder.
 class BoFSelectField<T extends Object> extends BoFField<T> {
   @override
   final T? initialValue;
@@ -84,7 +84,7 @@ class BoFSelectField<T extends Object> extends BoFField<T> {
   }
 }
 
-/// A multi-selection dropdown. Maps to shadcn_flutter's `ControlledMultiSelect`.
+/// A multi-selection dropdown with removable chips and stable option sizing.
 class BoFMultiSelectField<T extends Object> extends BoFField<Iterable<T>> {
   @override
   final Iterable<T>? initialValue;
@@ -119,8 +119,7 @@ class BoFMultiSelectField<T extends Object> extends BoFField<Iterable<T>> {
   }
 }
 
-/// An inline single choice, rendered as tappable chips. Maps to
-/// shadcn_flutter's `ControlledMultipleChoice`.
+/// An inline single choice, rendered as tappable chips.
 class BoFMultipleChoiceField<T extends Object> extends BoFField<T> {
   @override
   final T? initialValue;
@@ -155,8 +154,7 @@ class BoFMultipleChoiceField<T extends Object> extends BoFField<T> {
   }
 }
 
-/// An inline multi-choice, rendered as tappable chips. Maps to
-/// shadcn_flutter's `ControlledMultipleAnswer`.
+/// An inline multi-choice, rendered as independently toggleable chips.
 class BoFMultipleAnswerField<T extends Object> extends BoFField<Iterable<T>> {
   @override
   final Iterable<T>? initialValue;

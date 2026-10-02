@@ -1331,31 +1331,39 @@ class _ComponentPreviewState extends State<_ComponentPreview> {
             if (!_showCode)
               Tooltip(
                 tooltip: (_) => const Text('Reset preview'),
-                child: BoF.button(
-                  null,
-                  type: BoFButtonType.ghost,
-                  icon: const Icon(material.Icons.refresh_rounded, size: 16),
-                  onPressed: () => setState(() => _revision++),
+                child: Semantics(
+                  label: 'Reset preview',
+                  button: true,
+                  child: BoF.button(
+                    null,
+                    type: BoFButtonType.ghost,
+                    icon: const Icon(material.Icons.refresh_rounded, size: 16),
+                    onPressed: () => setState(() => _revision++),
+                  ),
                 ),
               ),
           ],
         ),
         const SizedBox(height: 12),
-        if (_showCode)
-          CodeBlock(code: widget.page.code)
-        else
-          Container(
-            key: ValueKey('${widget.page.id}-$_revision'),
-            padding: const EdgeInsets.all(24),
-            constraints: const BoxConstraints(minHeight: 180),
-            decoration: BoxDecoration(
-              border: Border.all(color: colors.border),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: buildComponentPreview(context, widget.page.id),
+        Offstage(
+          offstage: _showCode,
+          child: TickerMode(
+            enabled: !_showCode,
+            child: Container(
+              key: ValueKey('${widget.page.id}-$_revision'),
+              padding: const EdgeInsets.all(24),
+              constraints: const BoxConstraints(minHeight: 180),
+              decoration: BoxDecoration(
+                border: Border.all(color: colors.border),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: buildComponentPreview(context, widget.page.id),
+              ),
             ),
           ),
+        ),
+        if (_showCode) CodeBlock(code: widget.page.code),
       ],
     );
   }

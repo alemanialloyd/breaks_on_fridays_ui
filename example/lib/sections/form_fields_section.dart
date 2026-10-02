@@ -118,6 +118,7 @@ class FormFieldsSection extends StatelessWidget {
         GalleryEntry(
           title: 'BoF.selectField',
           child: BoF.selectField<String>(
+            placeholder: const Text('Choose a country'),
             options: const [
               BoFOption(value: 'us', label: Text('United States')),
               BoFOption(value: 'ph', label: Text('Philippines')),
@@ -128,6 +129,7 @@ class FormFieldsSection extends StatelessWidget {
         GalleryEntry(
           title: 'BoF.multiSelectField',
           child: BoF.multiSelectField<String>(
+            placeholder: const Text('Choose countries'),
             options: const [
               BoFOption(value: 'us', label: Text('United States')),
               BoFOption(value: 'ph', label: Text('Philippines')),

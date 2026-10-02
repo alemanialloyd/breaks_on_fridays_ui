@@ -136,15 +136,18 @@ matter.
 
 ### BoF.text
 
-Returns a plain `Text` widget, so every shadcn_flutter typography modifier
+Returns a `Text`-compatible widget, so shadcn_flutter typography modifiers
 chains directly onto it:
 
 ```dart
 BoF.text('Title').h1
+BoF.text('Heading without a border').h2
 BoF.text('Section').h3
 BoF.text('Body copy').muted
 BoF.text('Emphasis').bold.large
 ```
+
+`BoF.text(...).h2` keeps the heading typography and spacing without a bottom border.
 
 ### BoF.button
 
@@ -428,7 +431,8 @@ BoF.accordion(items: [
 Each `BoFAccordionItem` accepts `headerDecoration`, `headerPadding`,
 `contentDecoration`, and `contentPadding` for styling its two containers.
 `dividerHeight` styles the separators for the whole accordion; use
-`dividerHeight: 0` for a borderless accordion. Only one item should set
+`dividerHeight: 0` to remove every automatic separator, including the last
+item's bottom divider. Only one item should set
 `expanded: true`.
 
 ### BoF.card
@@ -799,7 +803,7 @@ Controller: `RadioGroupController<T?>`.
 
 ### BoF.selectField
 
-`BoFSelectField<T>` — value type `T` — wraps `ControlledSelect`. Dropdown,
+`BoFSelectField<T>` — value type `T` — wraps `Select`. Dropdown,
 single selection.
 
 ```dart
@@ -811,10 +815,15 @@ BoF.selectField<String>(
 
 Controller: `SelectController<T>`.
 
+The field measures the widest option or placeholder and keeps its width when
+the selection changes, within its parent's available space. An empty selection
+shows `placeholder`, which defaults to `Text('Select an option')`. The controller
+value takes precedence over `initialValue`, including when its value is null.
+
 ### BoF.multiSelectField
 
 `BoFMultiSelectField<T>` — value type `Iterable<T>` — wraps
-`ControlledMultiSelect`. Dropdown, multiple selection.
+`Select`. Dropdown, multiple selection with removable, wrapping chips.
 
 ```dart
 BoF.multiSelectField<String>(
@@ -825,10 +834,14 @@ BoF.multiSelectField<String>(
 
 Controller: `MultiSelectController<T>`.
 
+The field measures the widest option chip or placeholder, and selected chips
+wrap within that width. Null and empty selections show `placeholder`, which
+defaults to `Text('Select options')`.
+
 ### BoF.multipleChoiceField
 
 `BoFMultipleChoiceField<T>` — value type `T` — wraps
-`ControlledMultipleChoice`. Inline tappable chips, single selection.
+`MultipleChoice`. Inline tappable chips, single selection.
 
 ```dart
 BoF.multipleChoiceField<String>(
@@ -839,10 +852,13 @@ BoF.multipleChoiceField<String>(
 
 Controller: `MultipleChoiceController<T>`.
 
+Choose another chip to switch selections. `allowUnselect: false` prevents
+clearing the current chip while still allowing a different choice.
+
 ### BoF.multipleAnswerField
 
 `BoFMultipleAnswerField<T>` — value type `Iterable<T>` — wraps
-`ControlledMultipleAnswer`. Inline tappable chips, multiple selection.
+`MultipleAnswer`. Inline tappable chips, multiple selection.
 
 ```dart
 BoF.multipleAnswerField<String>(
@@ -983,8 +999,8 @@ be disabled. It also has no controller of its own, so this field has no
 
 ### BoF.autoCompleteField
 
-`BoFAutoCompleteField` — value type `String` — wraps `AutoComplete` +
-`TextField`.
+`BoFAutoCompleteField` — value type `String` — autocomplete suggestions with
+a styled `TextField`.
 
 ```dart
 BoF.autoCompleteField(
@@ -994,8 +1010,10 @@ BoF.autoCompleteField(
 ```
 
 Requires `suggestions`. Controller: `TextEditingController`, passed through
-to the inner `TextField` (`AutoComplete` itself has no controller of its
-own).
+to the inner `TextField`.
+
+Suggestions match the current text without regard to case and appear while
+the nonempty field is focused. Selecting a suggestion replaces the whole input.
 
 ### BoF.chipInputField
 

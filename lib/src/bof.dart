@@ -43,6 +43,7 @@ export 'widgets/badge.dart' show BoFBadgeType;
 export 'widgets/button.dart' show BoFButtonType, BoFIconPosition;
 export 'widgets/container.dart' show BoFContainerType;
 export 'widgets/dropdown_menu.dart' show BoFMenuItem;
+export 'widgets/text.dart' show BoFText;
 
 /// Entry point for BreaksOnFridays' styled widgets, built on top of
 /// [shadcn_flutter].

@@ -57,12 +57,13 @@ final List<DocPage> componentPages = const [
     group: 'Core',
     description:
         'Display text with the typography of your app. BoF.text returns a '
-        'plain Text widget, so shadcn_flutter typography modifiers chain '
+        'Text-compatible widget, so shadcn_flutter typography modifiers chain '
         'directly onto it.',
     code: '''Column(
   crossAxisAlignment: CrossAxisAlignment.start,
   children: [
     BoF.text('Title').h1,
+    BoF.text('Heading without a border').h2,
     BoF.text('Section').h3,
     BoF.text('Body copy').muted,
     BoF.text('Emphasis').bold.large,
@@ -70,6 +71,7 @@ final List<DocPage> componentPages = const [
 );''',
     notes: [
       'Combine modifiers such as .bold.large or .muted.small for common text treatments.',
+      'BoF.text(...).h2 uses heading typography and spacing without a bottom border.',
       'Use style for a TextStyle override and maxLines with overflow for constrained text.',
     ],
     parameters: [
@@ -819,7 +821,7 @@ final List<DocPage> componentPages = const [
     notes: [
       'Set expanded: true on at most one BoFAccordionItem to choose the initially open section.',
       'Items accept headerDecoration, headerPadding, contentDecoration, and contentPadding.',
-      'dividerHeight: 0 removes separators throughout the accordion.',
+      'dividerHeight: 0 removes all automatic separators, including the final bottom divider.',
     ],
     parameters: [
       DocParameter(
@@ -1456,6 +1458,8 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFSelectField<T>. Options can be disabled individually with BoFOption.enabled.',
+      'The field measures its widest option or placeholder and keeps that width as selections change, within its parent constraints.',
+      'An empty selection shows the placeholder; the default is "Select an option". A controller value, including null, takes precedence over initialValue.',
       'filled changes the field treatment and borderRadius overrides its corners.',
     ],
     parameters: [
@@ -1477,7 +1481,7 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'placeholder',
         type: 'Widget?',
-        description: 'Content shown before an option is selected.',
+        description: 'Empty-selection content. Defaults to "Select an option".',
       ),
       DocParameter(
         name: 'filled',
@@ -1509,6 +1513,8 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFMultiSelectField<T>. Options may be disabled individually.',
+      'The field measures its widest option chip or placeholder. Selected chips wrap within that width and can be removed individually.',
+      'Null and empty selections show the placeholder, which defaults to "Select options".',
       'borderRadius overrides the field corner shape.',
     ],
     parameters: [
@@ -1530,7 +1536,7 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'placeholder',
         type: 'Widget?',
-        description: 'Content shown before a selection is made.',
+        description: 'Empty-selection content. Defaults to "Select options".',
       ),
       DocParameter(
         name: 'onChanged',
@@ -2149,6 +2155,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFAutoCompleteField. The controller is passed to the inner TextField.',
+      'Suggestions are filtered by the current text without regard to case. A focused, nonempty input opens matching suggestions; choosing one replaces the whole input.',
       'backgroundColor, foregroundColor, fontSize, and borderRadius customize the text field. A backgroundColor supplies a complete BoxDecoration override.',
     ],
     parameters: [

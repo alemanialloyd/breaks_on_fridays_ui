@@ -176,8 +176,7 @@ class BoFOtpField extends BoFField<List<int?>> {
   }
 }
 
-/// A text field with a suggestion popover. Maps to shadcn_flutter's
-/// `AutoComplete` wrapping a `TextField`.
+/// A styled text field with a suggestion popover that preserves typing focus.
 class BoFAutoCompleteField extends BoFField<String> {
   @override
   final String? initialValue;
