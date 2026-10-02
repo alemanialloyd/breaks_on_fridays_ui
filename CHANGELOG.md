@@ -1,3 +1,7 @@
+## 0.1.18
+
+* Fixed `BoF.skeleton` compatibility with shadcn_flutter versions that no longer export `asSkeleton`, using a direct skeletonizer dependency.
+
 ## 0.1.17
 
 * Exposed `leadingGap`, `trailingGap`, `borderColor`, and `borderWidth` on `BoF.badge`.
