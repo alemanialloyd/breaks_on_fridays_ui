@@ -27,6 +27,9 @@ import 'text.dart';
 ///
 /// Use [padding] to override the dialog's internal content padding and
 /// [trailing] to add a widget at the end of its header.
+/// [borderRadius] overrides the modal surface and backdrop shape.
+/// [surfaceBlur]/[surfaceOpacity] default to the app theme; [barrierColor]
+/// defaults to the upstream backdrop color.
 Future<Object?> bofAlertDialog(
   BuildContext context, {
   String? title,
@@ -43,6 +46,10 @@ Future<Object?> bofAlertDialog(
   Widget? leading,
   Widget? trailing,
   EdgeInsetsGeometry? padding,
+  BorderRadiusGeometry? borderRadius,
+  double? surfaceBlur,
+  double? surfaceOpacity,
+  Color? barrierColor,
   bool barrierDismissible = true,
 }) {
   final effectiveTitle = titleWidget ?? (title == null ? null : bofText(title));
@@ -57,7 +64,8 @@ Future<Object?> bofAlertDialog(
       // Built with dialogContext (not the outer context) so the default
       // buttons pop the dialog's own route, even if the caller's context
       // sits inside a different Navigator than the route used here.
-      final effectiveActions = actions ??
+      final effectiveActions =
+          actions ??
           [
             if (negativeText != null)
               bofButton(
@@ -89,16 +97,122 @@ Future<Object?> bofAlertDialog(
       // SafeArea prevents it from overlapping system UI on mobile.
       return SafeArea(
         child: Center(
-          child: AlertDialog(
-            leading: leading,
-            trailing: trailing,
-            title: effectiveTitle,
-            content: effectiveContent,
-            actions: effectiveActions.isEmpty ? null : effectiveActions,
-            padding: padding,
-          ),
+          child: borderRadius != null
+              ? _RadiusAlertDialog(
+                  borderRadius: borderRadius,
+                  leading: leading,
+                  trailing: trailing,
+                  title: effectiveTitle,
+                  content: effectiveContent,
+                  actions: effectiveActions,
+                  padding: padding,
+                  surfaceBlur: surfaceBlur,
+                  surfaceOpacity: surfaceOpacity,
+                  barrierColor: barrierColor,
+                )
+              : AlertDialog(
+                  leading: leading,
+                  trailing: trailing,
+                  title: effectiveTitle,
+                  content: effectiveContent,
+                  actions: effectiveActions.isEmpty ? null : effectiveActions,
+                  padding: padding,
+                  surfaceBlur: surfaceBlur,
+                  surfaceOpacity: surfaceOpacity,
+                  barrierColor: barrierColor,
+                ),
         ),
       );
     },
   );
+}
+
+// AlertDialog in shadcn_flutter 0.0.53 has no radius parameter. Keep its
+// layout and modal behavior while setting the same shape on both layers.
+class _RadiusAlertDialog extends StatelessWidget {
+  const _RadiusAlertDialog({
+    required this.borderRadius,
+    required this.actions,
+    this.leading,
+    this.trailing,
+    this.title,
+    this.content,
+    this.padding,
+    this.surfaceBlur,
+    this.surfaceOpacity,
+    this.barrierColor,
+  });
+
+  final BorderRadiusGeometry borderRadius;
+  final List<Widget> actions;
+  final Widget? leading;
+  final Widget? trailing;
+  final Widget? title;
+  final Widget? content;
+  final EdgeInsetsGeometry? padding;
+  final double? surfaceBlur;
+  final double? surfaceOpacity;
+  final Color? barrierColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final gap = theme.density.baseGap * theme.scaling;
+    return ModalBackdrop(
+      borderRadius: borderRadius,
+      barrierColor: barrierColor ?? Colors.black.withValues(alpha: 0.8),
+      surfaceClip: ModalBackdrop.shouldClipSurface(
+        surfaceOpacity ?? theme.surfaceOpacity,
+      ),
+      child: ModalContainer(
+        fillColor: theme.colorScheme.popover,
+        filled: true,
+        borderRadius: borderRadius,
+        borderWidth: theme.scaling,
+        borderColor: theme.colorScheme.muted,
+        padding:
+            padding ??
+            EdgeInsets.all(
+              theme.density.baseContainerPadding * theme.scaling * 1.5,
+            ),
+        surfaceBlur: surfaceBlur ?? theme.surfaceBlur,
+        surfaceOpacity: surfaceOpacity ?? theme.surfaceOpacity,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Flexible(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (leading != null)
+                    leading!.iconXLarge().iconMutedForeground(),
+                  if (title != null || content != null)
+                    Flexible(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (title != null) title!.large().semiBold(),
+                          if (content != null) content!.small().muted(),
+                        ],
+                      ).gap(gap),
+                    ),
+                  if (trailing != null)
+                    trailing!.iconXLarge().iconMutedForeground(),
+                ],
+              ).gap(gap * 2),
+            ),
+            if (actions.isNotEmpty)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: join(actions, SizedBox(width: gap)).toList(),
+              ),
+          ],
+        ).gap(gap * 2),
+      ),
+    );
+  }
 }

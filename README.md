@@ -265,12 +265,27 @@ control):
 BoF.alertDialog(
   context,
   title: 'Storage almost full',
+  borderRadius: BorderRadius.circular(16),
+  surfaceBlur: 8,
+  surfaceOpacity: 0.9,
+  barrierColor: Colors.black.withValues(alpha: 0.4),
   content: 'Free up space to keep syncing files.',
   trailing: const Icon(Icons.warning_amber_rounded),
   padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
   positiveText: 'Manage storage',
 );
 ```
+
+Dialog styling accepts `borderRadius` (`BorderRadiusGeometry?`), `surfaceBlur`
+and `surfaceOpacity` (`double?`), and `barrierColor` (`Color?`). With null
+values, radius, blur, and opacity use the app theme; barrier color keeps the
+upstream default. The barrier color styles the dialog's modal backdrop.
+
+For global defaults, configure `ShadcnApp`'s `theme` and `darkTheme` using
+`ThemeData.radius`, `surfaceBlur`, and `surfaceOpacity`. These affect other
+components too. BoF currently has no dialog-specific global style configuration;
+a shared helper is still needed for defaults such as padding, barrier color,
+and positive/negative button styles.
 
 ## Display & layout
 

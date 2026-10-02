@@ -264,6 +264,44 @@ void main() {
     expect(find.text('Delete item'), findsNothing);
   });
 
+  testWidgets('alert dialog custom radius matches its backdrop and surface', (
+    tester,
+  ) async {
+    const radius = BorderRadiusDirectional.only(topStart: Radius.circular(24));
+    await tester.pumpWidget(
+      ShadcnApp(
+        home: Scaffold(
+          child: Builder(
+            builder: (context) => BoF.button(
+              'Open styled dialog',
+              onPressed: () => BoF.alertDialog(
+                context,
+                title: 'Styled dialog',
+                positiveText: 'Done',
+                borderRadius: radius,
+                surfaceBlur: 8,
+                surfaceOpacity: 0.9,
+                barrierColor: const Color(0x66000000),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Open styled dialog'));
+    await tester.pumpAndSettle();
+    final surface = tester.widget<ModalContainer>(find.byType(ModalContainer));
+    final backdrop = tester.widget<ModalBackdrop>(find.byType(ModalBackdrop));
+    expect(surface.borderRadius, radius);
+    expect(backdrop.borderRadius, radius);
+    expect(surface.surfaceBlur, 8);
+    expect(surface.surfaceOpacity, 0.9);
+    expect(backdrop.barrierColor, const Color(0x66000000));
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.text('Styled dialog'), findsNothing);
+  });
+
   testWidgets('standalone BoF form widgets render without a BoF.form', (
     tester,
   ) async {

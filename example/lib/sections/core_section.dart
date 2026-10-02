@@ -104,6 +104,10 @@ class CoreSection extends StatelessWidget {
               onPressed: () => BoF.alertDialog(
                 context,
                 title: 'Delete item',
+                borderRadius: BorderRadius.circular(16),
+                surfaceBlur: 8,
+                surfaceOpacity: 0.9,
+                barrierColor: Colors.black.withValues(alpha: 0.4),
                 content: 'This action cannot be undone.',
                 trailing: const Icon(Icons.warning_amber_rounded),
                 padding: const EdgeInsets.symmetric(
