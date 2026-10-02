@@ -1,3 +1,7 @@
+## 0.1.19
+
+* Import Flutter icons explicitly for compatibility with newer shadcn_flutter exports.
+
 ## 0.1.18
 
 * Fixed `BoF.skeleton` compatibility with shadcn_flutter versions that no longer export `asSkeleton`, using a direct skeletonizer dependency.
