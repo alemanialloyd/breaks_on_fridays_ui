@@ -1,3 +1,7 @@
+## 0.1.24
+
+* Added BoFRow, BoFColumn and BoFCustom layout entries to BoF.form
+
 ## 0.1.23
 
 * - Added borderless accordion support for `dividerHeight: 0`. - Refactored `BoFAutoCompleteField` using `RawAutocomplete` for improved keyboard focus and suggestion handling. - Improved `BoFSelectField` and `BoFMultiSelectField` sizing stability via widest option/placeholder measurement and safe label intrinsics. - Added borderless `h2` heading modifier to `BoF.text`. - Implemented `BofControlledAdapter` for robust nullable choice and form field state management.
