@@ -4,6 +4,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../widgets/checkbox.dart';
 import '../widgets/input.dart';
+import 'bof_form_layout.dart';
 
 /// Base spec for a single field rendered by [bofForm].
 ///
@@ -15,7 +16,7 @@ import '../widgets/input.dart';
 /// Every concrete subclass (see `bof_field.dart`, `bof_choice_fields.dart`,
 /// `bof_datetime_fields.dart` and `bof_misc_fields.dart`) implements
 /// [buildInput] to render the matching shadcn_flutter widget.
-abstract class BoFField<T> {
+abstract class BoFField<T> extends BoFFormItem {
   /// The unique name used to key this field's value in [BoFFormController].
   final String name;
 

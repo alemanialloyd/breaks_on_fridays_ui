@@ -1039,16 +1039,30 @@ class _AccountFormState extends State<AccountForm> {
     children: [
       BoF.form(
         [
-          BoFTextField(
-            name: 'email',
-            label: BoF.text('Email'),
-            validator: const NotEmptyValidator() & const EmailValidator(),
+          BoFRow([
+            BoFTextField(
+              name: 'firstName',
+              label: BoF.text('First name'),
+              validator: const NotEmptyValidator(),
+            ),
+            BoFTextField(name: 'lastName', label: BoF.text('Last name')),
+          ]),
+          BoFRow(
+            [
+              BoFTextField(
+                name: 'email',
+                label: BoF.text('Email'),
+                validator: const NotEmptyValidator() & const EmailValidator(),
+              ),
+              BoFDateInputField(
+                name: 'birthday',
+                label: BoF.text('Birthday'),
+                validator: const NonNullValidator<DateTime>(),
+              ),
+            ],
+            flex: const [2, 1],
           ),
-          BoFDateInputField(
-            name: 'birthday',
-            label: BoF.text('Birthday'),
-            validator: const NonNullValidator<DateTime>(),
-          ),
+          BoFCustom(BoF.divider()),
           BoFCheckboxField(
             name: 'agree',
             label: BoF.text('I agree to the terms'),
@@ -1071,12 +1085,16 @@ class _AccountFormState extends State<AccountForm> {
       'Keep an externally supplied controller in State and dispose it there. Without a controller, the form creates and disposes its own.',
       'setValue updates the rendered input by remounting only that field, so it can reset its focus and cursor position.',
       'Pass a GlobalKey to locate the form for scrolling, independently of its data controller.',
+      'Mix layout entries into the list to place fields: BoFRow puts children side by side (flex sets their relative widths), BoFColumn stacks them (e.g. inside one column of a row), and BoFCustom renders any other widget, such as a heading or divider.',
+      'Fields nested in BoFRow/BoFColumn behave exactly like top-level ones. Names must be unique across the whole form.',
     ],
     parameters: [
       DocParameter(
         name: 'fields',
-        type: 'List<BoFField>',
-        description: 'Required positional list of field specifications.',
+        type: 'List<BoFFormItem>',
+        description:
+            'Required positional list of field specifications, optionally '
+            'mixed with BoFRow, BoFColumn and BoFCustom layout entries.',
       ),
       DocParameter(
         name: 'controller',
@@ -1092,7 +1110,9 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'spacing',
         type: 'double',
-        description: 'Vertical gap between fields. Defaults to 16.',
+        description:
+            'Gap between fields. Defaults to 16. Also the default gap '
+            'inside BoFRow and BoFColumn.',
       ),
       DocParameter(
         name: 'key',
