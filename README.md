@@ -35,6 +35,7 @@ accessed through a single `BoF` entry point.
 **Forms**
 
 - [BoF.form](#bofform)
+  - [Laying out fields](#laying-out-fields) (`BoFRow`, `BoFColumn`, `BoFCustom`)
 - [BoF.textField](#boftextfield) (`BoFTextField`)
 - [BoF.textAreaField](#boftextareafield) (`BoFTextAreaField`)
 - [BoF.numberField](#bofnumberfield) (`BoFNumberField`)
@@ -525,6 +526,60 @@ BoF.form(
   },
 )
 ```
+
+#### Laying out fields
+
+Fields are stacked vertically by default. To place them differently, mix
+layout entries into the same list:
+
+- `BoFRow(children, {flex, spacing, crossAxisAlignment})` puts its children
+  side by side. `flex` sets each child's share of the width, like
+  `Expanded.flex` (one positive entry per child; equal shares by default).
+  Children are top-aligned so a hint or error under one field doesn't shift
+  its neighbours.
+- `BoFColumn(children, {spacing})` stacks its children — mostly useful
+  inside a `BoFRow` to put several fields in one of its columns.
+- `BoFCustom(widget)` renders any other widget among the fields, such as a
+  section heading or a divider. It holds no value.
+
+`spacing` on `BoFRow`/`BoFColumn` defaults to the form's own `spacing`.
+Layout entries nest freely, and fields inside them behave exactly like
+top-level ones: they are validated on submit, cleared by `reset()`, and
+appear under their `name` in the submitted values. Field names must be
+unique across the whole form.
+
+```dart
+BoF.form(
+  [
+    BoFCustom(BoF.text('Shipping address')),
+    BoFRow([
+      BoFTextField(name: 'firstName', label: BoF.text('First name')),
+      BoFTextField(name: 'lastName', label: BoF.text('Last name')),
+    ]),
+    BoFTextField(name: 'street', label: BoF.text('Street')),
+    BoFRow(
+      [
+        BoFTextField(name: 'city', label: BoF.text('City')),
+        BoFTextField(name: 'zip', label: BoF.text('ZIP')),
+      ],
+      flex: [2, 1], // city is twice as wide as zip
+    ),
+    BoFCustom(BoF.divider()),
+    BoFRow([
+      BoFColumn([
+        BoFTextField(name: 'phone', label: BoF.text('Phone')),
+        BoFTextField(name: 'email', label: BoF.text('Email')),
+      ]),
+      BoFTextAreaField(name: 'notes', label: BoF.text('Delivery notes')),
+    ]),
+  ],
+  onSubmit: (values) => print(values),
+)
+```
+
+Rows don't wrap on narrow screens; if you need a different layout below a
+breakpoint, build a different list for it (e.g. with `LayoutBuilder` or
+`MediaQuery`).
 
 #### Reading/driving the form like a ref
 

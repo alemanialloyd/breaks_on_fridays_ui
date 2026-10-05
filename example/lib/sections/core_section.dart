@@ -145,6 +145,8 @@ class CoreSection extends StatelessWidget {
         GalleryEntry(
           title: 'BoF.form',
           description:
+              'BoFRow places fields side by side (flex: [2, 1] makes Email '
+              'twice as wide as Birthday) and BoFCustom adds the divider. '
               'BoFDateInputField masks input as mm/dd/yyyy and '
               'NonNullValidator<DateTime>() rejects an incomplete date — '
               'tap Submit without finishing the date to see it.',
@@ -177,12 +179,26 @@ class _FormDemoState extends State<_FormDemo> {
     children: [
       BoF.form(
         [
-          BoFTextField(name: 'email', label: BoF.text('Email')),
-          BoFDateInputField(
-            name: 'birthday',
-            label: BoF.text('Birthday'),
-            validator: const NonNullValidator<DateTime>(),
+          BoFRow([
+            BoFTextField(
+              name: 'firstName',
+              label: BoF.text('First name'),
+              validator: const NotEmptyValidator(),
+            ),
+            BoFTextField(name: 'lastName', label: BoF.text('Last name')),
+          ]),
+          BoFRow(
+            [
+              BoFTextField(name: 'email', label: BoF.text('Email')),
+              BoFDateInputField(
+                name: 'birthday',
+                label: BoF.text('Birthday'),
+                validator: const NonNullValidator<DateTime>(),
+              ),
+            ],
+            flex: const [2, 1],
           ),
+          BoFCustom(BoF.divider()),
           BoFCheckboxField(
             name: 'agree',
             label: BoF.text('I agree to the terms'),

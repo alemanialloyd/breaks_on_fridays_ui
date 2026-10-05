@@ -36,6 +36,7 @@ export 'forms/bof_choice_fields.dart';
 export 'forms/bof_datetime_fields.dart';
 export 'forms/bof_field.dart';
 export 'forms/bof_form_controller.dart';
+export 'forms/bof_form_layout.dart';
 export 'forms/bof_misc_fields.dart';
 export 'forms/bof_option.dart';
 export 'widgets/accordion.dart' show BoFAccordionItem;
