@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'code_block.dart';
 import 'docs_catalog.dart';
 import 'guide_demos.dart';
+import 'package_version.dart';
 
 const _guides = <(String, String, String)>[
   ('/', 'Welcome', 'Get started'),
@@ -585,7 +586,10 @@ class _DocsShellState extends State<DocsShell> {
               child: Row(
                 children: [
                   Expanded(child: _paragraph('breaks_on_fridays_ui', size: 11)),
-                  BoF.badge(BoF.text('0.1.21'), type: BoFBadgeType.outline),
+                  BoF.badge(
+                    BoF.text(packageVersion),
+                    type: BoFBadgeType.outline,
+                  ),
                 ],
               ),
             ),

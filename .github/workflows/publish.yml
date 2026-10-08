@@ -72,6 +72,16 @@ jobs:
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
+      - name: Update version shown in the docs app
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          cat > example/lib/docs/package_version.dart <<EOF
+          // Updated by .github/workflows/publish.yml on each release. Keep it in sync
+          // with the version in the package's pubspec.yaml.
+          const packageVersion = '${VERSION}';
+          EOF
+
       - name: Add changelog entry
         env:
           VERSION: ${{ steps.version.outputs.version }}
@@ -90,8 +100,13 @@ jobs:
                 printf '* %s\n' "$note"
               fi
             done <<< "$RELEASE_NOTES"
-            printf '\n'
-            cat CHANGELOG.md
+            # Fold any "## Unreleased" entries into this release.
+            if [ "$(head -n 1 CHANGELOG.md)" = "## Unreleased" ]; then
+              sed '1,/^$/d' CHANGELOG.md
+            else
+              printf '\n'
+              cat CHANGELOG.md
+            fi
           } > "$changelog"
           mv "$changelog" CHANGELOG.md
 
@@ -101,7 +116,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pubspec.yaml CHANGELOG.md
+          git add pubspec.yaml CHANGELOG.md example/lib/docs/package_version.dart
           git commit -m "chore(release): v${VERSION}"
           git tag -a "v${VERSION}" -m "Release v${VERSION}"
           git push origin "HEAD:${{ github.event.repository.default_branch }}" "v${VERSION}"
