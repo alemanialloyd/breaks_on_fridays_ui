@@ -29,11 +29,17 @@ abstract class BoFField<T> extends BoFFormItem {
   /// Optional validator, evaluated on change and on submit.
   final Validator<T>? validator;
 
+  /// Whether the user can change this field. A disabled field still shows
+  /// its value and is still included in the submitted values, but it is
+  /// skipped by validation, so a locked value can never block submit.
+  final bool enabled;
+
   const BoFField({
     required this.name,
     required this.label,
     this.hint,
     this.validator,
+    this.enabled = true,
   });
 
   /// The value this field starts with, used to seed [BoFFormController].
@@ -77,7 +83,6 @@ class BoFTextField extends BoFField<String> {
   final int? minLines;
   final bool expands;
   final List<TextInputFormatter>? inputFormatters;
-  final bool enabled;
   final ValueChanged<String>? onChanged;
   final Color? backgroundColor;
   final Color? foregroundColor;
@@ -126,7 +131,7 @@ class BoFTextField extends BoFField<String> {
     this.minLines,
     this.expands = false,
     this.inputFormatters,
-    this.enabled = true,
+    super.enabled,
     this.onChanged,
     this.backgroundColor,
     this.foregroundColor,
@@ -227,6 +232,7 @@ class BoFTextAreaField extends BoFField<String> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue,
     this.placeholder,
     this.minHeight = 100,
@@ -267,6 +273,7 @@ class BoFNumberField extends BoFField<num> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue,
     this.placeholder,
     this.allowDecimal = true,
@@ -299,6 +306,7 @@ class BoFCheckboxField extends BoFField<CheckboxState> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue = CheckboxState.unchecked,
   });
 
@@ -327,6 +335,7 @@ class BoFSwitchField extends BoFField<bool> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue = false,
   });
 

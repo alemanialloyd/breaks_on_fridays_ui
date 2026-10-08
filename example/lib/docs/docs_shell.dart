@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 
 import 'code_block.dart';
 import 'docs_catalog.dart';
+import 'guide_demos.dart';
 
 const _guides = <(String, String, String)>[
   ('/', 'Welcome', 'Get started'),
@@ -23,6 +24,16 @@ const _guides = <(String, String, String)>[
     '/form-guide',
     'Building forms',
     'Validation, controllers, and submitting values',
+  ),
+  (
+    '/validators',
+    'Validators',
+    'Built-in and custom validation rules for text fields',
+  ),
+  (
+    '/conditional-styling',
+    'Conditional styling',
+    'Apply modifiers with when, unless, and whenNotNull',
   ),
 ];
 
@@ -161,6 +172,8 @@ class _DocsShellState extends State<DocsShell> {
           '/installation' => 'Installation',
           '/styling' => 'Styling',
           '/form-guide' => 'Building forms',
+          '/validators' => 'Validators',
+          '/conditional-styling' => 'Conditional styling',
           _ => 'Page not found',
         };
     final description =
@@ -174,6 +187,10 @@ class _DocsShellState extends State<DocsShell> {
             'Start with a shared theme. Fine-tune individual components when you need to.',
           '/form-guide' =>
             'Compose fields, validate input, and work with typed values using one controller.',
+          '/validators' =>
+            'Check text field input with built-in rules, combine them, or write your own.',
+          '/conditional-styling' =>
+            'Apply a modifier or wrapper only when a condition holds, without leaving the chain.',
           _ =>
             'This documentation page does not exist. Browse the sidebar or search for a component.',
         };
@@ -435,6 +452,15 @@ class _DocsShellState extends State<DocsShell> {
       height: 1.75,
       color: Theme.of(context).colorScheme.mutedForeground,
     ),
+  );
+
+  Widget _demoFrame(Widget child) => Container(
+    padding: const EdgeInsets.all(24),
+    decoration: BoxDecoration(
+      border: Border.all(color: Theme.of(context).colorScheme.border),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: child,
   );
 
   Widget _sidebar({bool mobile = false}) {
@@ -1153,6 +1179,177 @@ class _DocsShellState extends State<DocsShell> {
         'Create the BoFFormController once in State; call controller.dispose() in dispose().',
       ),
     ],
+    '/validators' => [
+      _Section(
+        'Add a validator',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'Every field spec takes a validator. Validators are shadcn_flutter\'s Validator<T>, re-exported by this package, so a BoFTextField takes a Validator<String>. A validator returns null when the value is fine, or an InvalidResult whose message is shown under the field.',
+            ),
+            const SizedBox(height: 16),
+            const CodeBlock(code: _validatorExample),
+          ],
+        ),
+        'Pass validator: to any field spec.\n\n```dart\n$_validatorExample\n```',
+      ),
+      _Section(
+        'Built-in text validators',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'These work on BoFTextField, BoFTextAreaField and BoFAutoCompleteField. Every one accepts an optional message: to replace its default error text.',
+            ),
+            const SizedBox(height: 16),
+            _parameters(_textValidators),
+          ],
+        ),
+        _textValidators
+            .map((v) => '${v.name} (${v.type}): ${v.description}')
+            .join('\n'),
+      ),
+      _Section(
+        'Combine validators',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'Use & to require every rule, checked in order so the first failure is the message shown. Use ~ (or unary -) to invert a rule.',
+            ),
+            const SizedBox(height: 16),
+            const CodeBlock(code: _combineExample),
+            const SizedBox(height: 16),
+            BoF.alert(
+              leading: const Icon(material.Icons.warning_amber_rounded),
+              title: const Text('Avoid | for now'),
+              content: const Text(
+                'In shadcn_flutter 0.0.53–0.0.55, an OR of validators passes even when every rule fails. Write the "either" rule as one ConditionalValidator instead.',
+              ),
+              destructive: true,
+            ),
+          ],
+        ),
+        'Combine with & (all must pass) and ~ (invert). Avoid | in shadcn_flutter 0.0.53–0.0.55: it passes even when every rule fails.\n\n```dart\n$_combineExample\n```',
+      ),
+      _Section(
+        'Write your own',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'ConditionalValidator turns a true/false check into a validator. For more control, such as a message that depends on the value, extend Validator<String>.',
+            ),
+            const SizedBox(height: 16),
+            const CodeBlock(code: _customValidatorExample),
+          ],
+        ),
+        '```dart\n$_customValidatorExample\n```',
+      ),
+      _Section(
+        'Try them',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'Each field below uses the validator named in its hint. Type to see errors as you go, or press Submit on the empty form to see which rules reject a field left blank.',
+            ),
+            const SizedBox(height: 16),
+            _demoFrame(const ValidatorsDemo()),
+          ],
+        ),
+        'A live form with one field per validator.',
+      ),
+      _Section(
+        'When validation runs',
+        _paragraph(
+          'A field is validated when its value changes and again on controller.submit(); onSubmit runs only if every field passes. An untouched field shows no error until submit. Fields with enabled: false skip validation, so a locked value never blocks submit. Each validator only sees its own field\'s value, so shadcn_flutter\'s CompareWith does not work inside BoF.form; compare two fields by reading the form controller instead.',
+        ),
+        'Validation runs on change and on submit. Disabled fields are skipped. CompareWith does not work inside BoF.form.',
+      ),
+    ],
+    '/conditional-styling' => [
+      _Section(
+        'How it works',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'The package adds three methods to every value, so you can apply a change only when a condition holds without breaking out of a chain or wrapping the whole widget in an if/else.',
+            ),
+            const SizedBox(height: 16),
+            _parameters(const [
+              DocParameter(
+                name: '.when(condition, transform)',
+                type: 'T',
+                description:
+                    'Returns transform(this) when condition is true, otherwise this unchanged.',
+              ),
+              DocParameter(
+                name: '.unless(condition, transform)',
+                type: 'T',
+                description:
+                    'The inverse of when: applies transform when condition is false.',
+              ),
+              DocParameter(
+                name: '.whenNotNull(value, transform)',
+                type: 'T',
+                description:
+                    'Applies transform(this, value) only when value is not null, passing it in already non-null.',
+              ),
+            ]),
+          ],
+        ),
+        '.when(condition, transform), .unless(condition, transform), .whenNotNull(value, (it, value) => ...). Each returns the same type it was called on.',
+      ),
+      _Section(
+        'Chain text modifiers',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'Each method returns the same type it was called on. Text modifiers such as .small and .muted return a TextModifier, not a Text, so start the chain from a value typed as Widget, or after a first modifier.',
+            ),
+            const SizedBox(height: 16),
+            const CodeBlock(code: _conditionalTextExample),
+          ],
+        ),
+        '```dart\n$_conditionalTextExample\n```',
+      ),
+      _Section(
+        'Try it',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'The switches below feed the chain from the previous example.',
+            ),
+            const SizedBox(height: 16),
+            _demoFrame(const ConditionalDemo()),
+          ],
+        ),
+        'A live demo of when, unless, and whenNotNull on one text widget.',
+      ),
+      _Section(
+        'Wrap any widget',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'The transform can return a different widget around the original, which is handy for tooltips, skeletons and other wrappers you only sometimes want.',
+            ),
+            const SizedBox(height: 16),
+            const CodeBlock(code: _conditionalWrapExample),
+            const SizedBox(height: 16),
+            _paragraph(
+              'For lists, such as the fields passed to BoF.form, prefer Dart\'s collection if: [if (showAddress) addressField]. For a field\'s own settings, pass the condition directly, for example enabled: !appointment.locked.',
+            ),
+          ],
+        ),
+        '```dart\n$_conditionalWrapExample\n```\n\nFor lists, prefer collection if. For field settings, pass the condition directly.',
+      ),
+    ],
     _ => [
       _Section(
         'Find your way',
@@ -1605,3 +1802,122 @@ class _ProfileFormState extends State<ProfileForm> {
     ],
   );
 }''';
+
+const _validatorExample = '''BoFTextField(
+  name: 'email',
+  label: BoF.text('Email'),
+  validator: const NotEmptyValidator() & const EmailValidator(),
+);''';
+
+const _textValidators = [
+  DocParameter(
+    name: 'NotEmptyValidator()',
+    type: 'Validator<String>',
+    description: 'Fails when the field is null or an empty string.',
+  ),
+  DocParameter(
+    name: 'NonNullValidator<String>()',
+    type: 'Validator<String>',
+    description:
+        'Fails only when the value is null. A field the user typed in and then cleared holds an empty string, which passes, so prefer NotEmptyValidator for text.',
+  ),
+  DocParameter(
+    name: 'LengthValidator(min:, max:)',
+    type: 'Validator<String>',
+    description:
+        'Checks the number of characters. Either bound may be left out. An untouched field fails only when min is set.',
+  ),
+  DocParameter(
+    name: 'EmailValidator()',
+    type: 'Validator<String>',
+    description:
+        'Checks the email format. It passes an untouched field but fails an emptied one, so pair it with NotEmptyValidator for a required email.',
+  ),
+  DocParameter(
+    name: 'RegexValidator(RegExp)',
+    type: 'Validator<String>',
+    description:
+        'Fails when the pattern does not match. Anchor the pattern with ^ and \$ to match the whole value, and pass a message, since the default one is generic.',
+  ),
+  DocParameter(
+    name: 'SafePasswordValidator()',
+    type: 'Validator<String>',
+    description:
+        'Requires a digit, a lowercase letter, an uppercase letter, and a special character. Turn each off with requireDigit, requireLowercase, requireUppercase, or requireSpecialChar. It does not check length, so combine it with LengthValidator.',
+  ),
+  DocParameter(
+    name: 'URLValidator()',
+    type: 'Validator<String>',
+    description:
+        'Only rejects text Dart cannot parse as a URI, so almost anything passes, including "hello world". Use a RegexValidator or ConditionalValidator when the value must be a web address.',
+  ),
+  DocParameter(
+    name: 'ConditionalValidator<String>(test, message:)',
+    type: 'Validator<String>',
+    description:
+        'Your own rule: fails with message when test(value) returns false. test may be async.',
+  ),
+];
+
+const _combineExample = r"""// Both rules must pass; the first failure is shown.
+validator: const NotEmptyValidator() & const LengthValidator(min: 3, max: 20),
+
+// Invert a rule: reject values that are only digits.
+validator: ~RegexValidator(RegExp(r'^\d+$'), message: 'Add a letter.'),""";
+
+const _customValidatorExample =
+    r"""// A yes/no check with a fixed message. Empty is allowed, so the
+// field stays optional.
+final website = ConditionalValidator<String>(
+  (value) =>
+      value == null ||
+      value.isEmpty ||
+      RegExp(r'^https?://\S+\.\S+$').hasMatch(value),
+  message: 'Enter a full URL, starting with https://',
+);
+
+// A reusable rule with a message that depends on the value.
+class NoSpacesValidator extends Validator<String> {
+  const NoSpacesValidator();
+
+  @override
+  ValidationResult? validate(
+    BuildContext context,
+    String? value,
+    FormValidationMode state,
+  ) {
+    final spaces = ' '.allMatches(value ?? '').length;
+    if (spaces == 0) return null;
+    return InvalidResult('Remove $spaces space(s).', state: state);
+  }
+}""";
+
+const _conditionalTextExample =
+    '''// Typed as Widget so modifiers like .small fit the chain.
+final Widget title = BoF.text('Team standup');
+
+title
+    .when(compact, (t) => t.small)
+    .when(selected, (t) => t.semiBold)
+    .unless(selected, (t) => t.muted)
+    .whenNotNull(
+      flagColor, // Color?
+      (t, color) => DefaultTextStyle.merge(
+        style: TextStyle(color: color),
+        child: t,
+      ),
+    );
+
+// Or start after a first modifier:
+BoF.text('Team standup').small.when(selected, (t) => t.semiBold);''';
+
+const _conditionalWrapExample =
+    '''// Explain why a button is disabled, only when there is a reason.
+BoF.button('Save', onPressed: canSave ? save : null)
+    .whenNotNull(
+      disabledReason, // String?
+      (button, reason) => BoF.tooltip(button, message: reason),
+    );
+
+// Show a loading placeholder while data is on its way.
+BoF.card(content).when(isLoading, (card) => BoF.skeleton(card));''';

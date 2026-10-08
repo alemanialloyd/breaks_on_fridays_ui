@@ -97,6 +97,8 @@ void main() {
       '/installation',
       '/styling',
       '/form-guide',
+      '/validators',
+      '/conditional-styling',
       for (final page in componentPages) '/components/${page.id}',
     ];
     for (final path in paths) {

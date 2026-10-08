@@ -21,6 +21,7 @@ class BoFColorField extends BoFField<Color> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue = const Color(0xFF000000),
     this.showAlpha = false,
   });
@@ -43,7 +44,8 @@ class BoFColorField extends BoFField<Color> {
 
 /// A phone number input. Maps to shadcn_flutter's `PhoneInput`.
 ///
-/// `PhoneInput` has no `enabled` parameter, so this field cannot be disabled.
+/// `PhoneInput` has no `enabled` parameter, so a disabled field blocks input
+/// and dims the widget instead.
 class BoFPhoneField extends BoFField<PhoneNumber> {
   @override
   final PhoneNumber? initialValue;
@@ -53,6 +55,7 @@ class BoFPhoneField extends BoFField<PhoneNumber> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue,
   });
 
@@ -63,9 +66,9 @@ class BoFPhoneField extends BoFField<PhoneNumber> {
     ValueChanged<PhoneNumber?> onChanged,
     bool enabled,
   ) {
-    return bofPhoneField(
-      initialValue: value,
-      onChanged: onChanged,
+    return _lockedUnless(
+      enabled,
+      bofPhoneField(initialValue: value, onChanged: onChanged),
     );
   }
 }
@@ -84,6 +87,7 @@ class BoFSliderField extends BoFField<SliderValue> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue = const SliderValue.single(0),
     this.min = 0,
     this.max = 1,
@@ -121,6 +125,7 @@ class BoFStarRatingField extends BoFField<double> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue = 0,
     this.max = 5,
     this.step = 0.5,
@@ -145,7 +150,8 @@ class BoFStarRatingField extends BoFField<double> {
 
 /// A one-time-password / PIN input. Maps to shadcn_flutter's `InputOTP`.
 ///
-/// `InputOTP` has no `enabled` parameter, so this field cannot be disabled.
+/// `InputOTP` has no `enabled` parameter, so a disabled field blocks input
+/// and dims the widget instead.
 class BoFOtpField extends BoFField<List<int?>> {
   @override
   final List<int?>? initialValue;
@@ -157,6 +163,7 @@ class BoFOtpField extends BoFField<List<int?>> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     required this.length,
     this.initialValue,
   });
@@ -168,10 +175,9 @@ class BoFOtpField extends BoFField<List<int?>> {
     ValueChanged<List<int?>?> onChanged,
     bool enabled,
   ) {
-    return bofOtpField(
-      length: length,
-      initialValue: value,
-      onChanged: onChanged,
+    return _lockedUnless(
+      enabled,
+      bofOtpField(length: length, initialValue: value, onChanged: onChanged),
     );
   }
 }
@@ -189,6 +195,7 @@ class BoFAutoCompleteField extends BoFField<String> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     required this.suggestions,
     this.initialValue,
     this.placeholder,
@@ -228,6 +235,7 @@ class BoFChipInputField<T extends Object> extends BoFField<List<T>> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     required this.chipBuilder,
     required this.onChipSubmitted,
     this.initialValue,
@@ -248,4 +256,13 @@ class BoFChipInputField<T extends Object> extends BoFField<List<T>> {
       onChanged: onChanged,
     );
   }
+}
+
+/// Disables [child] for upstream widgets that have no `enabled` parameter:
+/// blocks taps and focus, and dims it like shadcn_flutter's disabled inputs.
+Widget _lockedUnless(bool enabled, Widget child) {
+  if (enabled) return child;
+  return ExcludeFocus(
+    child: IgnorePointer(child: Opacity(opacity: 0.5, child: child)),
+  );
 }

@@ -143,9 +143,15 @@ class _BofFormState extends State<_BofForm> {
 
   Future<void> _runValidator(BoFField field, FormValidationMode mode) async {
     final validator = field.validator;
-    if (validator == null) return;
+    if (validator == null || !field.enabled) {
+      _controller.setError(field.name, null);
+      return;
+    }
     final value = _controller.value(field.name);
     final result = await validator.validate(context, value, mode);
+    // The form (and its own controller) may have been disposed while an
+    // async validator was running.
+    if (!mounted) return;
     _controller.setError(field.name, result);
   }
 
@@ -243,7 +249,7 @@ class _BofFormState extends State<_BofForm> {
           _controller.reportChange(field.name, value);
           _runValidator(field, FormValidationMode.changed);
           setState(() {});
-        }, true),
+        }, field.enabled),
       ),
     );
   }

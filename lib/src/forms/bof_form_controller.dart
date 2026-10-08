@@ -53,8 +53,13 @@ class BoFFormController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Records the validation result for the field named [name] and notifies
+  /// listeners, so anything watching [isValid] or [errorOf] updates.
+  /// Called internally by `bofForm` after each validation run.
   void setError(String name, ValidationResult? error) {
+    if (_errors[name] == error) return;
     _errors[name] = error;
+    notifyListeners();
   }
 
   /// Validates every field and, if all pass, invokes the form's `onSubmit`.

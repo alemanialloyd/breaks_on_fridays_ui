@@ -1,3 +1,10 @@
+## Unreleased
+
+* Added `enabled` to every `BoFField` spec, so any form field can be locked. Disabled fields skip validation but are still submitted. `BoFPhoneField` and `BoFOtpField` block input and dim when disabled.
+* `BoFFormController.setError` now notifies listeners, so widgets watching `isValid` or `errorOf` update after submit.
+* Docs: added Validators and Conditional styling guides to the example app, and documented that `|` between validators passes even when every rule fails in shadcn_flutter 0.0.53–0.0.55.
+* Fixed the `.when` doc example, which didn't compile with shadcn_flutter's text modifiers.
+
 ## 0.1.24
 
 * Added BoFRow, BoFColumn and BoFCustom layout entries to BoF.form

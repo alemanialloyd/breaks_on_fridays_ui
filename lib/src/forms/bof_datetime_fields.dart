@@ -21,6 +21,7 @@ class BoFDatePickerField extends BoFField<DateTime> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue,
     this.placeholder,
     this.mode = PromptMode.popover,
@@ -57,6 +58,7 @@ class BoFDateInputField extends BoFField<DateTime> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue,
   });
 
@@ -93,6 +95,7 @@ class BoFTimePickerField extends BoFField<TimeOfDay> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue,
     this.showSeconds = false,
     this.mode = PromptMode.popover,
@@ -131,6 +134,7 @@ class BoFTimeInputField extends BoFField<TimeOfDay> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue,
     this.showSeconds = false,
   });
@@ -161,6 +165,7 @@ class BoFDurationPickerField extends BoFField<Duration> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue = Duration.zero,
   });
 
@@ -191,6 +196,7 @@ class BoFDurationInputField extends BoFField<Duration> {
     required super.label,
     super.hint,
     super.validator,
+    super.enabled,
     this.initialValue,
     this.showSeconds = false,
   });

@@ -6,6 +6,7 @@ accessed through a single `BoF` entry point.
 ## Glossary
 
 - [Custom styling](#custom-styling)
+- [Conditional styling](#conditional-styling)
 
 **Core**
 
@@ -132,6 +133,29 @@ implementation hardcodes colors with no theme or constructor override):
 call this out; where a picker/dialog counterpart exists (e.g.
 `BoF.datePickerField` for `BoF.dateInputField`), prefer that if custom colors
 matter.
+
+## Conditional styling
+
+The package adds `.when`, `.unless` and `.whenNotNull` to every value, so a
+modifier or wrapper can be applied only when a condition holds, without
+breaking out of a chain:
+
+```dart
+final Widget title = BoF.text('Team standup');
+title
+    .when(compact, (t) => t.small)
+    .when(selected, (t) => t.semiBold)
+    .unless(selected, (t) => t.muted);
+
+BoF.button('Save', onPressed: canSave ? save : null)
+    .whenNotNull(disabledReason, (b, reason) => BoF.tooltip(b, message: reason));
+```
+
+Each returns the same type it was called on. Text modifiers such as `.small`
+return a `TextModifier`, not a `Text`, so start the chain from a value typed
+as `Widget` (as above) or after a first modifier
+(`BoF.text('x').small.when(...)`). For lists, such as the fields passed to
+`BoF.form`, prefer Dart's collection `if`.
 
 ## Core
 
@@ -603,6 +627,21 @@ controller.setValue('email', 'a@b.com'); // sets a value AND updates the rendere
 controller.addListener(() { ... });  // rebuild on any value/error change
 ```
 
+#### Locking fields
+
+Every field spec takes `enabled` (default `true`). A disabled field still shows
+its value and is still included in the submitted values, but the user can't
+change it and its validator is skipped, so a locked value never blocks submit:
+
+```dart
+BoFDatePickerField(
+  name: 'date',
+  label: BoF.text('Date'),
+  initialValue: appointment.date,
+  enabled: !appointment.locked,
+);
+```
+
 `setValue` is for *programmatic* changes — e.g. prefilling the form once an
 async fetch resolves, or a "same as shipping" checkbox that copies values
 into other fields. It updates the rendered widget, not just the tracked
@@ -640,18 +679,44 @@ BoF.button('Submit', onPressed: () async {
 
 #### Validation
 
-Validators are shadcn_flutter's `Validator<T>` — composable Zod-style with
-`&` (AND), `|` (OR) and `~`/unary `-` (NOT):
+Validators are shadcn_flutter's `Validator<T>` — composable with `&` (AND)
+and `~`/unary `-` (NOT):
 
 ```dart
 validator: const NotEmptyValidator() & const LengthValidator(min: 8, max: 64)
-validator: const EmailValidator() | const URLValidator()
+validator: ~RegexValidator(RegExp(r'^\d+$'), message: 'Add a letter.')
+```
+
+Avoid `|` (OR) for now: in shadcn_flutter 0.0.53–0.0.55 an OR of validators
+passes even when every rule fails. Write the "either" rule as a single
+`ConditionalValidator` instead:
+
+```dart
+validator: ConditionalValidator<String>(
+  (value) => value == null || value.isEmpty || value.startsWith('https://'),
+  message: 'Enter a full URL, starting with https://',
+)
 ```
 
 Built-in validators include `NonNullValidator<T>`, `NotEmptyValidator`,
 `LengthValidator`, `SafePasswordValidator`, `MinValidator<T>`,
 `MaxValidator<T>`, `RangeValidator<T>`, `RegexValidator`, `EmailValidator`,
-`URLValidator`, or write your own by extending `Validator<T>`.
+`URLValidator`, or write your own by extending `Validator<T>`. For text, a
+few behave in ways worth knowing:
+
+- `NonNullValidator<String>` passes an emptied field (`''`); use
+  `NotEmptyValidator` for required text.
+- `EmailValidator`, `RegexValidator` and `SafePasswordValidator` pass an
+  untouched (null) field; pair them with `NotEmptyValidator` when the field
+  is required.
+- `SafePasswordValidator` doesn't check length; combine it with
+  `LengthValidator(min: ...)`.
+- `URLValidator` only rejects text Dart can't parse as a URI, so almost
+  anything passes; use `RegexValidator` when it must be a web address.
+- `CompareWith` doesn't work inside `BoF.form`, since each validator only
+  sees its own field's value.
+
+The example app's **Validators** guide has a live field for each of these.
 
 Validation runs on every change and again on submit; `BoF.form` won't call
 `onSubmit` unless every field currently passes.
@@ -1016,8 +1081,8 @@ controller itself deals in `ColorDerivative`, not `Color` (use
 BoF.phoneField(onChanged: (v) => print(v));
 ```
 
-The upstream widget has no `enabled` param, so this can't be disabled.
-Controller: `TextEditingController` — it manages the raw number text, not a
+The upstream widget has no `enabled` param, so `BoFPhoneField(enabled: false)`
+blocks input and dims the widget instead. Controller: `TextEditingController` — it manages the raw number text, not a
 `PhoneNumber`, since `PhoneInput` has no dedicated value controller upstream.
 
 ### BoF.sliderField
@@ -1048,8 +1113,8 @@ Params: `max`, `step`. Controller: `StarRatingController`.
 BoF.otpField(length: 6, onChanged: (v) => print(v));
 ```
 
-Requires `length`. The upstream widget has no `enabled` param, so this can't
-be disabled. It also has no controller of its own, so this field has no
+Requires `length`. The upstream widget has no `enabled` param, so
+`BoFOtpField(enabled: false)` blocks input and dims the widget instead. It also has no controller of its own, so this field has no
 `controller` param — programmatic updates aren't supported.
 
 ### BoF.autoCompleteField
