@@ -1,3 +1,7 @@
+## 0.1.26
+
+* Add textField styling params to the other form fields
+
 ## 0.1.25
 
 * Added enabled to form fields and setError to BoFFormController
