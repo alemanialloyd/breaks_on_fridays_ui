@@ -3,6 +3,9 @@
 A thin, opinionated layer of styled widgets on top of [shadcn_flutter],
 accessed through a single `BoF` entry point.
 
+See the live docs at
+<https://breaks-on-fridays.web.app/>.
+
 ## Glossary
 
 - [Custom styling](#custom-styling)
