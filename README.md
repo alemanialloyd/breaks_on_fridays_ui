@@ -40,6 +40,7 @@ See the live docs at
 
 - [BoF.form](#bofform)
   - [Laying out fields](#laying-out-fields) (`BoFRow`, `BoFColumn`, `BoFCustom`)
+  - [Form field appearance](#form-field-appearance)
 - [BoF.textField](#boftextfield) (`BoFTextField`)
 - [BoF.textAreaField](#boftextareafield) (`BoFTextAreaField`)
 - [BoF.numberField](#bofnumberfield) (`BoFNumberField`)
@@ -128,14 +129,13 @@ override params bridge both the same way:
   field-local filled theme. This preserves the inherited border, corner radius,
   padding, and other text-field theming.
 
-A few widgets have no styling surface at all upstream (their shadcn_flutter
-implementation hardcodes colors with no theme or constructor override):
-`BoF.colorField`, `BoF.phoneField`, `BoF.dateInputField`,
-`BoF.timeInputField`, `BoF.durationInputField`, and per-cell colors on
-`BoF.otpField` (only its `spacing`/`height` are themable). Their doc comments
-call this out; where a picker/dialog counterpart exists (e.g.
-`BoF.datePickerField` for `BoF.dateInputField`), prefer that if custom colors
-matter.
+- **Theme-drawn widgets** (the select and picker triggers, `BoF.colorField`,
+  `BoF.phoneField`, the segmented `BoF.dateInputField`/`BoF.timeInputField`/
+  `BoF.durationInputField`, and the `BoF.otpField` cells) have no styling
+  parameters upstream, so BoF scopes a theme around just that field. Trigger
+  overrides stop at the trigger: the popover or dialog it opens keeps the
+  surrounding look. See [Form field appearance](#form-field-appearance) for
+  what each field accepts.
 
 ## Conditional styling
 
@@ -780,6 +780,65 @@ Every field spec needs `name` (used as the key in the submitted values map),
 `BoFMultipleChoiceField`, `BoFMultipleAnswerField`) take a
 `List<BoFOption<T>>`, where `BoFOption(value: ..., label: Text('...'))`.
 
+### Form field appearance
+
+Every form field's styling options are shared by its standalone `BoF.*` widget
+and its `BoFXxxField` spec, using the names `BoF.textField` introduced. Null
+values keep the theme defaults, and `foregroundColor`/`fontSize`/`fontWeight`
+override the matching properties of `style`.
+
+- **Text inputs**: `BoF.textField`, `BoF.textAreaField`, `BoF.numberField`,
+  `BoF.autoCompleteField` and `BoF.chipInputField` take the full text-field
+  set below: `backgroundColor`, `filled`, `borderRadius`, `border`,
+  `borderColor`, `borderWidth`, `padding`, `decoration`, `foregroundColor`,
+  `fontSize`, `fontWeight`, `style`, `textAlign`, `textAlignVertical`,
+  `textDirection`, `cursorColor`, `cursorWidth`, `cursorHeight`,
+  `cursorRadius`, `showCursor` and `selectionColor`. Chip input text options
+  style the typed text; chips come from `chipBuilder`.
+- **Triggers**: `BoF.selectField`, `BoF.multiSelectField`,
+  `BoF.datePickerField`, `BoF.timePickerField`, `BoF.durationPickerField` and
+  `BoF.colorField` take `backgroundColor`, `foregroundColor` (also tints the
+  icon), `fontSize`, `fontWeight`, `style`, `borderRadius`, `borderColor`,
+  `borderWidth` and `padding` for the trigger button. The popup keeps its
+  themed look.
+- **Segmented inputs**: `BoF.dateInputField`, `BoF.timeInputField` and
+  `BoF.durationInputField` take the same nine options for their surface and
+  digits. `borderRadius` is matched through the theme radius, so a
+  non-uniform radius uses its top-left corner.
+- **Choice chips**: `BoF.multipleChoiceField` and `BoF.multipleAnswerField`
+  take `selectedBackgroundColor`, `selectedForegroundColor`,
+  `selectedFontSize`, `selectedFontWeight`, `selectedBorderRadius`,
+  `selectedBorderColor`, `selectedBorderWidth`, `selectedPadding` and their
+  `unselected*` counterparts.
+- **OTP**: `BoF.otpField` takes `spacing`, `height`, `backgroundColor`,
+  `foregroundColor`, `fontSize`, `fontWeight`, `borderRadius` and
+  `borderColor`. The cell border width is fixed upstream.
+- **Phone**: `BoF.phoneField` takes `backgroundColor`, `borderColor` and
+  `borderWidth` for both the country button and the number field, plus
+  `filled`, `border` and `padding` for the number field. The number's text
+  style has no upstream hook, and the country list uses `backgroundColor` as
+  its hover color.
+- **Star rating**: `BoF.starRatingField` takes `activeColor`,
+  `backgroundColor`, `starSize` and `starSpacing`.
+
+`trailingIcon` replaces the built-in trailing icon on `BoF.selectField` and
+`BoF.multiSelectField` (the chevron), `BoF.datePickerField` and
+`BoF.dateInputField` (the calendar), and `BoF.timePickerField` and
+`BoF.durationPickerField` (the clock).
+
+```dart
+BoFSelectField<String>(
+  name: 'plan',
+  label: BoF.text('Plan'),
+  options: const [BoFOption(value: 'pro', label: Text('Pro'))],
+  trailingIcon: const Icon(LucideIcons.chevronsUpDown),
+  backgroundColor: Colors.blue.withValues(alpha: 0.08),
+  borderColor: Colors.blue,
+  borderRadius: BorderRadius.circular(12),
+);
+// The same options work on BoF.selectField(...).
+```
+
 ### BoF.textField
 
 `BoFTextField` — value type `String` — wraps `TextField`.
@@ -859,8 +918,8 @@ by `BoFFormController`. Its `onChanged` runs after the form records the edit,
 and `enabled: false` disables that input. The standalone API additionally
 accepts `key` and `TextEditingController`; it has no form metadata.
 
-`backgroundColor` also preserves the inherited border and rounded corners in
-`BoF.textAreaField` and `BoF.numberField`.
+`BoF.textAreaField`, `BoF.numberField`, `BoF.autoCompleteField` and
+`BoF.chipInputField` accept the same styling parameters.
 
 ### BoF.textAreaField
 
@@ -1106,7 +1165,8 @@ Params: `min`, `max`, `divisions`. Controller: `SliderController`.
 BoF.starRatingField(onChanged: (v) => print(v));
 ```
 
-Params: `max`, `step`. Controller: `StarRatingController`.
+Params: `max`, `step`, `activeColor`, `backgroundColor`, `starSize`,
+`starSpacing`. Controller: `StarRatingController`.
 
 ### BoF.otpField
 

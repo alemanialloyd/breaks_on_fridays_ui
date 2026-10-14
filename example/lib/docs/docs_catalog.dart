@@ -1231,7 +1231,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFTextAreaField. Values are Strings.',
-      'backgroundColor preserves the inherited border and rounded corners. foregroundColor, fontSize, and borderRadius also accept overrides.',
+      'Accepts the same appearance options as BoF.textField. backgroundColor preserves the inherited border and rounded corners.',
     ],
     parameters: [
       DocParameter(
@@ -1264,6 +1264,42 @@ class _AccountFormState extends State<AccountForm> {
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
       ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Surface fill and text color overrides.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderColor / borderWidth / border',
+        type: 'Color? / double? / Border?',
+        description:
+            'Override matching border properties while retaining inherited sides.',
+      ),
+      DocParameter(
+        name: 'filled / borderRadius / padding / decoration',
+        type: 'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
+        description:
+            'Surface options shared with BoF.textField; decoration replaces the whole surface.',
+      ),
+      DocParameter(
+        name: 'textAlign / textAlignVertical / textDirection',
+        type: 'TextAlign / TextAlignVertical? / TextDirection?',
+        description:
+            'Text layout options.',
+      ),
+      DocParameter(
+        name: 'cursorColor / selectionColor',
+        type: 'Color?',
+        description:
+            'Cursor and selected-text highlight colors. cursorWidth, cursorHeight, cursorRadius, and showCursor are also accepted.',
+      ),
     ],
   ),
   DocPage(
@@ -1283,7 +1319,7 @@ class _AccountFormState extends State<AccountForm> {
       _controllerNote,
       'The form spec is BoFNumberField. The TextEditingController stores raw text, while onChanged receives the parsed num?.',
       'allowDecimal configures the requested keyboard; it does not enforce integer-only input.',
-      'backgroundColor preserves inherited field styling. foregroundColor, fontSize, and borderRadius accept overrides.',
+      'Accepts the same appearance options as BoF.textField. backgroundColor preserves inherited field styling.',
     ],
     parameters: [
       DocParameter(
@@ -1316,6 +1352,42 @@ class _AccountFormState extends State<AccountForm> {
         name: 'enabled',
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Surface fill and text color overrides.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderColor / borderWidth / border',
+        type: 'Color? / double? / Border?',
+        description:
+            'Override matching border properties while retaining inherited sides.',
+      ),
+      DocParameter(
+        name: 'filled / borderRadius / padding / decoration',
+        type: 'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
+        description:
+            'Surface options shared with BoF.textField; decoration replaces the whole surface.',
+      ),
+      DocParameter(
+        name: 'textAlign / textAlignVertical / textDirection',
+        type: 'TextAlign / TextAlignVertical? / TextDirection?',
+        description:
+            'Text layout options.',
+      ),
+      DocParameter(
+        name: 'cursorColor / selectionColor',
+        type: 'Color?',
+        description:
+            'Cursor and selected-text highlight colors. cursorWidth, cursorHeight, cursorRadius, and showCursor are also accepted.',
       ),
     ],
   ),
@@ -1513,6 +1585,36 @@ class _AccountFormState extends State<AccountForm> {
         type: 'ValueChanged<T?>?',
         description: 'Receives the selected value.',
       ),
+      DocParameter(
+        name: 'trailingIcon',
+        type: 'Widget?',
+        description:
+            'Replaces the dropdown chevron icon.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Trigger fill and text color; foregroundColor also tints the icon.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Trigger text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Trigger corner and border overrides.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Trigger padding.',
+      ),
     ],
   ),
   DocPage(
@@ -1568,6 +1670,36 @@ class _AccountFormState extends State<AccountForm> {
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
       ),
+      DocParameter(
+        name: 'trailingIcon',
+        type: 'Widget?',
+        description:
+            'Replaces the dropdown chevron icon.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Trigger fill and text color; foregroundColor also tints the icon.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Trigger text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Trigger corner and border overrides.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Trigger padding.',
+      ),
     ],
   ),
   DocPage(
@@ -1588,7 +1720,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFMultipleChoiceField<T>. Set allowUnselect: false to keep a selected option from being toggled off.',
-      'selectedBackgroundColor, selectedForegroundColor, selectedFontSize, and selectedBorderRadius style selected chips; unselected counterparts style the others.',
+      'The selected* options style selected chips; unselected counterparts style the others. Both cover colors, font size and weight, border radius, color and width, and padding.',
     ],
     parameters: [
       DocParameter(
@@ -1616,6 +1748,30 @@ class _AccountFormState extends State<AccountForm> {
         type: 'ValueChanged<T?>?',
         description: 'Receives the selected value or null.',
       ),
+      DocParameter(
+        name: 'selectedBackgroundColor / selectedForegroundColor',
+        type: 'Color?',
+        description:
+            'Fill and text color of selected chips.',
+      ),
+      DocParameter(
+        name: 'selectedFontSize / selectedFontWeight',
+        type: 'double? / FontWeight?',
+        description:
+            'Text size and weight of selected chips.',
+      ),
+      DocParameter(
+        name: 'selectedBorderRadius / selectedBorderColor / selectedBorderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Corner and border overrides for selected chips.',
+      ),
+      DocParameter(
+        name: 'selectedPadding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Padding of selected chips. Every selected* option has an unselected* counterpart.',
+      ),
     ],
   ),
   DocPage(
@@ -1636,7 +1792,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFMultipleAnswerField<T>. Values are Iterable<T>.',
-      'Use selectedBackgroundColor, selectedForegroundColor, selectedFontSize, selectedBorderRadius and unselected counterparts to style both states.',
+      'The selected* options style selected chips; unselected counterparts style the others. Both cover colors, font size and weight, border radius, color and width, and padding.',
     ],
     parameters: [
       DocParameter(
@@ -1663,6 +1819,30 @@ class _AccountFormState extends State<AccountForm> {
         name: 'enabled',
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
+      ),
+      DocParameter(
+        name: 'selectedBackgroundColor / selectedForegroundColor',
+        type: 'Color?',
+        description:
+            'Fill and text color of selected chips.',
+      ),
+      DocParameter(
+        name: 'selectedFontSize / selectedFontWeight',
+        type: 'double? / FontWeight?',
+        description:
+            'Text size and weight of selected chips.',
+      ),
+      DocParameter(
+        name: 'selectedBorderRadius / selectedBorderColor / selectedBorderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Corner and border overrides for selected chips.',
+      ),
+      DocParameter(
+        name: 'selectedPadding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Padding of selected chips. Every selected* option has an unselected* counterpart.',
       ),
     ],
   ),
@@ -1714,6 +1894,36 @@ class _AccountFormState extends State<AccountForm> {
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
       ),
+      DocParameter(
+        name: 'trailingIcon',
+        type: 'Widget?',
+        description:
+            'Replaces the calendar icon.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Trigger fill and text color; foregroundColor also tints the icon.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Trigger text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Trigger corner and border overrides.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Trigger padding.',
+      ),
     ],
   ),
   DocPage(
@@ -1729,7 +1939,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFDateInputField. Incomplete dates report null; NonNullValidator<DateTime> rejects an incomplete form date.',
-      'The upstream segmented-input surface has no color or border override. Use BoF.datePickerField when custom colors are needed.',
+      'Appearance options are applied by scoping the theme around the field, since the upstream surface has no styling parameters. The calendar popup keeps the surrounding theme.',
     ],
     parameters: [
       DocParameter(
@@ -1751,6 +1961,36 @@ class _AccountFormState extends State<AccountForm> {
         name: 'enabled',
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
+      ),
+      DocParameter(
+        name: 'trailingIcon',
+        type: 'Widget?',
+        description:
+            'Replaces the calendar button icon.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Surface fill and digit color.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Digit text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Surface corner and border overrides. borderRadius uses its top-left corner.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Horizontal padding inside the surface.',
       ),
     ],
   ),
@@ -1796,6 +2036,36 @@ class _AccountFormState extends State<AccountForm> {
         type: 'ValueChanged<TimeOfDay?>?',
         description: 'Receives the selected time.',
       ),
+      DocParameter(
+        name: 'trailingIcon',
+        type: 'Widget?',
+        description:
+            'Replaces the clock icon.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Trigger fill and text color; foregroundColor also tints the icon.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Trigger text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Trigger corner and border overrides.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Trigger padding.',
+      ),
     ],
   ),
   DocPage(
@@ -1812,7 +2082,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFTimeInputField. Construct a controller with ComponentValueController<TimeOfDay?>(initialTime).',
-      'The upstream surface has no color or border override. Use BoF.timePickerField for a trigger with custom colors.',
+      'Appearance options are applied by scoping the theme around the field, since the upstream surface has no styling parameters.',
     ],
     parameters: [
       DocParameter(
@@ -1839,6 +2109,30 @@ class _AccountFormState extends State<AccountForm> {
         name: 'enabled',
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Surface fill and digit color.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Digit text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Surface corner and border overrides. borderRadius uses its top-left corner.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Horizontal padding inside the surface.',
       ),
     ],
   ),
@@ -1884,6 +2178,36 @@ class _AccountFormState extends State<AccountForm> {
         type: 'BorderRadiusGeometry?',
         description: 'Picker trigger corner shape.',
       ),
+      DocParameter(
+        name: 'trailingIcon',
+        type: 'Widget?',
+        description:
+            'Replaces the clock icon.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Trigger fill and text color; foregroundColor also tints the icon.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Trigger text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Trigger corner and border overrides.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Trigger padding.',
+      ),
     ],
   ),
   DocPage(
@@ -1899,7 +2223,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFDurationInputField. Construct a controller with ComponentValueController<Duration?>(initialDuration).',
-      'The upstream surface has no color or border override. Use BoF.durationPickerField when custom trigger colors are needed.',
+      'Appearance options are applied by scoping the theme around the field, since the upstream surface has no styling parameters.',
     ],
     parameters: [
       DocParameter(
@@ -1927,6 +2251,30 @@ class _AccountFormState extends State<AccountForm> {
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
       ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Surface fill and digit color.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Digit text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Surface corner and border overrides. borderRadius uses its top-left corner.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Horizontal padding inside the surface.',
+      ),
     ],
   ),
   DocPage(
@@ -1944,7 +2292,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFColorField. ColorInputController stores ColorDerivative; call controller.setColor(color) to update it with a plain Color.',
-      'The upstream widget has no surface color or border override.',
+      'Appearance options restyle the swatch trigger only; the color picker keeps its themed look.',
     ],
     parameters: [
       DocParameter(
@@ -1972,6 +2320,30 @@ class _AccountFormState extends State<AccountForm> {
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
       ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Trigger fill and text color; foregroundColor also tints the icon.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Trigger text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor / borderWidth',
+        type: 'BorderRadiusGeometry? / Color? / double?',
+        description:
+            'Trigger corner and border overrides.',
+      ),
+      DocParameter(
+        name: 'padding',
+        type: 'EdgeInsetsGeometry?',
+        description:
+            'Trigger padding.',
+      ),
     ],
   ),
   DocPage(
@@ -1987,7 +2359,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFPhoneField. The TextEditingController manages raw number text, rather than a PhoneNumber.',
-      'The upstream widget has no enabled parameter or surface styling overrides.',
+      'The upstream widget has no enabled parameter, so a disabled form field blocks input and dims instead. The number text style follows the theme.',
     ],
     parameters: [
       DocParameter(
@@ -2009,6 +2381,18 @@ class _AccountFormState extends State<AccountForm> {
         name: 'key',
         type: 'Key?',
         description: 'Optional widget identity.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / borderColor / borderWidth',
+        type: 'Color? / Color? / double?',
+        description:
+            'Fill and border of both the country button and the number field.',
+      ),
+      DocParameter(
+        name: 'filled / border / padding',
+        type: 'bool? / Border? / EdgeInsetsGeometry?',
+        description:
+            'Number field surface options, as on BoF.textField.',
       ),
     ],
   ),
@@ -2081,7 +2465,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       _controllerNote,
       'The form spec is BoFStarRatingField. Values are doubles.',
-      'activeColor, backgroundColor, and starSize customize the stars.',
+      'activeColor, backgroundColor, starSize, and starSpacing customize the stars.',
     ],
     parameters: [
       DocParameter(
@@ -2114,6 +2498,18 @@ class _AccountFormState extends State<AccountForm> {
         type: 'double?',
         description: 'Size of each star.',
       ),
+      DocParameter(
+        name: 'activeColor / backgroundColor',
+        type: 'Color?',
+        description:
+            'Rated and unrated star colors.',
+      ),
+      DocParameter(
+        name: 'starSpacing',
+        type: 'double?',
+        description:
+            'Gap between stars.',
+      ),
     ],
   ),
   DocPage(
@@ -2130,7 +2526,7 @@ class _AccountFormState extends State<AccountForm> {
       _standaloneNote,
       'The form spec is BoFOtpField. Values are List<int?>; null represents an empty character slot.',
       'This field has no controller or enabled parameter. Programmatic updates are not supported by the upstream widget.',
-      'Only spacing and height are exposed for styling; per-cell colors cannot be overridden.',
+      'spacing and height size the cells. backgroundColor, foregroundColor, fontSize, fontWeight, borderRadius, and borderColor restyle them; the cell border width is fixed upstream.',
     ],
     parameters: [
       DocParameter(
@@ -2157,6 +2553,24 @@ class _AccountFormState extends State<AccountForm> {
         name: 'height',
         type: 'double?',
         description: 'Input cell height.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Cell fill and character color.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight',
+        type: 'double? / FontWeight?',
+        description:
+            'Character size and weight.',
+      ),
+      DocParameter(
+        name: 'borderRadius / borderColor',
+        type: 'BorderRadiusGeometry? / Color?',
+        description:
+            'Outer corner radius (top-left corner) and cell border color.',
       ),
     ],
   ),
@@ -2209,6 +2623,42 @@ class _AccountFormState extends State<AccountForm> {
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
       ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Surface fill and text color overrides.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderColor / borderWidth / border',
+        type: 'Color? / double? / Border?',
+        description:
+            'Override matching border properties while retaining inherited sides.',
+      ),
+      DocParameter(
+        name: 'filled / borderRadius / padding / decoration',
+        type: 'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
+        description:
+            'Surface options shared with BoF.textField; decoration replaces the whole surface.',
+      ),
+      DocParameter(
+        name: 'textAlign / textAlignVertical / textDirection',
+        type: 'TextAlign / TextAlignVertical? / TextDirection?',
+        description:
+            'Text layout options.',
+      ),
+      DocParameter(
+        name: 'cursorColor / selectionColor',
+        type: 'Color?',
+        description:
+            'Cursor and selected-text highlight colors. cursorWidth, cursorHeight, cursorRadius, and showCursor are also accepted.',
+      ),
     ],
   ),
   DocPage(
@@ -2259,6 +2709,42 @@ class _AccountFormState extends State<AccountForm> {
         name: 'enabled',
         type: 'bool',
         description: 'Allow interaction. Defaults to true.',
+      ),
+      DocParameter(
+        name: 'backgroundColor / foregroundColor',
+        type: 'Color?',
+        description:
+            'Surface fill and text color overrides.',
+      ),
+      DocParameter(
+        name: 'fontSize / fontWeight / style',
+        type: 'double? / FontWeight? / TextStyle?',
+        description:
+            'Text overrides; the individual values win over style.',
+      ),
+      DocParameter(
+        name: 'borderColor / borderWidth / border',
+        type: 'Color? / double? / Border?',
+        description:
+            'Override matching border properties while retaining inherited sides.',
+      ),
+      DocParameter(
+        name: 'filled / borderRadius / padding / decoration',
+        type: 'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
+        description:
+            'Surface options shared with BoF.textField; decoration replaces the whole surface.',
+      ),
+      DocParameter(
+        name: 'textAlign / textAlignVertical / textDirection',
+        type: 'TextAlign / TextAlignVertical? / TextDirection?',
+        description:
+            'Text layout options.',
+      ),
+      DocParameter(
+        name: 'cursorColor / selectionColor',
+        type: 'Color?',
+        description:
+            'Cursor and selected-text highlight colors. cursorWidth, cursorHeight, cursorRadius, and showCursor are also accepted.',
       ),
     ],
   ),

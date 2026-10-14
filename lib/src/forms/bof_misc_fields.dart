@@ -10,11 +10,23 @@ import '../widgets/star_rating.dart';
 import 'bof_field.dart';
 
 /// A color swatch input. Maps to shadcn_flutter's `ControlledColorInput`.
+///
+/// Shares its appearance options with [bofColorField].
 class BoFColorField extends BoFField<Color> {
   @override
   final Color initialValue;
 
   final bool showAlpha;
+
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextStyle? style;
+  final BorderRadiusGeometry? borderRadius;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
 
   const BoFColorField({
     required super.name,
@@ -24,6 +36,15 @@ class BoFColorField extends BoFField<Color> {
     super.enabled,
     this.initialValue = const Color(0xFF000000),
     this.showAlpha = false,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.style,
+    this.borderRadius,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
   });
 
   @override
@@ -38,6 +59,15 @@ class BoFColorField extends BoFField<Color> {
       enabled: enabled,
       showAlpha: showAlpha,
       onChanged: onChanged,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      borderRadius: borderRadius,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
     );
   }
 }
@@ -46,9 +76,18 @@ class BoFColorField extends BoFField<Color> {
 ///
 /// `PhoneInput` has no `enabled` parameter, so a disabled field blocks input
 /// and dims the widget instead.
+///
+/// Shares its appearance options with [bofPhoneField].
 class BoFPhoneField extends BoFField<PhoneNumber> {
   @override
   final PhoneNumber? initialValue;
+
+  final Color? backgroundColor;
+  final bool? filled;
+  final Border? border;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
 
   const BoFPhoneField({
     required super.name,
@@ -57,6 +96,12 @@ class BoFPhoneField extends BoFField<PhoneNumber> {
     super.validator,
     super.enabled,
     this.initialValue,
+    this.backgroundColor,
+    this.filled,
+    this.border,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
   });
 
   @override
@@ -68,7 +113,16 @@ class BoFPhoneField extends BoFField<PhoneNumber> {
   ) {
     return _lockedUnless(
       enabled,
-      bofPhoneField(initialValue: value, onChanged: onChanged),
+      bofPhoneField(
+        initialValue: value,
+        onChanged: onChanged,
+        backgroundColor: backgroundColor,
+        filled: filled,
+        border: border,
+        borderColor: borderColor,
+        borderWidth: borderWidth,
+        padding: padding,
+      ),
     );
   }
 }
@@ -113,12 +167,19 @@ class BoFSliderField extends BoFField<SliderValue> {
 }
 
 /// A star rating. Maps to shadcn_flutter's `ControlledStarRating`.
+///
+/// Shares its appearance options with [bofStarRatingField].
 class BoFStarRatingField extends BoFField<double> {
   @override
   final double initialValue;
 
   final double max;
   final double step;
+
+  final Color? activeColor;
+  final Color? backgroundColor;
+  final double? starSize;
+  final double? starSpacing;
 
   const BoFStarRatingField({
     required super.name,
@@ -129,6 +190,10 @@ class BoFStarRatingField extends BoFField<double> {
     this.initialValue = 0,
     this.max = 5,
     this.step = 0.5,
+    this.activeColor,
+    this.backgroundColor,
+    this.starSize,
+    this.starSpacing,
   });
 
   @override
@@ -144,6 +209,10 @@ class BoFStarRatingField extends BoFField<double> {
       max: max,
       step: step,
       onChanged: onChanged,
+      activeColor: activeColor,
+      backgroundColor: backgroundColor,
+      starSize: starSize,
+      starSpacing: starSpacing,
     );
   }
 }
@@ -152,11 +221,21 @@ class BoFStarRatingField extends BoFField<double> {
 ///
 /// `InputOTP` has no `enabled` parameter, so a disabled field blocks input
 /// and dims the widget instead.
+///
+/// Shares its appearance options with [bofOtpField].
 class BoFOtpField extends BoFField<List<int?>> {
   @override
   final List<int?>? initialValue;
 
   final int length;
+  final double? spacing;
+  final double? height;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final BorderRadiusGeometry? borderRadius;
+  final Color? borderColor;
 
   const BoFOtpField({
     required super.name,
@@ -166,6 +245,14 @@ class BoFOtpField extends BoFField<List<int?>> {
     super.enabled,
     required this.length,
     this.initialValue,
+    this.spacing,
+    this.height,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.borderRadius,
+    this.borderColor,
   });
 
   @override
@@ -177,18 +264,54 @@ class BoFOtpField extends BoFField<List<int?>> {
   ) {
     return _lockedUnless(
       enabled,
-      bofOtpField(length: length, initialValue: value, onChanged: onChanged),
+      bofOtpField(
+        length: length,
+        initialValue: value,
+        onChanged: onChanged,
+        spacing: spacing,
+        height: height,
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        borderRadius: borderRadius,
+        borderColor: borderColor,
+      ),
     );
   }
 }
 
 /// A styled text field with a suggestion popover that preserves typing focus.
+///
+/// Shares its appearance options with [bofAutoCompleteField].
 class BoFAutoCompleteField extends BoFField<String> {
   @override
   final String? initialValue;
 
   final List<String> suggestions;
   final Widget? placeholder;
+
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextStyle? style;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final TextDirection? textDirection;
+  final bool? filled;
+  final BorderRadiusGeometry? borderRadius;
+  final Border? border;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
+  final BoxDecoration? decoration;
+  final Color? selectionColor;
+  final Color? cursorColor;
+  final double cursorWidth;
+  final double? cursorHeight;
+  final Radius cursorRadius;
+  final bool? showCursor;
 
   const BoFAutoCompleteField({
     required super.name,
@@ -199,6 +322,27 @@ class BoFAutoCompleteField extends BoFField<String> {
     required this.suggestions,
     this.initialValue,
     this.placeholder,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.style,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.textDirection,
+    this.filled,
+    this.borderRadius,
+    this.border,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
+    this.decoration,
+    this.selectionColor,
+    this.cursorColor,
+    this.cursorWidth = 2,
+    this.cursorHeight,
+    this.cursorRadius = const Radius.circular(2),
+    this.showCursor,
   });
 
   @override
@@ -214,12 +358,35 @@ class BoFAutoCompleteField extends BoFField<String> {
       placeholder: placeholder,
       enabled: enabled,
       onChanged: onChanged,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      textDirection: textDirection,
+      filled: filled,
+      borderRadius: borderRadius,
+      border: border,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
+      decoration: decoration,
+      selectionColor: selectionColor,
+      cursorColor: cursorColor,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      showCursor: showCursor,
     );
   }
 }
 
 /// A free-form list of chips parsed from typed text. Maps to shadcn_flutter's
 /// `ChipInput`.
+///
+/// Shares its appearance options with [bofChipInputField].
 class BoFChipInputField<T extends Object> extends BoFField<List<T>> {
   @override
   final List<T>? initialValue;
@@ -230,6 +397,28 @@ class BoFChipInputField<T extends Object> extends BoFField<List<T>> {
   /// Parses submitted text into a chip value, or returns null to reject it.
   final T? Function(String text) onChipSubmitted;
 
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextStyle? style;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final TextDirection? textDirection;
+  final bool? filled;
+  final BorderRadiusGeometry? borderRadius;
+  final Border? border;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
+  final BoxDecoration? decoration;
+  final Color? selectionColor;
+  final Color? cursorColor;
+  final double cursorWidth;
+  final double? cursorHeight;
+  final Radius cursorRadius;
+  final bool? showCursor;
+
   const BoFChipInputField({
     required super.name,
     required super.label,
@@ -239,6 +428,27 @@ class BoFChipInputField<T extends Object> extends BoFField<List<T>> {
     required this.chipBuilder,
     required this.onChipSubmitted,
     this.initialValue,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.style,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.textDirection,
+    this.filled,
+    this.borderRadius,
+    this.border,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
+    this.decoration,
+    this.selectionColor,
+    this.cursorColor,
+    this.cursorWidth = 2,
+    this.cursorHeight,
+    this.cursorRadius = const Radius.circular(2),
+    this.showCursor,
   });
 
   @override
@@ -254,6 +464,27 @@ class BoFChipInputField<T extends Object> extends BoFField<List<T>> {
       initialValue: value,
       enabled: enabled,
       onChanged: onChanged,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      textDirection: textDirection,
+      filled: filled,
+      borderRadius: borderRadius,
+      border: border,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
+      decoration: decoration,
+      selectionColor: selectionColor,
+      cursorColor: cursorColor,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      showCursor: showCursor,
     );
   }
 }

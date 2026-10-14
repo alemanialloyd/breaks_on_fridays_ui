@@ -41,6 +41,63 @@ AbstractButtonStyle bofButtonStyle(
   );
 }
 
+/// Applies the given overrides to an already-resolved button [Decoration].
+///
+/// Shared by [bofButtonStyle] and the field triggers that restyle shadcn's
+/// button themes. Returns [resolved] unchanged when every override is null.
+Decoration bofOverrideDecoration(
+  Decoration resolved, {
+  Color? backgroundColor,
+  BorderRadiusGeometry? borderRadius,
+  Color? borderColor,
+  double? borderWidth,
+}) {
+  if (backgroundColor == null &&
+      borderRadius == null &&
+      borderColor == null &&
+      borderWidth == null) {
+    return resolved;
+  }
+  if (resolved is ShapeDecoration) {
+    // e.g. ButtonShape.circle — has no BorderRadius/BoxBorder concept,
+    // so only the fill color can be overridden here.
+    return resolved.copyWithIfShapeDecoration(color: backgroundColor);
+  }
+  Border? border;
+  if (borderColor != null || borderWidth != null) {
+    final existing = resolved is BoxDecoration ? resolved.border : null;
+    final existingSide = existing is Border ? existing.top : null;
+    border = Border.fromBorderSide(
+      BorderSide(
+        color: borderColor ?? existingSide?.color ?? Colors.transparent,
+        width: borderWidth ?? existingSide?.width ?? 1,
+      ),
+    );
+  }
+  return resolved.copyWithIfBoxDecoration(
+    color: backgroundColor,
+    borderRadius: borderRadius,
+    border: border,
+  );
+}
+
+/// Applies the given overrides to an already-resolved [TextStyle].
+TextStyle bofOverrideTextStyle(
+  TextStyle resolved, {
+  Color? foregroundColor,
+  double? fontSize,
+  FontWeight? fontWeight,
+}) {
+  if (foregroundColor == null && fontSize == null && fontWeight == null) {
+    return resolved;
+  }
+  return resolved.copyWith(
+    color: foregroundColor,
+    fontSize: fontSize,
+    fontWeight: fontWeight,
+  );
+}
+
 class _ButtonStyleOverride implements AbstractButtonStyle {
   const _ButtonStyleOverride(
     this.base, {
@@ -65,47 +122,23 @@ class _ButtonStyleOverride implements AbstractButtonStyle {
   final EdgeInsetsGeometry? _paddingOverride;
 
   @override
-  ButtonStateProperty<Decoration> get decoration => (context, states) {
-        final resolved = base.decoration(context, states);
-        if (backgroundColor == null &&
-            borderRadius == null &&
-            borderColor == null &&
-            borderWidth == null) {
-          return resolved;
-        }
-        if (resolved is ShapeDecoration) {
-          // e.g. ButtonShape.circle — has no BorderRadius/BoxBorder concept,
-          // so only the fill color can be overridden here.
-          return resolved.copyWithIfShapeDecoration(color: backgroundColor);
-        }
-        Border? border;
-        if (borderColor != null || borderWidth != null) {
-          final existing = resolved is BoxDecoration ? resolved.border : null;
-          final existingSide = existing is Border ? existing.top : null;
-          border = Border.fromBorderSide(BorderSide(
-            color: borderColor ?? existingSide?.color ?? Colors.transparent,
-            width: borderWidth ?? existingSide?.width ?? 1,
-          ));
-        }
-        return resolved.copyWithIfBoxDecoration(
-          color: backgroundColor,
-          borderRadius: borderRadius,
-          border: border,
-        );
-      };
+  ButtonStateProperty<Decoration> get decoration =>
+      (context, states) => bofOverrideDecoration(
+        base.decoration(context, states),
+        backgroundColor: backgroundColor,
+        borderRadius: borderRadius,
+        borderColor: borderColor,
+        borderWidth: borderWidth,
+      );
 
   @override
-  ButtonStateProperty<TextStyle> get textStyle => (context, states) {
-        final resolved = base.textStyle(context, states);
-        if (foregroundColor == null && fontSize == null && fontWeight == null) {
-          return resolved;
-        }
-        return resolved.copyWith(
-          color: foregroundColor,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-        );
-      };
+  ButtonStateProperty<TextStyle> get textStyle =>
+      (context, states) => bofOverrideTextStyle(
+        base.textStyle(context, states),
+        foregroundColor: foregroundColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+      );
 
   @override
   ButtonStateProperty<EdgeInsetsGeometry> get padding {

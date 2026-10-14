@@ -2,6 +2,8 @@ import 'package:flutter/services.dart'
     show TextCapitalization, TextInputAction, TextInputFormatter;
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
+import 'field_style.dart';
+
 /// A single-line text input. Wraps shadcn_flutter's `TextField`.
 ///
 /// [obscureText] defaults to matching [showPasswordToggle] when not set
@@ -69,13 +71,13 @@ Widget bofTextField({
     if (showPasswordToggle) InputFeature.passwordToggle(mode: passwordPeekMode),
     ...?features,
   ];
-  final input = _TextFieldBackground(
+  final input = BofTextFieldSurface.builder(
     color: backgroundColor,
     filled: filled,
     border: border,
     borderColor: borderColor,
     borderWidth: borderWidth,
-    child: TextField(
+    builder: (context, filled, border) => TextField(
       key: key,
       initialValue: initialValue,
       controller: controller,
@@ -96,17 +98,17 @@ Widget bofTextField({
       focusNode: focusNode,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
-      style: foregroundColor == null && fontSize == null && fontWeight == null
-          ? style
-          : (style ?? const TextStyle()).copyWith(
-              color: foregroundColor,
-              fontSize: fontSize,
-              fontWeight: fontWeight,
-            ),
+      style: bofFieldTextStyle(
+        style,
+        foregroundColor: foregroundColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+      ),
       textAlign: textAlign,
       textAlignVertical: textAlignVertical,
       textDirection: textDirection,
       filled: filled,
+      border: border,
       borderRadius: borderRadius,
       padding: padding,
       decoration: decoration,
@@ -117,11 +119,16 @@ Widget bofTextField({
       showCursor: showCursor,
     ),
   );
+  return bofWithSelectionColor(selectionColor, input);
+}
+
+/// Scopes [selectionColor] to [child], or returns [child] when it is null.
+Widget bofWithSelectionColor(Color? selectionColor, Widget child) {
   return selectionColor == null
-      ? input
+      ? child
       : DefaultSelectionStyle.merge(
           selectionColor: selectionColor,
-          child: input,
+          child: child,
         );
 }
 
@@ -130,8 +137,8 @@ Widget bofTextField({
 /// Pass [controller] to update the text programmatically; when provided it
 /// takes precedence over [initialValue].
 ///
-/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
-/// [borderRadius] to override the field's default styling.
+/// Appearance options match [bofTextField] and are shared with
+/// `BoFTextAreaField`.
 Widget bofTextAreaField({
   Key? key,
   String? initialValue,
@@ -144,23 +151,62 @@ Widget bofTextAreaField({
   Color? backgroundColor,
   Color? foregroundColor,
   double? fontSize,
+  FontWeight? fontWeight,
+  TextStyle? style,
+  TextAlign textAlign = TextAlign.start,
+  TextAlignVertical? textAlignVertical,
+  TextDirection? textDirection,
+  bool? filled,
   BorderRadiusGeometry? borderRadius,
+  Border? border,
+  Color? borderColor,
+  double? borderWidth,
+  EdgeInsetsGeometry? padding,
+  BoxDecoration? decoration,
+  Color? selectionColor,
+  Color? cursorColor,
+  double cursorWidth = 2,
+  double? cursorHeight,
+  Radius cursorRadius = const Radius.circular(2),
+  bool? showCursor,
 }) {
-  return _TextFieldBackground(
-    color: backgroundColor,
-    child: TextArea(
-      key: key,
-      initialValue: initialValue,
-      controller: controller,
-      placeholder: placeholder,
-      minHeight: minHeight,
-      maxHeight: maxHeight,
-      enabled: enabled,
-      onChanged: onChanged,
-      style: foregroundColor == null && fontSize == null
-          ? null
-          : TextStyle(color: foregroundColor, fontSize: fontSize),
-      borderRadius: borderRadius,
+  return bofWithSelectionColor(
+    selectionColor,
+    BofTextFieldSurface.builder(
+      color: backgroundColor,
+      filled: filled,
+      border: border,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      builder: (context, filled, border) => TextArea(
+        key: key,
+        initialValue: initialValue,
+        controller: controller,
+        placeholder: placeholder,
+        minHeight: minHeight,
+        maxHeight: maxHeight,
+        enabled: enabled,
+        onChanged: onChanged,
+        style: bofFieldTextStyle(
+          style,
+          foregroundColor: foregroundColor,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        ),
+        textAlign: textAlign,
+        textAlignVertical: textAlignVertical,
+        textDirection: textDirection,
+        filled: filled,
+        border: border,
+        borderRadius: borderRadius,
+        padding: padding,
+        decoration: decoration,
+        cursorColor: cursorColor,
+        cursorWidth: cursorWidth,
+        cursorHeight: cursorHeight,
+        cursorRadius: cursorRadius,
+        showCursor: showCursor,
+      ),
     ),
   );
 }
@@ -173,8 +219,8 @@ Widget bofTextAreaField({
 /// Pass [controller] to update the text programmatically; when provided it
 /// takes precedence over [initialValue].
 ///
-/// Pass [backgroundColor], [foregroundColor], [fontSize] and/or
-/// [borderRadius] to override the field's default styling.
+/// Appearance options match [bofTextField] and are shared with
+/// `BoFNumberField`.
 Widget bofNumberField({
   Key? key,
   num? initialValue,
@@ -186,94 +232,63 @@ Widget bofNumberField({
   Color? backgroundColor,
   Color? foregroundColor,
   double? fontSize,
+  FontWeight? fontWeight,
+  TextStyle? style,
+  TextAlign textAlign = TextAlign.start,
+  TextAlignVertical? textAlignVertical,
+  TextDirection? textDirection,
+  bool? filled,
   BorderRadiusGeometry? borderRadius,
+  Border? border,
+  Color? borderColor,
+  double? borderWidth,
+  EdgeInsetsGeometry? padding,
+  BoxDecoration? decoration,
+  Color? selectionColor,
+  Color? cursorColor,
+  double cursorWidth = 2,
+  double? cursorHeight,
+  Radius cursorRadius = const Radius.circular(2),
+  bool? showCursor,
 }) {
-  return _TextFieldBackground(
-    color: backgroundColor,
-    child: TextField(
-      key: key,
-      initialValue: initialValue?.toString(),
-      controller: controller,
-      placeholder: placeholder,
-      enabled: enabled,
-      keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
-      onChanged: onChanged == null
-          ? null
-          : (text) => onChanged(num.tryParse(text)),
-      style: foregroundColor == null && fontSize == null
-          ? null
-          : TextStyle(color: foregroundColor, fontSize: fontSize),
-      borderRadius: borderRadius,
+  return bofWithSelectionColor(
+    selectionColor,
+    BofTextFieldSurface.builder(
+      color: backgroundColor,
+      filled: filled,
+      border: border,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      builder: (context, filled, border) => TextField(
+        key: key,
+        initialValue: initialValue?.toString(),
+        controller: controller,
+        placeholder: placeholder,
+        enabled: enabled,
+        keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
+        onChanged: onChanged == null
+            ? null
+            : (text) => onChanged(num.tryParse(text)),
+        style: bofFieldTextStyle(
+          style,
+          foregroundColor: foregroundColor,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        ),
+        textAlign: textAlign,
+        textAlignVertical: textAlignVertical,
+        textDirection: textDirection,
+        filled: filled,
+        border: border,
+        borderRadius: borderRadius,
+        padding: padding,
+        decoration: decoration,
+        cursorColor: cursorColor,
+        cursorWidth: cursorWidth,
+        cursorHeight: cursorHeight,
+        cursorRadius: cursorRadius,
+        showCursor: showCursor,
+      ),
     ),
   );
-}
-
-/// Applies a field-local fill without replacing shadcn's decoration.
-///
-/// `TextField.decoration` is a complete decoration override, so using it for a
-/// color alone also removes the border, radius, and any component-theme
-/// styling. A filled shadcn field gets its color from `colorScheme.muted`; this
-/// scopes that color to one field and retains the surrounding text-field theme.
-class _TextFieldBackground extends StatelessWidget {
-  const _TextFieldBackground({
-    required this.color,
-    required this.child,
-    this.filled,
-    this.border,
-    this.borderColor,
-    this.borderWidth,
-  });
-
-  final Color? color;
-  final bool? filled;
-  final Border? border;
-  final Color? borderColor;
-  final double? borderWidth;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    if (color == null &&
-        filled == null &&
-        border == null &&
-        borderColor == null &&
-        borderWidth == null) {
-      return child;
-    }
-
-    final theme = Theme.of(context);
-    final fieldTheme = ComponentTheme.maybeOf<TextFieldTheme>(context);
-    var effectiveBorder = border ?? fieldTheme?.border;
-    if (borderColor != null || borderWidth != null) {
-      final base =
-          effectiveBorder ??
-          Border.all(
-            color: theme.colorScheme.border,
-            strokeAlign: BorderSide.strokeAlignCenter,
-          );
-      BorderSide overrideSide(BorderSide side) =>
-          side.copyWith(color: borderColor, width: borderWidth);
-      effectiveBorder = Border(
-        top: overrideSide(base.top),
-        bottom: overrideSide(base.bottom),
-        left: overrideSide(base.left),
-        right: overrideSide(base.right),
-      );
-    }
-    return Theme(
-      data: color == null
-          ? theme
-          : theme.copyWith(
-              colorScheme: () =>
-                  theme.colorScheme.copyWith(muted: () => color!),
-            ),
-      child: ComponentTheme<TextFieldTheme>(
-        data: (fieldTheme ?? const TextFieldTheme()).copyWith(
-          filled: () => filled ?? (color != null ? true : fieldTheme?.filled),
-          border: () => effectiveBorder,
-        ),
-        child: child,
-      ),
-    );
-  }
 }

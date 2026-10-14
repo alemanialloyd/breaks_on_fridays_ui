@@ -48,6 +48,8 @@ class BoFRadioGroupField<T extends Object> extends BoFField<T> {
 }
 
 /// A single-selection dropdown sized to its widest option or placeholder.
+///
+/// Shares its appearance options with [bofSelectField].
 class BoFSelectField<T extends Object> extends BoFField<T> {
   @override
   final T? initialValue;
@@ -55,6 +57,17 @@ class BoFSelectField<T extends Object> extends BoFField<T> {
   final List<BoFOption<T>> options;
   final Widget? placeholder;
   final bool filled;
+
+  final Widget? trailingIcon;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextStyle? style;
+  final BorderRadiusGeometry? borderRadius;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
 
   const BoFSelectField({
     required super.name,
@@ -66,6 +79,16 @@ class BoFSelectField<T extends Object> extends BoFField<T> {
     this.initialValue,
     this.placeholder,
     this.filled = false,
+    this.trailingIcon,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.style,
+    this.borderRadius,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
   });
 
   @override
@@ -82,17 +105,40 @@ class BoFSelectField<T extends Object> extends BoFField<T> {
       filled: filled,
       enabled: enabled,
       onChanged: onChanged,
+      trailingIcon: trailingIcon,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      borderRadius: borderRadius,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
     );
   }
 }
 
 /// A multi-selection dropdown with removable chips and stable option sizing.
+///
+/// Shares its appearance options with [bofMultiSelectField].
 class BoFMultiSelectField<T extends Object> extends BoFField<Iterable<T>> {
   @override
   final Iterable<T>? initialValue;
 
   final List<BoFOption<T>> options;
   final Widget? placeholder;
+
+  final Widget? trailingIcon;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextStyle? style;
+  final BorderRadiusGeometry? borderRadius;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
 
   const BoFMultiSelectField({
     required super.name,
@@ -103,6 +149,16 @@ class BoFMultiSelectField<T extends Object> extends BoFField<Iterable<T>> {
     required this.options,
     this.initialValue,
     this.placeholder,
+    this.trailingIcon,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.style,
+    this.borderRadius,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
   });
 
   @override
@@ -118,17 +174,46 @@ class BoFMultiSelectField<T extends Object> extends BoFField<Iterable<T>> {
       placeholder: placeholder,
       enabled: enabled,
       onChanged: onChanged,
+      trailingIcon: trailingIcon,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      borderRadius: borderRadius,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
     );
   }
 }
 
 /// An inline single choice, rendered as tappable chips.
+///
+/// Shares its appearance options with [bofMultipleChoiceField].
 class BoFMultipleChoiceField<T extends Object> extends BoFField<T> {
   @override
   final T? initialValue;
 
   final List<BoFOption<T>> options;
   final bool allowUnselect;
+
+  final Color? selectedBackgroundColor;
+  final Color? selectedForegroundColor;
+  final double? selectedFontSize;
+  final FontWeight? selectedFontWeight;
+  final BorderRadiusGeometry? selectedBorderRadius;
+  final Color? selectedBorderColor;
+  final double? selectedBorderWidth;
+  final EdgeInsetsGeometry? selectedPadding;
+  final Color? unselectedBackgroundColor;
+  final Color? unselectedForegroundColor;
+  final double? unselectedFontSize;
+  final FontWeight? unselectedFontWeight;
+  final BorderRadiusGeometry? unselectedBorderRadius;
+  final Color? unselectedBorderColor;
+  final double? unselectedBorderWidth;
+  final EdgeInsetsGeometry? unselectedPadding;
 
   const BoFMultipleChoiceField({
     required super.name,
@@ -139,6 +224,22 @@ class BoFMultipleChoiceField<T extends Object> extends BoFField<T> {
     required this.options,
     this.initialValue,
     this.allowUnselect = true,
+    this.selectedBackgroundColor,
+    this.selectedForegroundColor,
+    this.selectedFontSize,
+    this.selectedFontWeight,
+    this.selectedBorderRadius,
+    this.selectedBorderColor,
+    this.selectedBorderWidth,
+    this.selectedPadding,
+    this.unselectedBackgroundColor,
+    this.unselectedForegroundColor,
+    this.unselectedFontSize,
+    this.unselectedFontWeight,
+    this.unselectedBorderRadius,
+    this.unselectedBorderColor,
+    this.unselectedBorderWidth,
+    this.unselectedPadding,
   });
 
   @override
@@ -154,16 +255,51 @@ class BoFMultipleChoiceField<T extends Object> extends BoFField<T> {
       allowUnselect: allowUnselect,
       enabled: enabled,
       onChanged: onChanged,
+      selectedBackgroundColor: selectedBackgroundColor,
+      selectedForegroundColor: selectedForegroundColor,
+      selectedFontSize: selectedFontSize,
+      selectedFontWeight: selectedFontWeight,
+      selectedBorderRadius: selectedBorderRadius,
+      selectedBorderColor: selectedBorderColor,
+      selectedBorderWidth: selectedBorderWidth,
+      selectedPadding: selectedPadding,
+      unselectedBackgroundColor: unselectedBackgroundColor,
+      unselectedForegroundColor: unselectedForegroundColor,
+      unselectedFontSize: unselectedFontSize,
+      unselectedFontWeight: unselectedFontWeight,
+      unselectedBorderRadius: unselectedBorderRadius,
+      unselectedBorderColor: unselectedBorderColor,
+      unselectedBorderWidth: unselectedBorderWidth,
+      unselectedPadding: unselectedPadding,
     );
   }
 }
 
 /// An inline multi-choice, rendered as independently toggleable chips.
+///
+/// Shares its appearance options with [bofMultipleAnswerField].
 class BoFMultipleAnswerField<T extends Object> extends BoFField<Iterable<T>> {
   @override
   final Iterable<T>? initialValue;
 
   final List<BoFOption<T>> options;
+
+  final Color? selectedBackgroundColor;
+  final Color? selectedForegroundColor;
+  final double? selectedFontSize;
+  final FontWeight? selectedFontWeight;
+  final BorderRadiusGeometry? selectedBorderRadius;
+  final Color? selectedBorderColor;
+  final double? selectedBorderWidth;
+  final EdgeInsetsGeometry? selectedPadding;
+  final Color? unselectedBackgroundColor;
+  final Color? unselectedForegroundColor;
+  final double? unselectedFontSize;
+  final FontWeight? unselectedFontWeight;
+  final BorderRadiusGeometry? unselectedBorderRadius;
+  final Color? unselectedBorderColor;
+  final double? unselectedBorderWidth;
+  final EdgeInsetsGeometry? unselectedPadding;
 
   const BoFMultipleAnswerField({
     required super.name,
@@ -173,6 +309,22 @@ class BoFMultipleAnswerField<T extends Object> extends BoFField<Iterable<T>> {
     super.enabled,
     required this.options,
     this.initialValue,
+    this.selectedBackgroundColor,
+    this.selectedForegroundColor,
+    this.selectedFontSize,
+    this.selectedFontWeight,
+    this.selectedBorderRadius,
+    this.selectedBorderColor,
+    this.selectedBorderWidth,
+    this.selectedPadding,
+    this.unselectedBackgroundColor,
+    this.unselectedForegroundColor,
+    this.unselectedFontSize,
+    this.unselectedFontWeight,
+    this.unselectedBorderRadius,
+    this.unselectedBorderColor,
+    this.unselectedBorderWidth,
+    this.unselectedPadding,
   });
 
   @override
@@ -187,6 +339,22 @@ class BoFMultipleAnswerField<T extends Object> extends BoFField<Iterable<T>> {
       initialValue: value,
       enabled: enabled,
       onChanged: onChanged,
+      selectedBackgroundColor: selectedBackgroundColor,
+      selectedForegroundColor: selectedForegroundColor,
+      selectedFontSize: selectedFontSize,
+      selectedFontWeight: selectedFontWeight,
+      selectedBorderRadius: selectedBorderRadius,
+      selectedBorderColor: selectedBorderColor,
+      selectedBorderWidth: selectedBorderWidth,
+      selectedPadding: selectedPadding,
+      unselectedBackgroundColor: unselectedBackgroundColor,
+      unselectedForegroundColor: unselectedForegroundColor,
+      unselectedFontSize: unselectedFontSize,
+      unselectedFontWeight: unselectedFontWeight,
+      unselectedBorderRadius: unselectedBorderRadius,
+      unselectedBorderColor: unselectedBorderColor,
+      unselectedBorderWidth: unselectedBorderWidth,
+      unselectedPadding: unselectedPadding,
     );
   }
 }

@@ -42,8 +42,10 @@ class BofChoiceChip<T> extends StatelessWidget {
 /// it takes precedence over [initialValue].
 ///
 /// Use [selectedBackgroundColor]/[selectedForegroundColor]/[selectedFontSize]/
-/// [selectedBorderRadius] and their `unselected*` counterparts to style the
-/// chips without replacing their whole button styling.
+/// [selectedFontWeight]/[selectedBorderRadius]/[selectedBorderColor]/
+/// [selectedBorderWidth]/[selectedPadding] and their `unselected*`
+/// counterparts to style the chips without replacing their whole button
+/// styling.
 Widget bofMultipleChoiceField<T extends Object>({
   Key? key,
   required List<BoFOption<T>> options,
@@ -55,25 +57,41 @@ Widget bofMultipleChoiceField<T extends Object>({
   Color? selectedBackgroundColor,
   Color? selectedForegroundColor,
   double? selectedFontSize,
+  FontWeight? selectedFontWeight,
   BorderRadiusGeometry? selectedBorderRadius,
+  Color? selectedBorderColor,
+  double? selectedBorderWidth,
+  EdgeInsetsGeometry? selectedPadding,
   Color? unselectedBackgroundColor,
   Color? unselectedForegroundColor,
   double? unselectedFontSize,
+  FontWeight? unselectedFontWeight,
   BorderRadiusGeometry? unselectedBorderRadius,
+  Color? unselectedBorderColor,
+  double? unselectedBorderWidth,
+  EdgeInsetsGeometry? unselectedPadding,
 }) {
   final selectedStyle = bofButtonStyle(
     ButtonVariance.primary,
     backgroundColor: selectedBackgroundColor,
     foregroundColor: selectedForegroundColor,
     fontSize: selectedFontSize,
+    fontWeight: selectedFontWeight,
     borderRadius: selectedBorderRadius,
+    borderColor: selectedBorderColor,
+    borderWidth: selectedBorderWidth,
+    padding: selectedPadding,
   );
   final unselectedStyle = bofButtonStyle(
     ButtonVariance.outline,
     backgroundColor: unselectedBackgroundColor,
     foregroundColor: unselectedForegroundColor,
     fontSize: unselectedFontSize,
+    fontWeight: unselectedFontWeight,
     borderRadius: unselectedBorderRadius,
+    borderColor: unselectedBorderColor,
+    borderWidth: unselectedBorderWidth,
+    padding: unselectedPadding,
   );
   return BofControlledAdapter<T?>(
     key: key,
@@ -125,8 +143,10 @@ Widget bofMultipleChoiceField<T extends Object>({
 /// it takes precedence over [initialValue].
 ///
 /// Use [selectedBackgroundColor]/[selectedForegroundColor]/[selectedFontSize]/
-/// [selectedBorderRadius] and their `unselected*` counterparts to style the
-/// chips without replacing their whole button styling.
+/// [selectedFontWeight]/[selectedBorderRadius]/[selectedBorderColor]/
+/// [selectedBorderWidth]/[selectedPadding] and their `unselected*`
+/// counterparts to style the chips without replacing their whole button
+/// styling.
 Widget bofMultipleAnswerField<T extends Object>({
   Key? key,
   required List<BoFOption<T>> options,
@@ -137,25 +157,41 @@ Widget bofMultipleAnswerField<T extends Object>({
   Color? selectedBackgroundColor,
   Color? selectedForegroundColor,
   double? selectedFontSize,
+  FontWeight? selectedFontWeight,
   BorderRadiusGeometry? selectedBorderRadius,
+  Color? selectedBorderColor,
+  double? selectedBorderWidth,
+  EdgeInsetsGeometry? selectedPadding,
   Color? unselectedBackgroundColor,
   Color? unselectedForegroundColor,
   double? unselectedFontSize,
+  FontWeight? unselectedFontWeight,
   BorderRadiusGeometry? unselectedBorderRadius,
+  Color? unselectedBorderColor,
+  double? unselectedBorderWidth,
+  EdgeInsetsGeometry? unselectedPadding,
 }) {
   final selectedStyle = bofButtonStyle(
     ButtonVariance.primary,
     backgroundColor: selectedBackgroundColor,
     foregroundColor: selectedForegroundColor,
     fontSize: selectedFontSize,
+    fontWeight: selectedFontWeight,
     borderRadius: selectedBorderRadius,
+    borderColor: selectedBorderColor,
+    borderWidth: selectedBorderWidth,
+    padding: selectedPadding,
   );
   final unselectedStyle = bofButtonStyle(
     ButtonVariance.outline,
     backgroundColor: unselectedBackgroundColor,
     foregroundColor: unselectedForegroundColor,
     fontSize: unselectedFontSize,
+    fontWeight: unselectedFontWeight,
     borderRadius: unselectedBorderRadius,
+    borderColor: unselectedBorderColor,
+    borderWidth: unselectedBorderWidth,
+    padding: unselectedPadding,
   );
   return BofControlledAdapter<Iterable<T>?>(
     key: key,

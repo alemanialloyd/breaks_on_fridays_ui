@@ -4,6 +4,9 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 ///
 /// Pass [controller] to update the value programmatically; when provided it
 /// takes precedence over [initialValue].
+///
+/// [activeColor] fills the rated portion and [backgroundColor] the rest;
+/// [starSize] and [starSpacing] size and space the stars.
 Widget bofStarRatingField({
   Key? key,
   double initialValue = 0,
@@ -15,6 +18,7 @@ Widget bofStarRatingField({
   Color? activeColor,
   Color? backgroundColor,
   double? starSize,
+  double? starSpacing,
 }) {
   return ControlledStarRating(
     key: key,
@@ -27,5 +31,6 @@ Widget bofStarRatingField({
     activeColor: activeColor,
     backgroundColor: backgroundColor,
     starSize: starSize,
+    starSpacing: starSpacing,
   );
 }
