@@ -3,6 +3,7 @@ import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import '../forms/bof_option.dart';
 import 'controlled.dart';
+import 'field_style.dart';
 
 Widget _buildSelectItem<T>(List<BoFOption<T>> options, T value) {
   final match = options.where((o) => o.value == value);
@@ -36,16 +37,30 @@ SelectPopupBuilder _buildSelectPopup<T>(List<BoFOption<T>> options) {
 ///
 /// Pass [controller] to update the selection programmatically; when provided
 /// it takes precedence over [initialValue], including an empty selection.
+///
+/// [trailingIcon] replaces the dropdown chevron. The appearance options
+/// restyle the trigger button only; the popup keeps its themed look. Null
+/// values retain inherited defaults, and [foregroundColor]/[fontSize]/
+/// [fontWeight] override the matching properties of [style].
 Widget bofSelectField<T extends Object>({
   Key? key,
   required List<BoFOption<T>> options,
   T? initialValue,
   SelectController<T>? controller,
   Widget? placeholder,
+  Widget? trailingIcon,
   bool filled = false,
   bool enabled = true,
   ValueChanged<T?>? onChanged,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  FontWeight? fontWeight,
+  TextStyle? style,
   BorderRadiusGeometry? borderRadius,
+  Color? borderColor,
+  double? borderWidth,
+  EdgeInsetsGeometry? padding,
 }) {
   final emptyLabel = placeholder ?? const Text('Select an option');
   Widget content(Widget child) => _SelectContentWidth(
@@ -61,16 +76,29 @@ Widget bofSelectField<T extends Object>({
     controller: controller,
     enabled: enabled,
     onChanged: onChanged,
-    builder: (context, data) => Select<T>(
-      value: data.value,
-      onChanged: data.onChanged,
-      enabled: data.enabled,
-      filled: filled,
-      placeholder: content(emptyLabel),
+    builder: (context, data) => BofTriggerStyle(
+      secondary: filled,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
       borderRadius: borderRadius,
-      itemBuilder: (context, value) =>
-          content(_buildSelectItem(options, value)),
-      popup: _buildSelectPopup(options),
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
+      child: Select<T>(
+        value: data.value,
+        onChanged: data.onChanged,
+        enabled: data.enabled,
+        filled: filled,
+        placeholder: content(emptyLabel),
+        borderRadius: borderRadius,
+        expandIcon: trailingIcon ?? const SelectExpandIcon(),
+        itemBuilder: (context, value) =>
+            content(_buildSelectItem(options, value)),
+        popup: _buildSelectPopup(options),
+      ),
     ),
   );
 }
@@ -80,15 +108,28 @@ Widget bofSelectField<T extends Object>({
 ///
 /// Pass [controller] to update the selection programmatically; when provided
 /// it takes precedence over [initialValue], including an empty selection.
+///
+/// [trailingIcon] replaces the dropdown chevron. The appearance options
+/// restyle the trigger button only; the selected chips and the popup keep
+/// their themed look.
 Widget bofMultiSelectField<T extends Object>({
   Key? key,
   required List<BoFOption<T>> options,
   Iterable<T>? initialValue,
   MultiSelectController<T>? controller,
   Widget? placeholder,
+  Widget? trailingIcon,
   bool enabled = true,
   ValueChanged<Iterable<T>?>? onChanged,
+  Color? backgroundColor,
+  Color? foregroundColor,
+  double? fontSize,
+  FontWeight? fontWeight,
+  TextStyle? style,
   BorderRadiusGeometry? borderRadius,
+  Color? borderColor,
+  double? borderWidth,
+  EdgeInsetsGeometry? padding,
 }) {
   final emptyLabel = placeholder ?? const Text('Select options');
   Widget chip(T value, Widget label) => MultiSelectChip(
@@ -109,38 +150,50 @@ Widget bofMultiSelectField<T extends Object>({
     controller: controller,
     enabled: enabled,
     onChanged: onChanged,
-    builder: (context, data) => Select<Iterable<T>>(
-      value: data.value,
-      onChanged: data.onChanged,
-      enabled: data.enabled,
-      placeholder: content(_selectLabel(emptyLabel)),
+    builder: (context, data) => BofTriggerStyle(
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
       borderRadius: borderRadius,
-      canUnselect: true,
-      autoClosePopover: false,
-      showValuePredicate: (values) => values.isNotEmpty,
-      valueSelectionPredicate: (values, value) =>
-          values?.contains(value) ?? false,
-      valueSelectionHandler: (values, value, selected) => [
-        for (final existing in values ?? <T>[])
-          if (existing != value) existing,
-        if (selected) value as T,
-      ],
-      itemBuilder: (context, values) {
-        final theme = Theme.of(context);
-        final spacing = theme.density.baseGap * theme.scaling * 0.5;
-        return content(
-          Wrap(
-            spacing: spacing,
-            runSpacing: spacing,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              for (final value in values)
-                chip(value, _buildSelectItem(options, value)),
-            ],
-          ),
-        );
-      },
-      popup: _buildSelectPopup(options),
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
+      child: Select<Iterable<T>>(
+        expandIcon: trailingIcon ?? const SelectExpandIcon(),
+        value: data.value,
+        onChanged: data.onChanged,
+        enabled: data.enabled,
+        placeholder: content(_selectLabel(emptyLabel)),
+        borderRadius: borderRadius,
+        canUnselect: true,
+        autoClosePopover: false,
+        showValuePredicate: (values) => values.isNotEmpty,
+        valueSelectionPredicate: (values, value) =>
+            values?.contains(value) ?? false,
+        valueSelectionHandler: (values, value, selected) => [
+          for (final existing in values ?? <T>[])
+            if (existing != value) existing,
+          if (selected) value as T,
+        ],
+        itemBuilder: (context, values) {
+          final theme = Theme.of(context);
+          final spacing = theme.density.baseGap * theme.scaling * 0.5;
+          return content(
+            Wrap(
+              spacing: spacing,
+              runSpacing: spacing,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                for (final value in values)
+                  chip(value, _buildSelectItem(options, value)),
+              ],
+            ),
+          );
+        },
+        popup: _buildSelectPopup(options),
+      ),
     ),
   );
 }

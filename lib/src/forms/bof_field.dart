@@ -219,6 +219,8 @@ class BoFTextField extends BoFField<String> {
 }
 
 /// A multi-line text field. Maps to shadcn_flutter's `TextArea`.
+///
+/// Shares its appearance options with [bofTextAreaField].
 class BoFTextAreaField extends BoFField<String> {
   @override
   final String? initialValue;
@@ -226,6 +228,28 @@ class BoFTextAreaField extends BoFField<String> {
   final Widget? placeholder;
   final double minHeight;
   final double maxHeight;
+
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextStyle? style;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final TextDirection? textDirection;
+  final bool? filled;
+  final BorderRadiusGeometry? borderRadius;
+  final Border? border;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
+  final BoxDecoration? decoration;
+  final Color? selectionColor;
+  final Color? cursorColor;
+  final double cursorWidth;
+  final double? cursorHeight;
+  final Radius cursorRadius;
+  final bool? showCursor;
 
   const BoFTextAreaField({
     required super.name,
@@ -237,6 +261,27 @@ class BoFTextAreaField extends BoFField<String> {
     this.placeholder,
     this.minHeight = 100,
     this.maxHeight = double.infinity,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.style,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.textDirection,
+    this.filled,
+    this.borderRadius,
+    this.border,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
+    this.decoration,
+    this.selectionColor,
+    this.cursorColor,
+    this.cursorWidth = 2,
+    this.cursorHeight,
+    this.cursorRadius = const Radius.circular(2),
+    this.showCursor,
   });
 
   @override
@@ -253,6 +298,27 @@ class BoFTextAreaField extends BoFField<String> {
       maxHeight: maxHeight,
       enabled: enabled,
       onChanged: onChanged,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      textDirection: textDirection,
+      filled: filled,
+      borderRadius: borderRadius,
+      border: border,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
+      decoration: decoration,
+      selectionColor: selectionColor,
+      cursorColor: cursorColor,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      showCursor: showCursor,
     );
   }
 }
@@ -261,12 +327,36 @@ class BoFTextAreaField extends BoFField<String> {
 ///
 /// shadcn_flutter has no dedicated number-input widget, so this wraps
 /// `TextField` with a numeric keyboard and parses the text to [num].
+///
+/// Shares its appearance options with [bofNumberField].
 class BoFNumberField extends BoFField<num> {
   @override
   final num? initialValue;
 
   final Widget? placeholder;
   final bool allowDecimal;
+
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final TextStyle? style;
+  final TextAlign textAlign;
+  final TextAlignVertical? textAlignVertical;
+  final TextDirection? textDirection;
+  final bool? filled;
+  final BorderRadiusGeometry? borderRadius;
+  final Border? border;
+  final Color? borderColor;
+  final double? borderWidth;
+  final EdgeInsetsGeometry? padding;
+  final BoxDecoration? decoration;
+  final Color? selectionColor;
+  final Color? cursorColor;
+  final double cursorWidth;
+  final double? cursorHeight;
+  final Radius cursorRadius;
+  final bool? showCursor;
 
   const BoFNumberField({
     required super.name,
@@ -277,6 +367,27 @@ class BoFNumberField extends BoFField<num> {
     this.initialValue,
     this.placeholder,
     this.allowDecimal = true,
+    this.backgroundColor,
+    this.foregroundColor,
+    this.fontSize,
+    this.fontWeight,
+    this.style,
+    this.textAlign = TextAlign.start,
+    this.textAlignVertical,
+    this.textDirection,
+    this.filled,
+    this.borderRadius,
+    this.border,
+    this.borderColor,
+    this.borderWidth,
+    this.padding,
+    this.decoration,
+    this.selectionColor,
+    this.cursorColor,
+    this.cursorWidth = 2,
+    this.cursorHeight,
+    this.cursorRadius = const Radius.circular(2),
+    this.showCursor,
   });
 
   @override
@@ -292,6 +403,27 @@ class BoFNumberField extends BoFField<num> {
       allowDecimal: allowDecimal,
       enabled: enabled,
       onChanged: onChanged,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      textAlign: textAlign,
+      textAlignVertical: textAlignVertical,
+      textDirection: textDirection,
+      filled: filled,
+      borderRadius: borderRadius,
+      border: border,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
+      decoration: decoration,
+      selectionColor: selectionColor,
+      cursorColor: cursorColor,
+      cursorWidth: cursorWidth,
+      cursorHeight: cursorHeight,
+      cursorRadius: cursorRadius,
+      showCursor: showCursor,
     );
   }
 }
