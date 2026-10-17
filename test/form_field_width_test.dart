@@ -89,4 +89,53 @@ void main() {
     );
     expect(inputWidth(tester, 'agree'), lessThan(formWidth / 2));
   });
+
+  const standaloneOptions = [BoFOption(value: 'a', label: Text('A'))];
+  final standalone = <String, Widget Function()>{
+    'datePickerField': () => BoF.datePickerField(),
+    'dateInputField': () => BoF.dateInputField(),
+    'timePickerField': () => BoF.timePickerField(),
+    'timeInputField': () => BoF.timeInputField(),
+    'durationPickerField': () => BoF.durationPickerField(),
+    'durationInputField': () => BoF.durationInputField(),
+    'selectField': () => BoF.selectField<String>(options: standaloneOptions),
+    'multiSelectField': () =>
+        BoF.multiSelectField<String>(options: standaloneOptions),
+  };
+
+  for (final MapEntry(key: name, value: build) in standalone.entries) {
+    testWidgets('BoF.$name fills its parent and honors a SizedBox', (
+      tester,
+    ) async {
+      const key = ValueKey('field');
+      await tester.pumpWidget(
+        ShadcnApp(
+          home: Scaffold(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: SizedBox(
+                width: formWidth,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    KeyedSubtree(key: key, child: build()),
+                    SizedBox(
+                      width: 250,
+                      child: KeyedSubtree(
+                        key: const ValueKey('sized'),
+                        child: build(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+      expect(tester.getSize(find.byKey(key)).width, formWidth);
+      expect(tester.getSize(find.byKey(const ValueKey('sized'))).width, 250);
+      expect(tester.takeException(), isNull);
+    });
+  }
 }

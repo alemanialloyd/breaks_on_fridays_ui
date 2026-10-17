@@ -173,9 +173,6 @@ class BoFStarRatingField extends BoFField<double> {
   @override
   final double initialValue;
 
-  @override
-  bool get fillsWidth => false;
-
   final double max;
   final double step;
 
@@ -229,9 +226,6 @@ class BoFStarRatingField extends BoFField<double> {
 class BoFOtpField extends BoFField<List<int?>> {
   @override
   final List<int?>? initialValue;
-
-  @override
-  bool get fillsWidth => false;
 
   final int length;
   final double? spacing;

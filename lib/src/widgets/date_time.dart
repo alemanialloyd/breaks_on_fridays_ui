@@ -20,6 +20,9 @@ import 'field_style.dart';
 /// restyle the trigger button only; the picker it opens keeps its themed look.
 /// [foregroundColor] also tints the trigger's icon, and [foregroundColor]/
 /// [fontSize]/[fontWeight] override the matching properties of [style].
+///
+/// Fills the width its parent allows, like `BoF.textField`; wrap it in a
+/// `SizedBox` for a fixed width.
 Widget bofDatePickerField({
   Key? key,
   DateTime? initialValue,
@@ -41,45 +44,49 @@ Widget bofDatePickerField({
   double? borderWidth,
   EdgeInsetsGeometry? padding,
 }) {
-  return ControlledComponentAdapter<DateTime?>(
+  return SizedBox(
     key: key,
-    controller: controller,
-    initialValue: initialValue,
-    onChanged: onChanged,
-    enabled: enabled,
-    builder: (context, data) {
-      final localizations = ShadcnLocalizations.of(context);
-      return BofTriggerStyle(
-        backgroundColor: backgroundColor,
-        foregroundColor: foregroundColor,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        style: style,
-        borderRadius: borderRadius,
-        borderColor: borderColor,
-        borderWidth: borderWidth,
-        padding: padding,
-        child: ObjectFormField<DateTime>(
-          value: data.value,
-          onChanged: data.onChanged,
-          enabled: data.enabled,
-          placeholder: placeholder ?? Text(localizations.placeholderDatePicker),
-          trailing: trailingIcon ?? const Icon(LucideIcons.calendarDays),
-          mode: mode,
-          popoverPadding: popoverPadding,
-          dialogTitle: dialogTitle,
-          builder: (context, value) {
-            return Text(localizations.formatDateTime(value, showTime: false));
-          },
-          editorBuilder: (context, handler) {
-            return _BofCalendarView(
-              initialValue: handler.value,
-              onChanged: (value) => handler.value = value,
-            );
-          },
-        ),
-      );
-    },
+    width: double.infinity,
+    child: ControlledComponentAdapter<DateTime?>(
+      controller: controller,
+      initialValue: initialValue,
+      onChanged: onChanged,
+      enabled: enabled,
+      builder: (context, data) {
+        final localizations = ShadcnLocalizations.of(context);
+        return BofTriggerStyle(
+          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          style: style,
+          borderRadius: borderRadius,
+          borderColor: borderColor,
+          borderWidth: borderWidth,
+          padding: padding,
+          child: ObjectFormField<DateTime>(
+            value: data.value,
+            onChanged: data.onChanged,
+            enabled: data.enabled,
+            placeholder:
+                placeholder ?? Text(localizations.placeholderDatePicker),
+            trailing: trailingIcon ?? const Icon(LucideIcons.calendarDays),
+            mode: mode,
+            popoverPadding: popoverPadding,
+            dialogTitle: dialogTitle,
+            builder: (context, value) {
+              return Text(localizations.formatDateTime(value, showTime: false));
+            },
+            editorBuilder: (context, handler) {
+              return _BofCalendarView(
+                initialValue: handler.value,
+                onChanged: (value) => handler.value = value,
+              );
+            },
+          ),
+        );
+      },
+    ),
   );
 }
 
@@ -273,6 +280,9 @@ class _BofCalendarViewState extends State<_BofCalendarView> {
 /// The segmented surface is drawn by shadcn_flutter from theme colors, so the
 /// appearance options are applied by scoping the theme around the field (see
 /// [_styleSegmentedInput]); the calendar popup keeps the surrounding theme.
+///
+/// Fills the width its parent allows, like `BoF.textField`; wrap it in a
+/// `SizedBox` for a fixed width.
 Widget bofDateInputField({
   Key? key,
   DateTime? initialValue,
@@ -290,24 +300,27 @@ Widget bofDateInputField({
   double? borderWidth,
   EdgeInsetsGeometry? padding,
 }) {
-  return _styleSegmentedInput(
-    _BofDateInput(
-      key: key,
-      initialValue: initialValue,
-      controller: controller,
-      enabled: enabled,
-      trailingIcon: trailingIcon,
-      onChanged: onChanged,
+  return SizedBox(
+    key: key,
+    width: double.infinity,
+    child: _styleSegmentedInput(
+      _BofDateInput(
+        initialValue: initialValue,
+        controller: controller,
+        enabled: enabled,
+        trailingIcon: trailingIcon,
+        onChanged: onChanged,
+      ),
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      borderRadius: borderRadius,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
     ),
-    backgroundColor: backgroundColor,
-    foregroundColor: foregroundColor,
-    fontSize: fontSize,
-    fontWeight: fontWeight,
-    style: style,
-    borderRadius: borderRadius,
-    borderColor: borderColor,
-    borderWidth: borderWidth,
-    padding: padding,
   );
 }
 
@@ -376,7 +389,6 @@ class _BofDateInput extends StatefulWidget with ControlledComponent<DateTime?> {
   final Widget? trailingIcon;
 
   const _BofDateInput({
-    super.key,
     this.controller,
     this.initialValue,
     this.onChanged,
@@ -545,6 +557,9 @@ class _BofDateInputState extends State<_BofDateInput> {
 /// restyle the trigger button only; the picker it opens keeps its themed look.
 /// [foregroundColor] also tints the trigger's icon, and [foregroundColor]/
 /// [fontSize]/[fontWeight] override the matching properties of [style].
+///
+/// Fills the width its parent allows, like `BoF.textField`; wrap it in a
+/// `SizedBox` for a fixed width.
 Widget bofTimePickerField({
   Key? key,
   TimeOfDay? initialValue,
@@ -568,52 +583,55 @@ Widget bofTimePickerField({
 }) {
   // Mirrors shadcn_flutter's `ControlledTimePicker`/`TimePicker`, which
   // hardcode the trigger's trailing icon.
-  return ControlledComponentAdapter<TimeOfDay?>(
+  return SizedBox(
     key: key,
-    controller: controller,
-    initialValue: initialValue,
-    onChanged: onChanged,
-    enabled: enabled,
-    builder: (context, data) {
-      final localizations = ShadcnLocalizations.of(context);
-      final use24HourFormat =
-          ComponentTheme.maybeOf<TimePickerTheme>(context)?.use24HourFormat ??
-          MediaQuery.of(context).alwaysUse24HourFormat;
-      return BofTriggerStyle(
-        backgroundColor: backgroundColor,
-        foregroundColor: foregroundColor,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        style: style,
-        borderRadius: borderRadius,
-        borderColor: borderColor,
-        borderWidth: borderWidth,
-        padding: padding,
-        child: ObjectFormField<TimeOfDay>(
-          value: data.value,
-          onChanged: data.onChanged,
-          enabled: data.enabled,
-          placeholder: Text(localizations.placeholderTimePicker),
-          trailing: trailingIcon ?? const Icon(LucideIcons.clock),
-          mode: mode,
-          popoverPadding: popoverPadding,
-          dialogTitle: dialogTitle,
-          builder: (context, value) => Text(
-            localizations.formatTimeOfDay(
-              value,
+    width: double.infinity,
+    child: ControlledComponentAdapter<TimeOfDay?>(
+      controller: controller,
+      initialValue: initialValue,
+      onChanged: onChanged,
+      enabled: enabled,
+      builder: (context, data) {
+        final localizations = ShadcnLocalizations.of(context);
+        final use24HourFormat =
+            ComponentTheme.maybeOf<TimePickerTheme>(context)?.use24HourFormat ??
+            MediaQuery.of(context).alwaysUse24HourFormat;
+        return BofTriggerStyle(
+          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor,
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+          style: style,
+          borderRadius: borderRadius,
+          borderColor: borderColor,
+          borderWidth: borderWidth,
+          padding: padding,
+          child: ObjectFormField<TimeOfDay>(
+            value: data.value,
+            onChanged: data.onChanged,
+            enabled: data.enabled,
+            placeholder: Text(localizations.placeholderTimePicker),
+            trailing: trailingIcon ?? const Icon(LucideIcons.clock),
+            mode: mode,
+            popoverPadding: popoverPadding,
+            dialogTitle: dialogTitle,
+            builder: (context, value) => Text(
+              localizations.formatTimeOfDay(
+                value,
+                use24HourFormat: use24HourFormat,
+                showSeconds: showSeconds,
+              ),
+            ),
+            editorBuilder: (context, handler) => TimePickerDialog(
+              initialValue: handler.value,
+              onChanged: (value) => handler.value = value,
               use24HourFormat: use24HourFormat,
               showSeconds: showSeconds,
             ),
           ),
-          editorBuilder: (context, handler) => TimePickerDialog(
-            initialValue: handler.value,
-            onChanged: (value) => handler.value = value,
-            use24HourFormat: use24HourFormat,
-            showSeconds: showSeconds,
-          ),
-        ),
-      );
-    },
+        );
+      },
+    ),
   );
 }
 
@@ -623,6 +641,9 @@ Widget bofTimePickerField({
 /// takes precedence over [initialValue].
 ///
 /// Appearance options are applied the same way as [bofDateInputField]'s.
+///
+/// Fills the width its parent allows, like `BoF.textField`; wrap it in a
+/// `SizedBox` for a fixed width.
 Widget bofTimeInputField({
   Key? key,
   TimeOfDay? initialValue,
@@ -640,24 +661,27 @@ Widget bofTimeInputField({
   double? borderWidth,
   EdgeInsetsGeometry? padding,
 }) {
-  return _styleSegmentedInput(
-    TimeInput(
-      key: key,
-      initialValue: initialValue,
-      controller: controller,
-      enabled: enabled,
-      showSeconds: showSeconds,
-      onChanged: onChanged,
+  return SizedBox(
+    key: key,
+    width: double.infinity,
+    child: _styleSegmentedInput(
+      TimeInput(
+        initialValue: initialValue,
+        controller: controller,
+        enabled: enabled,
+        showSeconds: showSeconds,
+        onChanged: onChanged,
+      ),
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      borderRadius: borderRadius,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
     ),
-    backgroundColor: backgroundColor,
-    foregroundColor: foregroundColor,
-    fontSize: fontSize,
-    fontWeight: fontWeight,
-    style: style,
-    borderRadius: borderRadius,
-    borderColor: borderColor,
-    borderWidth: borderWidth,
-    padding: padding,
   );
 }
 
@@ -673,6 +697,9 @@ Widget bofTimeInputField({
 /// restyle the trigger button only; the picker it opens keeps its themed look.
 /// [foregroundColor] also tints the trigger's icon, and [foregroundColor]/
 /// [fontSize]/[fontWeight] override the matching properties of [style].
+///
+/// Fills the width its parent allows, like `BoF.textField`; wrap it in a
+/// `SizedBox` for a fixed width.
 Widget bofDurationPickerField({
   Key? key,
   Duration initialValue = Duration.zero,
@@ -690,23 +717,26 @@ Widget bofDurationPickerField({
   double? borderWidth,
   EdgeInsetsGeometry? padding,
 }) {
-  return BofTriggerStyle(
-    backgroundColor: backgroundColor,
-    foregroundColor: foregroundColor,
-    fontSize: fontSize,
-    fontWeight: fontWeight,
-    style: style,
-    borderRadius: borderRadius,
-    borderColor: borderColor,
-    borderWidth: borderWidth,
-    padding: padding,
-    child: _DurationPickerAdapter(
-      key: key,
-      initialValue: initialValue,
-      controller: controller,
-      enabled: enabled,
-      trailingIcon: trailingIcon,
-      onChanged: onChanged,
+  return SizedBox(
+    key: key,
+    width: double.infinity,
+    child: BofTriggerStyle(
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      borderRadius: borderRadius,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
+      child: _DurationPickerAdapter(
+        initialValue: initialValue,
+        controller: controller,
+        enabled: enabled,
+        trailingIcon: trailingIcon,
+        onChanged: onChanged,
+      ),
     ),
   );
 }
@@ -719,7 +749,6 @@ class _DurationPickerAdapter extends StatefulWidget {
   final ValueChanged<Duration?>? onChanged;
 
   const _DurationPickerAdapter({
-    super.key,
     required this.initialValue,
     this.controller,
     required this.enabled,
@@ -795,6 +824,9 @@ class _DurationPickerAdapterState extends State<_DurationPickerAdapter> {
 /// takes precedence over [initialValue].
 ///
 /// Appearance options are applied the same way as [bofDateInputField]'s.
+///
+/// Fills the width its parent allows, like `BoF.textField`; wrap it in a
+/// `SizedBox` for a fixed width.
 Widget bofDurationInputField({
   Key? key,
   Duration? initialValue,
@@ -812,23 +844,26 @@ Widget bofDurationInputField({
   double? borderWidth,
   EdgeInsetsGeometry? padding,
 }) {
-  return _styleSegmentedInput(
-    DurationInput(
-      key: key,
-      initialValue: initialValue,
-      controller: controller,
-      enabled: enabled,
-      showSeconds: showSeconds,
-      onChanged: onChanged,
+  return SizedBox(
+    key: key,
+    width: double.infinity,
+    child: _styleSegmentedInput(
+      DurationInput(
+        initialValue: initialValue,
+        controller: controller,
+        enabled: enabled,
+        showSeconds: showSeconds,
+        onChanged: onChanged,
+      ),
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
+      fontSize: fontSize,
+      fontWeight: fontWeight,
+      style: style,
+      borderRadius: borderRadius,
+      borderColor: borderColor,
+      borderWidth: borderWidth,
+      padding: padding,
     ),
-    backgroundColor: backgroundColor,
-    foregroundColor: foregroundColor,
-    fontSize: fontSize,
-    fontWeight: fontWeight,
-    style: style,
-    borderRadius: borderRadius,
-    borderColor: borderColor,
-    borderWidth: borderWidth,
-    padding: padding,
   );
 }

@@ -238,7 +238,6 @@ class _BofFormState extends State<_BofForm> {
 
   Widget _buildField(BoFField field) {
     return _BofFieldShell(
-      fillWidth: field.fillsWidth,
       label: field.label,
       hint: field.hint,
       error: _controller.errorOf(field.name),
@@ -260,11 +259,9 @@ class _BofFieldShell extends StatelessWidget {
   final Widget label;
   final Widget? hint;
   final ValidationResult? error;
-  final bool fillWidth;
   final Widget child;
 
   const _BofFieldShell({
-    required this.fillWidth,
     required this.label,
     this.hint,
     this.error,
@@ -287,10 +284,7 @@ class _BofFieldShell extends StatelessWidget {
           child: label,
         ).small,
         const Gap(8),
-        if (fillWidth)
-          SizedBox(width: double.infinity, child: child)
-        else
-          child,
+        child,
         if (hint != null) ...[const Gap(4), hint!.xSmall.muted],
         if (invalid) ...[
           const Gap(4),
