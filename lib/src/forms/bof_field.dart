@@ -42,6 +42,12 @@ abstract class BoFField<T> extends BoFFormItem {
     this.enabled = true,
   });
 
+  /// Whether [bofForm] stretches this field's input to the full width of
+  /// its slot, the way a text field fills it. True for text-like inputs,
+  /// pickers and selects; compact controls such as checkboxes, switches and
+  /// radio groups override it to keep their natural size.
+  bool get fillsWidth => true;
+
   /// The value this field starts with, used to seed [BoFFormController].
   T? get initialValue;
 
@@ -433,6 +439,9 @@ class BoFCheckboxField extends BoFField<CheckboxState> {
   @override
   final CheckboxState initialValue;
 
+  @override
+  bool get fillsWidth => false;
+
   const BoFCheckboxField({
     required super.name,
     required super.label,
@@ -461,6 +470,9 @@ class BoFCheckboxField extends BoFField<CheckboxState> {
 class BoFSwitchField extends BoFField<bool> {
   @override
   final bool initialValue;
+
+  @override
+  bool get fillsWidth => false;
 
   const BoFSwitchField({
     required super.name,

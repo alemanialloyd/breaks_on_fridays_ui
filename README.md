@@ -556,7 +556,11 @@ BoF.form(
 
 #### Laying out fields
 
-Fields are stacked vertically by default. To place them differently, mix
+Fields are stacked vertically by default, and each input fills the full width
+of its slot, so text fields, selects and the date, time and duration pickers
+line up edge to edge. Compact controls (checkbox, switch, radio group,
+multiple choice/answer, star rating and OTP) keep their natural size.
+Override `fillsWidth` in a custom `BoFField` subclass to choose either. To place them differently, mix
 layout entries into the same list:
 
 - `BoFRow(children, {flex, spacing, crossAxisAlignment})` puts its children

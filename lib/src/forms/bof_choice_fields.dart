@@ -13,6 +13,9 @@ class BoFRadioGroupField<T extends Object> extends BoFField<T> {
   @override
   final T? initialValue;
 
+  @override
+  bool get fillsWidth => false;
+
   final List<BoFOption<T>> options;
   final bool card;
   final Axis direction;
@@ -47,7 +50,9 @@ class BoFRadioGroupField<T extends Object> extends BoFField<T> {
   }
 }
 
-/// A single-selection dropdown sized to its widest option or placeholder.
+/// A single-selection dropdown. [bofForm] stretches it to the full width of
+/// its slot; the standalone [bofSelectField] sizes to its widest option or
+/// placeholder.
 ///
 /// Shares its appearance options with [bofSelectField].
 class BoFSelectField<T extends Object> extends BoFField<T> {
@@ -195,6 +200,9 @@ class BoFMultipleChoiceField<T extends Object> extends BoFField<T> {
   @override
   final T? initialValue;
 
+  @override
+  bool get fillsWidth => false;
+
   final List<BoFOption<T>> options;
   final bool allowUnselect;
 
@@ -281,6 +289,9 @@ class BoFMultipleChoiceField<T extends Object> extends BoFField<T> {
 class BoFMultipleAnswerField<T extends Object> extends BoFField<Iterable<T>> {
   @override
   final Iterable<T>? initialValue;
+
+  @override
+  bool get fillsWidth => false;
 
   final List<BoFOption<T>> options;
 
