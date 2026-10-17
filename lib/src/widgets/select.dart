@@ -33,7 +33,8 @@ SelectPopupBuilder _buildSelectPopup<T>(List<BoFOption<T>> options) {
   );
 }
 
-/// A single-selection dropdown, sized to its widest option or placeholder.
+/// A single-selection dropdown that fills the width its parent allows, like
+/// `BoF.textField`. Wrap it in a `SizedBox` for a fixed width.
 ///
 /// Pass [controller] to update the selection programmatically; when provided
 /// it takes precedence over [initialValue], including an empty selection.
@@ -70,41 +71,45 @@ Widget bofSelectField<T extends Object>({
     ],
     child: _selectLabel(child),
   );
-  return BofControlledAdapter<T?>(
+  return SizedBox(
     key: key,
-    initialValue: initialValue,
-    controller: controller,
-    enabled: enabled,
-    onChanged: onChanged,
-    builder: (context, data) => BofTriggerStyle(
-      secondary: filled,
-      backgroundColor: backgroundColor,
-      foregroundColor: foregroundColor,
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-      style: style,
-      borderRadius: borderRadius,
-      borderColor: borderColor,
-      borderWidth: borderWidth,
-      padding: padding,
-      child: Select<T>(
-        value: data.value,
-        onChanged: data.onChanged,
-        enabled: data.enabled,
-        filled: filled,
-        placeholder: content(emptyLabel),
+    width: double.infinity,
+    child: BofControlledAdapter<T?>(
+      initialValue: initialValue,
+      controller: controller,
+      enabled: enabled,
+      onChanged: onChanged,
+      builder: (context, data) => BofTriggerStyle(
+        secondary: filled,
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        style: style,
         borderRadius: borderRadius,
-        expandIcon: trailingIcon ?? const SelectExpandIcon(),
-        itemBuilder: (context, value) =>
-            content(_buildSelectItem(options, value)),
-        popup: _buildSelectPopup(options),
+        borderColor: borderColor,
+        borderWidth: borderWidth,
+        padding: padding,
+        child: Select<T>(
+          value: data.value,
+          onChanged: data.onChanged,
+          enabled: data.enabled,
+          filled: filled,
+          placeholder: content(emptyLabel),
+          borderRadius: borderRadius,
+          expandIcon: trailingIcon ?? const SelectExpandIcon(),
+          itemBuilder: (context, value) =>
+              content(_buildSelectItem(options, value)),
+          popup: _buildSelectPopup(options),
+        ),
       ),
     ),
   );
 }
 
-/// A multi-selection dropdown, sized to its widest option chip or placeholder.
-/// Selected chips wrap within the field rather than changing its width.
+/// A multi-selection dropdown that fills the width its parent allows, like
+/// `BoF.textField`. Selected chips wrap within the field rather than changing
+/// its width.
 ///
 /// Pass [controller] to update the selection programmatically; when provided
 /// it takes precedence over [initialValue], including an empty selection.
@@ -144,55 +149,58 @@ Widget bofMultiSelectField<T extends Object>({
     ],
     child: child,
   );
-  return BofControlledAdapter<Iterable<T>?>(
+  return SizedBox(
     key: key,
-    initialValue: initialValue,
-    controller: controller,
-    enabled: enabled,
-    onChanged: onChanged,
-    builder: (context, data) => BofTriggerStyle(
-      backgroundColor: backgroundColor,
-      foregroundColor: foregroundColor,
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-      style: style,
-      borderRadius: borderRadius,
-      borderColor: borderColor,
-      borderWidth: borderWidth,
-      padding: padding,
-      child: Select<Iterable<T>>(
-        expandIcon: trailingIcon ?? const SelectExpandIcon(),
-        value: data.value,
-        onChanged: data.onChanged,
-        enabled: data.enabled,
-        placeholder: content(_selectLabel(emptyLabel)),
+    width: double.infinity,
+    child: BofControlledAdapter<Iterable<T>?>(
+      initialValue: initialValue,
+      controller: controller,
+      enabled: enabled,
+      onChanged: onChanged,
+      builder: (context, data) => BofTriggerStyle(
+        backgroundColor: backgroundColor,
+        foregroundColor: foregroundColor,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        style: style,
         borderRadius: borderRadius,
-        canUnselect: true,
-        autoClosePopover: false,
-        showValuePredicate: (values) => values.isNotEmpty,
-        valueSelectionPredicate: (values, value) =>
-            values?.contains(value) ?? false,
-        valueSelectionHandler: (values, value, selected) => [
-          for (final existing in values ?? <T>[])
-            if (existing != value) existing,
-          if (selected) value as T,
-        ],
-        itemBuilder: (context, values) {
-          final theme = Theme.of(context);
-          final spacing = theme.density.baseGap * theme.scaling * 0.5;
-          return content(
-            Wrap(
-              spacing: spacing,
-              runSpacing: spacing,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                for (final value in values)
-                  chip(value, _buildSelectItem(options, value)),
-              ],
-            ),
-          );
-        },
-        popup: _buildSelectPopup(options),
+        borderColor: borderColor,
+        borderWidth: borderWidth,
+        padding: padding,
+        child: Select<Iterable<T>>(
+          expandIcon: trailingIcon ?? const SelectExpandIcon(),
+          value: data.value,
+          onChanged: data.onChanged,
+          enabled: data.enabled,
+          placeholder: content(_selectLabel(emptyLabel)),
+          borderRadius: borderRadius,
+          canUnselect: true,
+          autoClosePopover: false,
+          showValuePredicate: (values) => values.isNotEmpty,
+          valueSelectionPredicate: (values, value) =>
+              values?.contains(value) ?? false,
+          valueSelectionHandler: (values, value, selected) => [
+            for (final existing in values ?? <T>[])
+              if (existing != value) existing,
+            if (selected) value as T,
+          ],
+          itemBuilder: (context, values) {
+            final theme = Theme.of(context);
+            final spacing = theme.density.baseGap * theme.scaling * 0.5;
+            return content(
+              Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  for (final value in values)
+                    chip(value, _buildSelectItem(options, value)),
+                ],
+              ),
+            );
+          },
+          popup: _buildSelectPopup(options),
+        ),
       ),
     ),
   );
@@ -298,7 +306,9 @@ class _RenderIntrinsicSafeLabel extends RenderProxyBox {
   }
 }
 
-/// Measures actual option widgets in the trigger's inherited text/icon theme.
+/// Gives the select's content the full width it is offered, and reports the
+/// widest option (measured in the trigger's inherited text/icon theme) as its
+/// intrinsic width, for parents such as `IntrinsicWidth` that size to it.
 /// The select itself adds its padding and chevron to this content width.
 class _SelectContentWidth extends MultiChildRenderObjectWidget {
   _SelectContentWidth({required Widget child, required List<Widget> samples})
@@ -361,7 +371,9 @@ class _RenderSelectContentWidth extends RenderBox
 
   @override
   Size computeDryLayout(BoxConstraints constraints) {
-    final width = constraints.constrainWidth(_preferredWidth(double.infinity));
+    final width = constraints.hasBoundedWidth
+        ? constraints.maxWidth
+        : _preferredWidth(double.infinity);
     return constraints.constrain(
       firstChild!.getDryLayout(constraints.tighten(width: width)),
     );
@@ -369,7 +381,9 @@ class _RenderSelectContentWidth extends RenderBox
 
   @override
   void performLayout() {
-    final width = constraints.constrainWidth(_preferredWidth(double.infinity));
+    final width = constraints.hasBoundedWidth
+        ? constraints.maxWidth
+        : _preferredWidth(double.infinity);
     firstChild!.layout(constraints.tighten(width: width), parentUsesSize: true);
     size = constraints.constrain(firstChild!.size);
     var sample = childAfter(firstChild!);

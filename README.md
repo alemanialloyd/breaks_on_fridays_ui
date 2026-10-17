@@ -556,7 +556,10 @@ BoF.form(
 
 #### Laying out fields
 
-Fields are stacked vertically by default. To place them differently, mix
+Fields are stacked vertically by default, and text fields, selects and the
+date, time and duration fields fill the full width of their slot. Compact
+controls (checkbox, switch, radio group, multiple choice/answer, star rating
+and OTP) keep their natural size. To place them differently, mix
 layout entries into the same list:
 
 - `BoFRow(children, {flex, spacing, crossAxisAlignment})` puts its children
@@ -997,8 +1000,9 @@ BoF.selectField<String>(
 
 Controller: `SelectController<T>`.
 
-The field measures the widest option or placeholder and keeps its width when
-the selection changes, within its parent's available space. An empty selection
+The field fills the width its parent gives it, like `BoF.textField`, and keeps
+that width when the selection changes; wrap it in a `SizedBox` for a fixed
+width. An empty selection
 shows `placeholder`, which defaults to `Text('Select an option')`. The controller
 value takes precedence over `initialValue`, including when its value is null.
 
@@ -1016,8 +1020,8 @@ BoF.multiSelectField<String>(
 
 Controller: `MultiSelectController<T>`.
 
-The field measures the widest option chip or placeholder, and selected chips
-wrap within that width. Null and empty selections show `placeholder`, which
+The field fills the width its parent gives it, and selected chips wrap within
+that width. Null and empty selections show `placeholder`, which
 defaults to `Text('Select options')`.
 
 ### BoF.multipleChoiceField
