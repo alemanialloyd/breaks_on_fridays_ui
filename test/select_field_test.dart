@@ -8,20 +8,27 @@ const _options = [
   BoFOption(value: 'disabled', label: Text('Unavailable'), enabled: false),
 ];
 
-Widget _host(Widget child, {double width = 700, double textScale = 1}) =>
-    ShadcnApp(
-      home: Scaffold(
-        child: MediaQuery(
-          data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
-          child: Center(
-            child: SizedBox(
-              width: width,
-              child: Align(alignment: Alignment.topLeft, child: child),
-            ),
+Widget _host(
+  Widget child, {
+  double width = 700,
+  double textScale = 1,
+  bool intrinsic = false,
+}) => ShadcnApp(
+  home: Scaffold(
+    child: MediaQuery(
+      data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
+      child: Center(
+        child: SizedBox(
+          width: width,
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: intrinsic ? IntrinsicWidth(child: child) : child,
           ),
         ),
       ),
-    );
+    ),
+  ),
+);
 
 void main() {
   testWidgets(
@@ -57,7 +64,7 @@ void main() {
     },
   );
 
-  testWidgets('single select keeps its widest width and restores placeholder', (
+  testWidgets('single select fills its parent and restores placeholder', (
     tester,
   ) async {
     const key = ValueKey('select');
@@ -77,7 +84,7 @@ void main() {
     expect(find.text('Choose a value'), findsOneWidget);
     expect(find.text('The longest available option'), findsNothing);
     final emptyWidth = tester.getSize(find.byKey(key)).width;
-    expect(emptyWidth, lessThan(700));
+    expect(emptyWidth, 700);
 
     controller.value = 'short';
     await tester.pumpAndSettle();
@@ -249,6 +256,7 @@ void main() {
           ],
           controller: controller,
         ),
+        intrinsic: true,
       ),
     );
     final textOnlyWidth = tester.getSize(find.byKey(key)).width;
@@ -259,6 +267,7 @@ void main() {
           options: complexOptions,
           controller: controller,
         ),
+        intrinsic: true,
       ),
     );
     final normalWidth = tester.getSize(find.byKey(key)).width;
@@ -271,6 +280,7 @@ void main() {
           controller: controller,
         ),
         textScale: 1.5,
+        intrinsic: true,
       ),
     );
     await tester.pumpAndSettle();

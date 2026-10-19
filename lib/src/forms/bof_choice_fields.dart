@@ -47,7 +47,7 @@ class BoFRadioGroupField<T extends Object> extends BoFField<T> {
   }
 }
 
-/// A single-selection dropdown sized to its widest option or placeholder.
+/// A single-selection dropdown that fills its available width.
 ///
 /// Shares its appearance options with [bofSelectField].
 class BoFSelectField<T extends Object> extends BoFField<T> {
@@ -119,7 +119,8 @@ class BoFSelectField<T extends Object> extends BoFField<T> {
   }
 }
 
-/// A multi-selection dropdown with removable chips and stable option sizing.
+/// A multi-selection dropdown with removable chips that fills its available
+/// width.
 ///
 /// Shares its appearance options with [bofMultiSelectField].
 class BoFMultiSelectField<T extends Object> extends BoFField<Iterable<T>> {
