@@ -1,3 +1,7 @@
+## 0.1.27
+
+* Fixed form fields not expanding to container's width.
+
 ## 0.1.26
 
 * Add textField styling params to the other form fields
