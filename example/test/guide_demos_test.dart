@@ -70,6 +70,16 @@ void main() {
     await tester.pumpAndSettle();
     expect(titleStyle().color, isNot(mutedColor));
     expect(titleStyle().fontWeight, FontWeight.w600);
+
+    double? iconSize() =>
+        IconTheme.of(tester.element(find.byIcon(LucideIcons.calendar))).size;
+    final regularSize = iconSize();
+    final regularFontSize = titleStyle().fontSize;
+
+    await tester.tap(find.byType(Switch).at(1)); // compact on
+    await tester.pumpAndSettle();
+    expect(iconSize(), lessThan(regularSize!));
+    expect(titleStyle().fontSize, lessThan(regularFontSize!));
   });
 
   testWidgets('dependent fields demo follows and clears earlier choices', (

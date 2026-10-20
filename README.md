@@ -142,24 +142,39 @@ override params bridge both the same way:
 
 The package adds `.when`, `.unless` and `.whenNotNull` to every value, so a
 modifier or wrapper can be applied only when a condition holds, without
-breaking out of a chain:
+breaking out of a chain. They work on any widget, including `Text`, `Icon`
+and every `BoF` widget:
 
 ```dart
-final Widget title = BoF.text('Team standup');
-title
+BoF.text('Team standup')
     .when(compact, (t) => t.small)
     .when(selected, (t) => t.semiBold)
     .unless(selected, (t) => t.muted);
+
+const Icon(LucideIcons.calendar)
+    .when(compact, (icon) => icon.iconSmall)
+    .unless(selected, (icon) => icon.iconMutedForeground);
 
 BoF.button('Save', onPressed: canSave ? save : null)
     .whenNotNull(disabledReason, (b, reason) => BoF.tooltip(b, message: reason));
 ```
 
-Each returns the same type it was called on. Text modifiers such as `.small`
-return a `TextModifier`, not a `Text`, so start the chain from a value typed
-as `Widget` (as above) or after a first modifier
-(`BoF.text('x').small.when(...)`). For lists, such as the fields passed to
-`BoF.form`, prefer Dart's collection `if`.
+On a widget, the transform receives the widget with its own type (an `Icon`
+stays an `Icon`, so `icon.icon` and `icon.size` can be read) and may return
+any `Widget`, such as the `TextModifier` from `.small` or the `WrappedIcon`
+from `.iconSmall`. shadcn_flutter's call form works too, e.g.
+`(icon) => icon.iconSmall()` or `icon.iconMutedForeground().iconSmall()`. The
+result is typed as `Widget`, so further modifiers chain after it.
+
+On any other value, such as a `TextStyle`, the transform returns the same
+type and so does the result:
+
+```dart
+final style = baseStyle.when(hasError, (s) => s.copyWith(color: errorColor));
+```
+
+For lists, such as the fields passed to `BoF.form`, prefer Dart's collection
+`if`.
 
 ## Core
 

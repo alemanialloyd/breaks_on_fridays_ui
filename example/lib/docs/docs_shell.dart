@@ -1360,32 +1360,32 @@ class _DocsShellState extends State<DocsShell> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _paragraph(
-              'The package adds three methods to every value, so you can apply a change only when a condition holds without breaking out of a chain or wrapping the whole widget in an if/else.',
+              'The package adds three methods to every value, so you can apply a change only when a condition holds without breaking out of a chain or wrapping the whole widget in an if/else. They work on any widget, including Text, Icon and BoF widgets, and on plain values such as a TextStyle.',
             ),
             const SizedBox(height: 16),
             _parameters(const [
               DocParameter(
                 name: '.when(condition, transform)',
-                type: 'T',
+                type: 'Widget or T',
                 description:
                     'Returns transform(this) when condition is true, otherwise this unchanged.',
               ),
               DocParameter(
                 name: '.unless(condition, transform)',
-                type: 'T',
+                type: 'Widget or T',
                 description:
                     'The inverse of when: applies transform when condition is false.',
               ),
               DocParameter(
                 name: '.whenNotNull(value, transform)',
-                type: 'T',
+                type: 'Widget or T',
                 description:
                     'Applies transform(this, value) only when value is not null, passing it in already non-null.',
               ),
             ]),
           ],
         ),
-        '.when(condition, transform), .unless(condition, transform), .whenNotNull(value, (it, value) => ...). Each returns the same type it was called on.',
+        '.when(condition, transform), .unless(condition, transform), .whenNotNull(value, (it, value) => ...). On a widget, the transform gets the widget with its own type and may return any widget, and the result is a Widget. On any other value, the result has the same type it was called on.',
       ),
       _Section(
         'Chain text modifiers',
@@ -1393,7 +1393,7 @@ class _DocsShellState extends State<DocsShell> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _paragraph(
-              'Each method returns the same type it was called on. Text modifiers such as .small and .muted return a TextModifier, not a Text, so start the chain from a value typed as Widget, or after a first modifier.',
+              'Chain shadcn_flutter modifiers straight off a widget. Inside each transform the widget keeps its own type, so a Text or an Icon can be read or rebuilt, and the transform may return any widget, such as the TextModifier from .small or the WrappedIcon from .iconSmall.',
             ),
             const SizedBox(height: 16),
             const CodeBlock(code: _conditionalTextExample),
@@ -1976,11 +1976,7 @@ class NoSpacesValidator extends Validator<String> {
   }
 }""";
 
-const _conditionalTextExample =
-    '''// Typed as Widget so modifiers like .small fit the chain.
-final Widget title = BoF.text('Team standup');
-
-title
+const _conditionalTextExample = '''BoF.text('Team standup')
     .when(compact, (t) => t.small)
     .when(selected, (t) => t.semiBold)
     .unless(selected, (t) => t.muted)
@@ -1992,8 +1988,10 @@ title
       ),
     );
 
-// Or start after a first modifier:
-BoF.text('Team standup').small.when(selected, (t) => t.semiBold);''';
+// Icons work the same way.
+const Icon(LucideIcons.calendar)
+    .when(compact, (icon) => icon.iconSmall)
+    .unless(selected, (icon) => icon.iconMutedForeground);''';
 
 const _conditionalWrapExample =
     '''// Explain why a button is disabled, only when there is a reason.
