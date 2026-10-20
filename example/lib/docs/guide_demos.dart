@@ -103,7 +103,7 @@ class _ValidatorsDemoState extends State<ValidatorsDemo> {
 }
 
 /// Live demo for the Conditional styling guide: toggles feed `.when`,
-/// `.unless` and `.whenNotNull` on one text widget.
+/// `.unless` and `.whenNotNull` on a text widget and an icon.
 class ConditionalDemo extends StatefulWidget {
   const ConditionalDemo({super.key});
 
@@ -135,7 +135,6 @@ class _ConditionalDemoState extends State<ConditionalDemo> {
     final Color? flagColor = flagged
         ? Theme.of(context).colorScheme.destructive
         : null;
-    final Widget title = BoF.text('Team standup');
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,17 +149,25 @@ class _ConditionalDemoState extends State<ConditionalDemo> {
           ],
         ),
         const SizedBox(height: 20),
-        title
-            .when(compact, (t) => t.small)
-            .when(selected, (t) => t.semiBold)
-            .unless(selected, (t) => t.muted)
-            .whenNotNull(
-              flagColor,
-              (t, color) => DefaultTextStyle.merge(
-                style: TextStyle(color: color),
-                child: t,
-              ),
-            ),
+        Row(
+          children: [
+            const Icon(LucideIcons.calendar)
+                .when(compact, (icon) => icon.iconSmall)
+                .unless(selected, (icon) => icon.iconMutedForeground),
+            const SizedBox(width: 8),
+            BoF.text('Team standup')
+                .when(compact, (t) => t.small)
+                .when(selected, (t) => t.semiBold)
+                .unless(selected, (t) => t.muted)
+                .whenNotNull(
+                  flagColor,
+                  (t, color) => DefaultTextStyle.merge(
+                    style: TextStyle(color: color),
+                    child: t,
+                  ),
+                ),
+          ],
+        ),
       ],
     );
   }
