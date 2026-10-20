@@ -1269,12 +1269,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'backgroundColor / foregroundColor',
         type: 'Color?',
-        description: 'Surface fill and text color overrides.',
+        description:
+            'Surface fill and text color overrides.',
       ),
       DocParameter(
         name: 'fontSize / fontWeight / style',
         type: 'double? / FontWeight? / TextStyle?',
-        description: 'Text overrides; the individual values win over style.',
+        description:
+            'Text overrides; the individual values win over style.',
       ),
       DocParameter(
         name: 'borderColor / borderWidth / border',
@@ -1284,15 +1286,15 @@ class _AccountFormState extends State<AccountForm> {
       ),
       DocParameter(
         name: 'filled / borderRadius / padding / decoration',
-        type:
-            'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
+        type: 'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
         description:
             'Surface options shared with BoF.textField; decoration replaces the whole surface.',
       ),
       DocParameter(
         name: 'textAlign / textAlignVertical / textDirection',
         type: 'TextAlign / TextAlignVertical? / TextDirection?',
-        description: 'Text layout options.',
+        description:
+            'Text layout options.',
       ),
       DocParameter(
         name: 'cursorColor / selectionColor',
@@ -1356,12 +1358,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'backgroundColor / foregroundColor',
         type: 'Color?',
-        description: 'Surface fill and text color overrides.',
+        description:
+            'Surface fill and text color overrides.',
       ),
       DocParameter(
         name: 'fontSize / fontWeight / style',
         type: 'double? / FontWeight? / TextStyle?',
-        description: 'Text overrides; the individual values win over style.',
+        description:
+            'Text overrides; the individual values win over style.',
       ),
       DocParameter(
         name: 'borderColor / borderWidth / border',
@@ -1371,15 +1375,15 @@ class _AccountFormState extends State<AccountForm> {
       ),
       DocParameter(
         name: 'filled / borderRadius / padding / decoration',
-        type:
-            'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
+        type: 'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
         description:
             'Surface options shared with BoF.textField; decoration replaces the whole surface.',
       ),
       DocParameter(
         name: 'textAlign / textAlignVertical / textDirection',
         type: 'TextAlign / TextAlignVertical? / TextDirection?',
-        description: 'Text layout options.',
+        description:
+            'Text layout options.',
       ),
       DocParameter(
         name: 'cursorColor / selectionColor',
@@ -1586,7 +1590,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'trailingIcon',
         type: 'Widget?',
-        description: 'Replaces the dropdown chevron icon.',
+        description:
+            'Replaces the dropdown chevron icon.',
       ),
       DocParameter(
         name: 'backgroundColor / foregroundColor',
@@ -1603,12 +1608,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'borderRadius / borderColor / borderWidth',
         type: 'BorderRadiusGeometry? / Color? / double?',
-        description: 'Trigger corner and border overrides.',
+        description:
+            'Trigger corner and border overrides.',
       ),
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Trigger padding.',
+        description:
+            'Trigger padding.',
       ),
     ],
   ),
@@ -1668,7 +1675,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'trailingIcon',
         type: 'Widget?',
-        description: 'Replaces the dropdown chevron icon.',
+        description:
+            'Replaces the dropdown chevron icon.',
       ),
       DocParameter(
         name: 'backgroundColor / foregroundColor',
@@ -1685,12 +1693,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'borderRadius / borderColor / borderWidth',
         type: 'BorderRadiusGeometry? / Color? / double?',
-        description: 'Trigger corner and border overrides.',
+        description:
+            'Trigger corner and border overrides.',
       ),
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Trigger padding.',
+        description:
+            'Trigger padding.',
       ),
     ],
   ),
@@ -1743,18 +1753,20 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'selectedBackgroundColor / selectedForegroundColor',
         type: 'Color?',
-        description: 'Fill and text color of selected chips.',
+        description:
+            'Fill and text color of selected chips.',
       ),
       DocParameter(
         name: 'selectedFontSize / selectedFontWeight',
         type: 'double? / FontWeight?',
-        description: 'Text size and weight of selected chips.',
+        description:
+            'Text size and weight of selected chips.',
       ),
       DocParameter(
-        name:
-            'selectedBorderRadius / selectedBorderColor / selectedBorderWidth',
+        name: 'selectedBorderRadius / selectedBorderColor / selectedBorderWidth',
         type: 'BorderRadiusGeometry? / Color? / double?',
-        description: 'Corner and border overrides for selected chips.',
+        description:
+            'Corner and border overrides for selected chips.',
       ),
       DocParameter(
         name: 'selectedPadding',
@@ -1813,18 +1825,20 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'selectedBackgroundColor / selectedForegroundColor',
         type: 'Color?',
-        description: 'Fill and text color of selected chips.',
+        description:
+            'Fill and text color of selected chips.',
       ),
       DocParameter(
         name: 'selectedFontSize / selectedFontWeight',
         type: 'double? / FontWeight?',
-        description: 'Text size and weight of selected chips.',
+        description:
+            'Text size and weight of selected chips.',
       ),
       DocParameter(
-        name:
-            'selectedBorderRadius / selectedBorderColor / selectedBorderWidth',
+        name: 'selectedBorderRadius / selectedBorderColor / selectedBorderWidth',
         type: 'BorderRadiusGeometry? / Color? / double?',
-        description: 'Corner and border overrides for selected chips.',
+        description:
+            'Corner and border overrides for selected chips.',
       ),
       DocParameter(
         name: 'selectedPadding',
@@ -1885,7 +1899,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'trailingIcon',
         type: 'Widget?',
-        description: 'Replaces the calendar icon.',
+        description:
+            'Replaces the calendar icon.',
       ),
       DocParameter(
         name: 'backgroundColor / foregroundColor',
@@ -1902,12 +1917,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'borderRadius / borderColor / borderWidth',
         type: 'BorderRadiusGeometry? / Color? / double?',
-        description: 'Trigger corner and border overrides.',
+        description:
+            'Trigger corner and border overrides.',
       ),
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Trigger padding.',
+        description:
+            'Trigger padding.',
       ),
     ],
   ),
@@ -1950,12 +1967,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'trailingIcon',
         type: 'Widget?',
-        description: 'Replaces the calendar button icon.',
+        description:
+            'Replaces the calendar button icon.',
       ),
       DocParameter(
         name: 'backgroundColor / foregroundColor',
         type: 'Color?',
-        description: 'Surface fill and digit color.',
+        description:
+            'Surface fill and digit color.',
       ),
       DocParameter(
         name: 'fontSize / fontWeight / style',
@@ -1972,7 +1991,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Horizontal padding inside the surface.',
+        description:
+            'Horizontal padding inside the surface.',
       ),
     ],
   ),
@@ -2021,7 +2041,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'trailingIcon',
         type: 'Widget?',
-        description: 'Replaces the clock icon.',
+        description:
+            'Replaces the clock icon.',
       ),
       DocParameter(
         name: 'backgroundColor / foregroundColor',
@@ -2038,12 +2059,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'borderRadius / borderColor / borderWidth',
         type: 'BorderRadiusGeometry? / Color? / double?',
-        description: 'Trigger corner and border overrides.',
+        description:
+            'Trigger corner and border overrides.',
       ),
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Trigger padding.',
+        description:
+            'Trigger padding.',
       ),
     ],
   ),
@@ -2092,7 +2115,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'backgroundColor / foregroundColor',
         type: 'Color?',
-        description: 'Surface fill and digit color.',
+        description:
+            'Surface fill and digit color.',
       ),
       DocParameter(
         name: 'fontSize / fontWeight / style',
@@ -2109,7 +2133,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Horizontal padding inside the surface.',
+        description:
+            'Horizontal padding inside the surface.',
       ),
     ],
   ),
@@ -2158,7 +2183,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'trailingIcon',
         type: 'Widget?',
-        description: 'Replaces the clock icon.',
+        description:
+            'Replaces the clock icon.',
       ),
       DocParameter(
         name: 'backgroundColor / foregroundColor',
@@ -2175,12 +2201,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'borderRadius / borderColor / borderWidth',
         type: 'BorderRadiusGeometry? / Color? / double?',
-        description: 'Trigger corner and border overrides.',
+        description:
+            'Trigger corner and border overrides.',
       ),
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Trigger padding.',
+        description:
+            'Trigger padding.',
       ),
     ],
   ),
@@ -2228,7 +2256,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'backgroundColor / foregroundColor',
         type: 'Color?',
-        description: 'Surface fill and digit color.',
+        description:
+            'Surface fill and digit color.',
       ),
       DocParameter(
         name: 'fontSize / fontWeight / style',
@@ -2245,7 +2274,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Horizontal padding inside the surface.',
+        description:
+            'Horizontal padding inside the surface.',
       ),
     ],
   ),
@@ -2307,12 +2337,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'borderRadius / borderColor / borderWidth',
         type: 'BorderRadiusGeometry? / Color? / double?',
-        description: 'Trigger corner and border overrides.',
+        description:
+            'Trigger corner and border overrides.',
       ),
       DocParameter(
         name: 'padding',
         type: 'EdgeInsetsGeometry?',
-        description: 'Trigger padding.',
+        description:
+            'Trigger padding.',
       ),
     ],
   ),
@@ -2361,7 +2393,8 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'filled / border / padding',
         type: 'bool? / Border? / EdgeInsetsGeometry?',
-        description: 'Number field surface options, as on BoF.textField.',
+        description:
+            'Number field surface options, as on BoF.textField.',
       ),
     ],
   ),
@@ -2470,12 +2503,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'activeColor / backgroundColor',
         type: 'Color?',
-        description: 'Rated and unrated star colors.',
+        description:
+            'Rated and unrated star colors.',
       ),
       DocParameter(
         name: 'starSpacing',
         type: 'double?',
-        description: 'Gap between stars.',
+        description:
+            'Gap between stars.',
       ),
     ],
   ),
@@ -2524,12 +2559,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'backgroundColor / foregroundColor',
         type: 'Color?',
-        description: 'Cell fill and character color.',
+        description:
+            'Cell fill and character color.',
       ),
       DocParameter(
         name: 'fontSize / fontWeight',
         type: 'double? / FontWeight?',
-        description: 'Character size and weight.',
+        description:
+            'Character size and weight.',
       ),
       DocParameter(
         name: 'borderRadius / borderColor',
@@ -2591,12 +2628,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'backgroundColor / foregroundColor',
         type: 'Color?',
-        description: 'Surface fill and text color overrides.',
+        description:
+            'Surface fill and text color overrides.',
       ),
       DocParameter(
         name: 'fontSize / fontWeight / style',
         type: 'double? / FontWeight? / TextStyle?',
-        description: 'Text overrides; the individual values win over style.',
+        description:
+            'Text overrides; the individual values win over style.',
       ),
       DocParameter(
         name: 'borderColor / borderWidth / border',
@@ -2606,15 +2645,15 @@ class _AccountFormState extends State<AccountForm> {
       ),
       DocParameter(
         name: 'filled / borderRadius / padding / decoration',
-        type:
-            'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
+        type: 'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
         description:
             'Surface options shared with BoF.textField; decoration replaces the whole surface.',
       ),
       DocParameter(
         name: 'textAlign / textAlignVertical / textDirection',
         type: 'TextAlign / TextAlignVertical? / TextDirection?',
-        description: 'Text layout options.',
+        description:
+            'Text layout options.',
       ),
       DocParameter(
         name: 'cursorColor / selectionColor',
@@ -2676,12 +2715,14 @@ class _AccountFormState extends State<AccountForm> {
       DocParameter(
         name: 'backgroundColor / foregroundColor',
         type: 'Color?',
-        description: 'Surface fill and text color overrides.',
+        description:
+            'Surface fill and text color overrides.',
       ),
       DocParameter(
         name: 'fontSize / fontWeight / style',
         type: 'double? / FontWeight? / TextStyle?',
-        description: 'Text overrides; the individual values win over style.',
+        description:
+            'Text overrides; the individual values win over style.',
       ),
       DocParameter(
         name: 'borderColor / borderWidth / border',
@@ -2691,15 +2732,15 @@ class _AccountFormState extends State<AccountForm> {
       ),
       DocParameter(
         name: 'filled / borderRadius / padding / decoration',
-        type:
-            'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
+        type: 'bool? / BorderRadiusGeometry? / EdgeInsetsGeometry? / BoxDecoration?',
         description:
             'Surface options shared with BoF.textField; decoration replaces the whole surface.',
       ),
       DocParameter(
         name: 'textAlign / textAlignVertical / textDirection',
         type: 'TextAlign / TextAlignVertical? / TextDirection?',
-        description: 'Text layout options.',
+        description:
+            'Text layout options.',
       ),
       DocParameter(
         name: 'cursorColor / selectionColor',
