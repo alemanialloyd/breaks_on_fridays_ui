@@ -1,3 +1,7 @@
+## 0.1.28
+
+* Add BoFDynamic for form fields that depend on other fields
+
 ## 0.1.27
 
 * Fixed form fields not expanding to container's width.
