@@ -1,7 +1,8 @@
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 /// Anything that can go in the list passed to [bofForm]: either a field spec
-/// ([BoFField]) or a layout entry ([BoFRow], [BoFColumn], [BoFCustom]).
+/// ([BoFField]) or a layout entry ([BoFRow], [BoFColumn], [BoFCustom],
+/// [BoFDynamic]).
 ///
 /// Layout entries only affect where fields are placed. Every field nested
 /// inside them, at any depth, still belongs to the same form: it is
@@ -67,4 +68,50 @@ class BoFCustom extends BoFFormItem {
   final Widget child;
 
   const BoFCustom(this.child);
+}
+
+/// Builds part of the form from the current field values, so options or
+/// whole fields can depend on what the user picked earlier — for example a
+/// region select whose options come from the selected country.
+///
+/// [builder] runs on every rebuild of the form with a snapshot of all field
+/// values, and returns the items to show in this entry's place. They are
+/// laid out as if they were written inline, and may be fields or any other
+/// [BoFFormItem], including another [BoFDynamic].
+///
+/// Whenever a field named in [dependsOn] changes, every field [builder]
+/// returns is reset to its `initialValue`, so a stale choice never outlives
+/// the value it depended on. The reset cascades: a [BoFDynamic] that depends
+/// on one of those fields resets too. Fields that [builder] stops returning
+/// are dropped from the form's values and errors, so hidden fields are
+/// neither validated nor submitted.
+///
+/// ```dart
+/// BoF.form([
+///   BoFSelectField<String>(
+///     name: 'country',
+///     label: BoF.text('Country'),
+///     options: countries,
+///   ),
+///   BoFDynamic(
+///     dependsOn: const ['country'],
+///     builder: (values) => [
+///       BoFSelectField<String>(
+///         name: 'region',
+///         label: BoF.text('Region'),
+///         enabled: values['country'] != null,
+///         options: regionsOf(values['country'] as String?),
+///       ),
+///     ],
+///   ),
+/// ])
+/// ```
+class BoFDynamic extends BoFFormItem {
+  /// The names of the fields whose changes reset the fields from [builder].
+  final List<String> dependsOn;
+
+  /// Returns the items to show, given every field's current value by name.
+  final List<BoFFormItem> Function(Map<String, Object?> values) builder;
+
+  const BoFDynamic({required this.builder, this.dependsOn = const []});
 }

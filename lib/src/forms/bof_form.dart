@@ -64,9 +64,16 @@ class _BofFormState extends State<_BofForm> {
   // field's own onChanged, so typing never gets interrupted.
   final Map<String, int> _fieldGenerations = {};
 
+  // Names of the fields whose values are currently tracked in [_controller],
+  // so fields that a [BoFDynamic] adds or removes can be seeded or dropped.
+  final Set<String> _knownFields = {};
+
   /// Every field in the form, in order, including those nested inside
-  /// [BoFRow]/[BoFColumn] entries.
-  List<BoFField> get _fields {
+  /// [BoFRow]/[BoFColumn] entries and those [BoFDynamic] entries build from
+  /// the current values.
+  List<BoFField> get _fields => _collectFields(widget.items);
+
+  List<BoFField> _collectFields(Iterable<BoFFormItem> items) {
     final fields = <BoFField>[];
     void collect(Iterable<BoFFormItem> items) {
       for (final item in items) {
@@ -75,13 +82,15 @@ class _BofFormState extends State<_BofForm> {
             fields.add(item);
           case BoFRow(:final children) || BoFColumn(:final children):
             collect(children);
+          case BoFDynamic():
+            collect(item.builder(_controller.values));
           case BoFCustom():
             break;
         }
       }
     }
 
-    collect(widget.items);
+    collect(items);
     assert(() {
       final seen = <String>{};
       for (final field in fields) {
@@ -102,30 +111,92 @@ class _BofFormState extends State<_BofForm> {
   void initState() {
     super.initState();
     _controller = widget.controller ?? BoFFormController();
-    for (final field in _fields) {
-      _controller.reportChange(field.name, field.initialValue);
-    }
+    _syncFields();
     _controller.submitHandler = _submit;
     _controller.resetHandler = _reset;
     _controller.applyHandler = _applyValue;
+  }
+
+  /// Seeds fields that appeared since the last sync with their initial
+  /// value, and drops the values and errors of fields that disappeared.
+  /// Seeds one field at a time, in form order, so a [BoFDynamic] builds its
+  /// fields (and their initial values) from the values seeded before them.
+  void _syncFields() {
+    while (true) {
+      final fields = _fields;
+      final names = {for (final field in fields) field.name};
+      for (final name in _knownFields.difference(names)) {
+        _controller.removeField(name);
+      }
+      _knownFields.retainAll(names);
+      final added = fields
+          .where((field) => !_knownFields.contains(field.name))
+          .firstOrNull;
+      if (added == null) return;
+      _knownFields.add(added.name);
+      _controller.reportChange(added.name, added.initialValue);
+    }
+  }
+
+  void _resetField(BoFField field) {
+    _fieldGenerations[field.name] = (_fieldGenerations[field.name] ?? 0) + 1;
+    _knownFields.add(field.name);
+    _controller.reportChange(field.name, field.initialValue);
+    _controller.setError(field.name, null);
+  }
+
+  /// Resets the fields of every [BoFDynamic] that depends on [name], then
+  /// the fields depending on those, and so on.
+  void _resetDependents(String name, [Set<String>? visited]) {
+    visited ??= {name};
+    final dependents = <BoFField>[];
+    void visit(Iterable<BoFFormItem> items) {
+      for (final item in items) {
+        switch (item) {
+          case BoFRow(:final children) || BoFColumn(:final children):
+            visit(children);
+          case BoFDynamic():
+            final built = item.builder(_controller.values);
+            if (item.dependsOn.contains(name)) {
+              dependents.addAll(_collectFields(built));
+            } else {
+              visit(built);
+            }
+          case BoFField() || BoFCustom():
+            break;
+        }
+      }
+    }
+
+    visit(widget.items);
+    for (final field in dependents) {
+      if (!visited.add(field.name)) continue;
+      _resetField(field);
+      _resetDependents(field.name, visited);
+    }
   }
 
   void _applyValue(String name, Object? value) {
     if (!mounted) return;
     setState(() {
       _fieldGenerations[name] = (_fieldGenerations[name] ?? 0) + 1;
+      _resetDependents(name);
+      _syncFields();
     });
   }
 
   void _reset() {
     if (!mounted) return;
     setState(() {
+      // Forget every field and re-seed them in order, so initial values that
+      // a BoFDynamic derives from other fields come from their reset values.
       for (final field in _fields) {
         _fieldGenerations[field.name] =
             (_fieldGenerations[field.name] ?? 0) + 1;
-        _controller.reportChange(field.name, field.initialValue);
-        _controller.setError(field.name, null);
+        _controller.removeField(field.name);
       }
+      _knownFields.clear();
+      _syncFields();
     });
   }
 
@@ -172,13 +243,23 @@ class _BofFormState extends State<_BofForm> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (final item in widget.items) ...[
+        for (final item in _expandDynamic(widget.items)) ...[
           _buildItem(item),
           Gap(widget.spacing),
         ],
       ],
     );
   }
+
+  /// Replaces each [BoFDynamic] in [items] with the items it builds, so they
+  /// are spaced as if they had been written inline.
+  List<BoFFormItem> _expandDynamic(Iterable<BoFFormItem> items) => [
+    for (final item in items)
+      if (item is BoFDynamic)
+        ..._expandDynamic(item.builder(_controller.values))
+      else
+        item,
+  ];
 
   Widget _buildItem(BoFFormItem item) {
     switch (item) {
@@ -188,14 +269,17 @@ class _BofFormState extends State<_BofForm> {
         return _buildRow(item);
       case BoFColumn():
         return _buildColumn(item);
+      case BoFDynamic():
+        // Inside a BoFRow the built items share the dynamic entry's column.
+        return _buildColumn(BoFColumn(_expandDynamic([item])));
       case BoFCustom():
         return item.child;
     }
     throw ArgumentError.value(
       item,
       'item',
-      'Unsupported BoFFormItem; use a BoFField, BoFRow, BoFColumn or '
-          'BoFCustom.',
+      'Unsupported BoFFormItem; use a BoFField, BoFRow, BoFColumn, '
+          'BoFDynamic or BoFCustom.',
     );
   }
 
@@ -224,13 +308,14 @@ class _BofFormState extends State<_BofForm> {
 
   Widget _buildColumn(BoFColumn column) {
     final spacing = column.spacing ?? widget.spacing;
+    final children = _expandDynamic(column.children);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (var i = 0; i < column.children.length; i++) ...[
+        for (var i = 0; i < children.length; i++) ...[
           if (i > 0) Gap(spacing),
-          _buildItem(column.children[i]),
+          _buildItem(children[i]),
         ],
       ],
     );
@@ -247,6 +332,8 @@ class _BofFormState extends State<_BofForm> {
           value,
         ) {
           _controller.reportChange(field.name, value);
+          _resetDependents(field.name);
+          _syncFields();
           _runValidator(field, FormValidationMode.changed);
           setState(() {});
         }, field.enabled),

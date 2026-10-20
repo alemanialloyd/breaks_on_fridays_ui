@@ -71,4 +71,59 @@ void main() {
     expect(titleStyle().color, isNot(mutedColor));
     expect(titleStyle().fontWeight, FontWeight.w600);
   });
+
+  testWidgets('dependent fields demo follows and clears earlier choices', (
+    tester,
+  ) async {
+    await pump(tester, const DependentFieldsDemo());
+
+    // Opens the select under [label] and picks [option].
+    Future<void> pick(String label, String option) async {
+      final field = find.ancestor(
+        of: find.text(label),
+        matching: find.byType(Column),
+      );
+      await tester.tap(
+        find.descendant(of: field.first, matching: find.byType(Select<String>)),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(option).last);
+      await tester.pumpAndSettle();
+    }
+
+    await pick('Country', 'Japan');
+    await pick('Region', 'Kansai');
+    await pick('City', 'Kyoto');
+    expect(find.textContaining('city: Kyoto'), findsOneWidget);
+
+    // A new country clears the region, which clears the city.
+    await pick('Country', 'Philippines');
+    expect(find.text('Kansai'), findsNothing);
+    expect(find.text('Kyoto'), findsNothing);
+    expect(find.textContaining('region: null, city: null'), findsOneWidget);
+    await pick('Region', 'Visayas');
+    await pick('City', 'Cebu');
+
+    // The company field only shows, and is only validated, behind the switch.
+    expect(find.text('Company name'), findsNothing);
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+    expect(find.text('Company name'), findsOneWidget);
+    await tester.tap(find.text('Submit'));
+    await tester.pumpAndSettle();
+    expect(find.text('This field cannot be empty'), findsOneWidget);
+
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+    expect(find.text('Company name'), findsNothing);
+    await tester.tap(find.text('Submit'));
+    await tester.pump();
+    expect(find.text('Address submitted'), findsOneWidget);
+    await tester.pumpAndSettle(const Duration(seconds: 10));
+
+    await tester.tap(find.text('Reset'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('country: null'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 }

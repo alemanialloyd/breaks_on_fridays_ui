@@ -98,6 +98,7 @@ void main() {
       '/styling',
       '/form-guide',
       '/validators',
+      '/dependent-fields',
       '/conditional-styling',
       for (final page in componentPages) '/components/${page.id}',
     ];
