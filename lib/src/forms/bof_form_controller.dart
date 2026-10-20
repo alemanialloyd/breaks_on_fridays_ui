@@ -44,6 +44,16 @@ class BoFFormController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Drops the value and error of a field that is no longer in the form,
+  /// such as one a `BoFDynamic` stopped building. Called internally by
+  /// `bofForm`.
+  void removeField(String name) {
+    final hadValue = _values.containsKey(name);
+    final hadError = _errors.remove(name) != null;
+    _values.remove(name);
+    if (hadValue || hadError) notifyListeners();
+  }
+
   /// Sets a field's value programmatically — e.g. prefilling the form after
   /// an async fetch resolves, or syncing one field from another. Unlike a
   /// value the user typed, this also updates the rendered widget to match.

@@ -40,6 +40,7 @@ See the live docs at
 
 - [BoF.form](#bofform)
   - [Laying out fields](#laying-out-fields) (`BoFRow`, `BoFColumn`, `BoFCustom`)
+  - [Dependent fields](#dependent-fields) (`BoFDynamic`)
   - [Form field appearance](#form-field-appearance)
 - [BoF.textField](#boftextfield) (`BoFTextField`)
 - [BoF.textAreaField](#boftextareafield) (`BoFTextAreaField`)
@@ -610,6 +611,71 @@ BoF.form(
 Rows don't wrap on narrow screens; if you need a different layout below a
 breakpoint, build a different list for it (e.g. with `LayoutBuilder` or
 `MediaQuery`).
+
+#### Dependent fields
+
+`BoFDynamic(builder: (values) => items, dependsOn: [...])` builds part of the
+form from the current field values, so a field's options, or whether it shows
+at all, can follow what was picked earlier. `builder` gets every field's value
+by name and returns the items to show in its place, laid out as if they were
+written inline.
+
+When a field named in `dependsOn` changes, whether from the user,
+`setValue` or `reset()`, every field the builder returns is reset to its
+`initialValue`, so a region picked for one country is cleared when the
+country changes. The reset cascades to entries that depend on those fields.
+Fields the builder stops returning are dropped from the values, so a hidden
+field is neither validated nor submitted.
+
+```dart
+BoF.form([
+  BoFSelectField<String>(
+    name: 'country',
+    label: BoF.text('Country'),
+    options: [
+      for (final c in regions.keys) BoFOption(value: c, label: Text(c)),
+    ],
+  ),
+  BoFDynamic(
+    dependsOn: const ['country'],
+    builder: (values) => [
+      BoFSelectField<String>(
+        name: 'region',
+        label: BoF.text('Region'),
+        enabled: values['country'] != null,
+        options: [
+          for (final r in regions[values['country']] ?? const <String>[])
+            BoFOption(value: r, label: Text(r)),
+        ],
+      ),
+    ],
+  ),
+  BoFDynamic(
+    dependsOn: const ['region'],
+    builder: (values) => [
+      BoFSelectField<String>(
+        name: 'city',
+        label: BoF.text('City'),
+        enabled: values['region'] != null,
+        options: [
+          for (final c in cities[values['region']] ?? const <String>[])
+            BoFOption(value: c, label: Text(c)),
+        ],
+      ),
+    ],
+  ),
+  BoFSwitchField(name: 'company', label: BoF.text('Business address')),
+  BoFDynamic(
+    builder: (values) => [
+      if (values['company'] == true)
+        BoFTextField(name: 'companyName', label: BoF.text('Company name')),
+    ],
+  ),
+])
+```
+
+Inside a `BoFRow`, a `BoFDynamic` counts as one child and stacks the items it
+builds in that column.
 
 #### Reading/driving the form like a ref
 

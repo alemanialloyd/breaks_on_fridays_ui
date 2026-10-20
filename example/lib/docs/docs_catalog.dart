@@ -1087,6 +1087,7 @@ class _AccountFormState extends State<AccountForm> {
       'Pass a GlobalKey to locate the form for scrolling, independently of its data controller.',
       'Mix layout entries into the list to place fields: BoFRow puts children side by side (flex sets their relative widths), BoFColumn stacks them (e.g. inside one column of a row), and BoFCustom renders any other widget, such as a heading or divider.',
       'Fields nested in BoFRow/BoFColumn behave exactly like top-level ones. Names must be unique across the whole form.',
+      'BoFDynamic(builder: (values) => items, dependsOn: [...]) builds fields from the current values, e.g. a region select whose options follow the selected country. When a dependsOn field changes, the built fields reset to their initialValue (cascading), and fields the builder stops returning are neither validated nor submitted.',
     ],
     parameters: [
       DocParameter(
@@ -1094,7 +1095,8 @@ class _AccountFormState extends State<AccountForm> {
         type: 'List<BoFFormItem>',
         description:
             'Required positional list of field specifications, optionally '
-            'mixed with BoFRow, BoFColumn and BoFCustom layout entries.',
+            'mixed with BoFRow, BoFColumn, BoFDynamic and BoFCustom layout '
+            'entries.',
       ),
       DocParameter(
         name: 'controller',
