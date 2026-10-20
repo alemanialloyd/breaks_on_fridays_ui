@@ -162,7 +162,9 @@ BoF.button('Save', onPressed: canSave ? save : null)
 On a widget, the transform receives the widget with its own type (an `Icon`
 stays an `Icon`, so `icon.icon` and `icon.size` can be read) and may return
 any `Widget`, such as the `TextModifier` from `.small` or the `WrappedIcon`
-from `.iconSmall`. The result is typed as `Widget`.
+from `.iconSmall`. shadcn_flutter's call form works too, e.g.
+`(icon) => icon.iconSmall()` or `icon.iconMutedForeground().iconSmall()`. The
+result is typed as `Widget`, so further modifiers chain after it.
 
 On any other value, such as a `TextStyle`, the transform returns the same
 type and so does the result:

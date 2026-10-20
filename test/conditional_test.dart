@@ -16,6 +16,25 @@ void main() {
       expect(icon.unless(true, (i) => i.iconSmall), same(icon));
     });
 
+    test('icon modifiers work in their call form too', () {
+      const icon = Icon(LucideIcons.star);
+
+      final Widget styled = icon
+          .when(true, (i) => i.iconSmall())
+          .unless(false, (i) => i.iconMutedForeground())
+          .when(false, (i) => i.iconPrimary());
+      expect(styled, isA<WrappedIcon>());
+      final inner = (styled as WrappedIcon).child;
+      expect(inner, isA<WrappedIcon>());
+      expect((inner as WrappedIcon).child, same(icon));
+
+      // Modifiers still chain after a conditional.
+      final after = icon
+          .when(false, (i) => i.iconSmall())
+          .iconMutedForeground();
+      expect((after as WrappedIcon).child, same(icon));
+    });
+
     test('the transform sees the widget as its own type', () {
       const icon = Icon(LucideIcons.star, size: 12);
       final resized = icon.whenNotNull<double>(
