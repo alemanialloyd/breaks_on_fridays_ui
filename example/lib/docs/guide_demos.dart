@@ -165,3 +165,122 @@ class _ConditionalDemoState extends State<ConditionalDemo> {
     );
   }
 }
+
+/// Sample address data for the Dependent fields guide.
+const _regionsByCountry = {
+  'Philippines': ['Luzon', 'Visayas', 'Mindanao'],
+  'Japan': ['Kanto', 'Kansai'],
+};
+
+const _citiesByRegion = {
+  'Luzon': ['Manila', 'Baguio'],
+  'Visayas': ['Cebu', 'Iloilo'],
+  'Mindanao': ['Davao'],
+  'Kanto': ['Tokyo', 'Yokohama'],
+  'Kansai': ['Osaka', 'Kyoto'],
+};
+
+List<BoFOption<String>> _optionsOf(Iterable<String>? values) => [
+  for (final value in values ?? const <String>[])
+    BoFOption(value: value, label: Text(value)),
+];
+
+/// Live demo for the Dependent fields guide: country → region → city selects
+/// built with BoFDynamic, plus a field that only shows behind a switch.
+class DependentFieldsDemo extends StatefulWidget {
+  const DependentFieldsDemo({super.key});
+
+  @override
+  State<DependentFieldsDemo> createState() => _DependentFieldsDemoState();
+}
+
+class _DependentFieldsDemoState extends State<DependentFieldsDemo> {
+  final controller = BoFFormController();
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      BoF.form(
+        [
+          BoFSelectField<String>(
+            name: 'country',
+            label: BoF.text('Country'),
+            options: _optionsOf(_regionsByCountry.keys),
+            validator: const NonNullValidator<String>(),
+          ),
+          BoFRow([
+            BoFDynamic(
+              dependsOn: const ['country'],
+              builder: (values) => [
+                BoFSelectField<String>(
+                  name: 'region',
+                  label: BoF.text('Region'),
+                  enabled: values['country'] != null,
+                  options: _optionsOf(_regionsByCountry[values['country']]),
+                ),
+              ],
+            ),
+            BoFDynamic(
+              dependsOn: const ['region'],
+              builder: (values) => [
+                BoFSelectField<String>(
+                  name: 'city',
+                  label: BoF.text('City'),
+                  enabled: values['region'] != null,
+                  options: _optionsOf(_citiesByRegion[values['region']]),
+                ),
+              ],
+            ),
+          ]),
+          BoFSwitchField(
+            name: 'business',
+            label: BoF.text('This is a business address'),
+          ),
+          BoFDynamic(
+            builder: (values) => [
+              if (values['business'] == true)
+                BoFTextField(
+                  name: 'company',
+                  label: BoF.text('Company name'),
+                  validator: const NotEmptyValidator(),
+                ),
+            ],
+          ),
+        ],
+        controller: controller,
+        onSubmit: (values) => BoF.toast(
+          context,
+          title: 'Address submitted',
+          message: values.toString(),
+        ),
+      ),
+      const SizedBox(height: 4),
+      // Below the form, so it starts listening after the form has seeded
+      // its initial values.
+      ListenableBuilder(
+        listenable: controller,
+        builder: (context, _) =>
+            BoF.text('Values: ${controller.values}').small.muted,
+      ),
+      const SizedBox(height: 12),
+      Row(
+        children: [
+          BoF.button('Submit', onPressed: () => controller.submit()),
+          const SizedBox(width: 8),
+          BoF.button(
+            'Reset',
+            type: BoFButtonType.outline,
+            onPressed: controller.reset,
+          ),
+        ],
+      ),
+    ],
+  );
+}

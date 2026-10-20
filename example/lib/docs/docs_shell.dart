@@ -32,6 +32,11 @@ const _guides = <(String, String, String)>[
     'Built-in and custom validation rules for text fields',
   ),
   (
+    '/dependent-fields',
+    'Dependent fields',
+    'Fields and options that follow earlier choices',
+  ),
+  (
     '/conditional-styling',
     'Conditional styling',
     'Apply modifiers with when, unless, and whenNotNull',
@@ -174,6 +179,7 @@ class _DocsShellState extends State<DocsShell> {
           '/styling' => 'Styling',
           '/form-guide' => 'Building forms',
           '/validators' => 'Validators',
+          '/dependent-fields' => 'Dependent fields',
           '/conditional-styling' => 'Conditional styling',
           _ => 'Page not found',
         };
@@ -190,6 +196,8 @@ class _DocsShellState extends State<DocsShell> {
             'Compose fields, validate input, and work with typed values using one controller.',
           '/validators' =>
             'Check text field input with built-in rules, combine them, or write your own.',
+          '/dependent-fields' =>
+            'Build fields from the values picked so far, such as a region select that follows the selected country.',
           '/conditional-styling' =>
             'Apply a modifier or wrapper only when a condition holds, without leaving the chain.',
           _ =>
@@ -1273,6 +1281,78 @@ class _DocsShellState extends State<DocsShell> {
         'Validation runs on change and on submit. Disabled fields are skipped. CompareWith does not work inside BoF.form.',
       ),
     ],
+    '/dependent-fields' => [
+      _Section(
+        'How it works',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'Put a BoFDynamic in the field list where the dependent fields should go. Its builder receives every field\'s current value by name and returns the items to show there. The form calls it again whenever a value changes, so options and fields always follow the latest choices.',
+            ),
+            const SizedBox(height: 16),
+            const CodeBlock(code: _dependentFieldsExample),
+          ],
+        ),
+        'BoFDynamic(dependsOn: [...], builder: (values) => items) builds fields from the current values.\n\n```dart\n$_dependentFieldsExample\n```',
+      ),
+      _Section(
+        'Try it',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'Pick a country, region and city, then change the country: the region and city clear. Turn on the business switch to show the company field, and submit to see that it is validated only while it shows.',
+            ),
+            const SizedBox(height: 16),
+            _demoFrame(const DependentFieldsDemo()),
+          ],
+        ),
+        'A live country, region and city form with a field shown behind a switch.',
+      ),
+      _Section(
+        'Clearing stale choices',
+        _paragraph(
+          'List the fields a builder depends on in dependsOn. When one of them changes, from the user, setValue or reset(), every field the builder returns goes back to its initialValue, so a city picked for one region never outlives it. The reset cascades: city depends on region, so changing the country clears both. A builder without dependsOn still rebuilds, but never resets its fields.',
+        ),
+        'When a dependsOn field changes, the built fields reset to their initialValue, and the reset cascades.',
+      ),
+      _Section(
+        'Defaults from other fields',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'A built field\'s initialValue can come from the values too. Fields are set up in form order, so it sees the fields above it, both on first build and after reset().',
+            ),
+            const SizedBox(height: 16),
+            const CodeBlock(code: _dependentDefaultExample),
+          ],
+        ),
+        '```dart\n$_dependentDefaultExample\n```',
+      ),
+      _Section(
+        'Show or hide fields',
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _paragraph(
+              'Return a field from the builder only when it applies. A field the builder stops returning is removed from the values and errors, so a hidden field is neither validated nor submitted.',
+            ),
+            const SizedBox(height: 16),
+            const CodeBlock(code: _dependentConditionalExample),
+          ],
+        ),
+        'Fields the builder stops returning are neither validated nor submitted.\n\n```dart\n$_dependentConditionalExample\n```',
+      ),
+      _Section(
+        'Layout',
+        _paragraph(
+          'At the top level or inside a BoFColumn, the built items are spaced as if they were written inline. Inside a BoFRow, a BoFDynamic counts as one child, and the items it builds stack in that column. Field names must still be unique across the whole form, including built ones.',
+        ),
+        'Inline at the top level and in BoFColumn; one column inside a BoFRow.',
+      ),
+    ],
     '/conditional-styling' => [
       _Section(
         'How it works',
@@ -1925,3 +2005,71 @@ BoF.button('Save', onPressed: canSave ? save : null)
 
 // Show a loading placeholder while data is on its way.
 BoF.card(content).when(isLoading, (card) => BoF.skeleton(card));''';
+
+const _dependentFieldsExample = '''const regions = {
+  'Philippines': ['Luzon', 'Visayas', 'Mindanao'],
+  'Japan': ['Kanto', 'Kansai'],
+};
+
+List<BoFOption<String>> optionsOf(Iterable<String>? values) => [
+  for (final value in values ?? const <String>[])
+    BoFOption(value: value, label: Text(value)),
+];
+
+BoF.form([
+  BoFSelectField<String>(
+    name: 'country',
+    label: BoF.text('Country'),
+    options: optionsOf(regions.keys),
+  ),
+  BoFDynamic(
+    dependsOn: const ['country'],
+    builder: (values) => [
+      BoFSelectField<String>(
+        name: 'region',
+        label: BoF.text('Region'),
+        enabled: values['country'] != null,
+        options: optionsOf(regions[values['country']]),
+      ),
+    ],
+  ),
+  BoFDynamic(
+    dependsOn: const ['region'],
+    builder: (values) => [
+      BoFSelectField<String>(
+        name: 'city',
+        label: BoF.text('City'),
+        enabled: values['region'] != null,
+        options: optionsOf(cities[values['region']]),
+      ),
+    ],
+  ),
+]);''';
+
+const _dependentDefaultExample = '''BoFDynamic(
+  dependsOn: const ['country'],
+  builder: (values) => [
+    BoFSelectField<String>(
+      name: 'region',
+      label: BoF.text('Region'),
+      options: optionsOf(regions[values['country']]),
+      // Preselect the first region of whichever country is chosen.
+      initialValue: regions[values['country']]?.first,
+    ),
+  ],
+)''';
+
+const _dependentConditionalExample = '''BoFSwitchField(
+  name: 'business',
+  label: BoF.text('This is a business address'),
+),
+BoFDynamic(
+  builder: (values) => [
+    if (values['business'] == true)
+      BoFTextField(
+        name: 'company',
+        label: BoF.text('Company name'),
+        validator: const NotEmptyValidator(),
+      ),
+  ],
+),''';
