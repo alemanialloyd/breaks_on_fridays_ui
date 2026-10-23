@@ -1,3 +1,7 @@
+## Unreleased
+
+* Added `BoF.metaLine` and `BoFMetaItem` for wrapping metadata lines with highlighted, tappable entries and a String or Widget separator.
+
 ## 0.1.28
 
 * Add BoFDynamic for form fields that depend on other fields

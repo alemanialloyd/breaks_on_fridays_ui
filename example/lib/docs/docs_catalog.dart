@@ -533,6 +533,60 @@ final List<DocPage> componentPages = const [
     ],
   ),
   DocPage(
+    id: 'meta-line',
+    title: 'Meta line',
+    group: 'Display & layout',
+    description:
+        'Show a line of metadata such as an author, date and time, joined by '
+        'separators. It stays on one line when it fits and moves whole '
+        'entries to the next line on narrow screens.',
+    code: '''BoF.metaLine([
+  BoFMetaItem(
+    'jc@gmail.com',
+    prefix: 'by ',
+    highlighted: true,
+    onPressed: () {},
+  ),
+  BoFMetaItem('September 30, 2026'),
+  BoFMetaItem('12:49 PM'),
+]);''',
+    notes: [
+      'The line wraps between entries, never inside one, and each separator stays with the entry before it.',
+      'separator takes a String, styled like the entries, or any Widget such as an Icon.',
+      'Use BoFMetaItem.widget for an entry that is not plain text.',
+    ],
+    parameters: [
+      DocParameter(
+        name: 'items',
+        type: 'List<BoFMetaItem>',
+        description:
+            'Required positional entries. Each takes a prefix, highlighted, onPressed and style.',
+      ),
+      DocParameter(
+        name: 'separator',
+        type: 'Object (String or Widget)',
+        description: "Placed between entries. Defaults to '·'.",
+      ),
+      DocParameter(
+        name: 'spacing / runSpacing',
+        type: 'double',
+        description:
+            'Gap around separators and between wrapped lines. Default 4 and 2.',
+      ),
+      DocParameter(
+        name: 'style / highlightColor',
+        type: 'TextStyle? / Color?',
+        description:
+            'Merged over the small muted text style, and the color of highlighted entries (primary by default).',
+      ),
+      DocParameter(
+        name: 'alignment',
+        type: 'WrapAlignment',
+        description: 'Horizontal alignment of each line.',
+      ),
+    ],
+  ),
+  DocPage(
     id: 'tooltip',
     title: 'Tooltip',
     group: 'Display & layout',
@@ -2762,6 +2816,7 @@ const _galleryTitles = <String, String>{
   'chip': 'BoF.chip',
   'divider': 'BoF.divider',
   'vertical-divider': 'BoF.verticalDivider',
+  'meta-line': 'BoF.metaLine',
   'tooltip': 'BoF.tooltip',
   'popover': 'BoF.popover',
   'progress': 'BoF.progress',
