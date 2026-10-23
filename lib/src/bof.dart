@@ -17,6 +17,7 @@ import 'widgets/date_time.dart';
 import 'widgets/divider.dart';
 import 'widgets/dropdown_menu.dart';
 import 'widgets/input.dart';
+import 'widgets/meta_line.dart';
 import 'widgets/otp.dart';
 import 'widgets/phone.dart';
 import 'widgets/popover.dart';
@@ -44,6 +45,7 @@ export 'widgets/badge.dart' show BoFBadgeType;
 export 'widgets/button.dart' show BoFButtonType, BoFIconPosition;
 export 'widgets/container.dart' show BoFContainerType;
 export 'widgets/dropdown_menu.dart' show BoFMenuItem;
+export 'widgets/meta_line.dart' show BoFMetaItem;
 export 'widgets/text.dart' show BoFText;
 
 /// Entry point for BreaksOnFridays' styled widgets, built on top of
@@ -105,6 +107,9 @@ class BoF {
 
   /// A vertical rule. See [bofVerticalDivider].
   static const verticalDivider = bofVerticalDivider;
+
+  /// A wrapping line of metadata joined by separators. See [bofMetaLine].
+  static const metaLine = bofMetaLine;
 
   /// Shows a tooltip on hover. See [bofTooltip].
   static const tooltip = bofTooltip;

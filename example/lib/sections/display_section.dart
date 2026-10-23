@@ -13,12 +13,7 @@ class DisplaySection extends StatelessWidget {
       children: [
         GalleryEntry(
           title: 'BoF.avatar',
-          child: Wrap(
-            spacing: 12,
-            children: [
-              BoF.avatar(initials: 'JD'),
-            ],
-          ),
+          child: Wrap(spacing: 12, children: [BoF.avatar(initials: 'JD')]),
         ),
         GalleryEntry(
           title: 'BoF.badge',
@@ -44,7 +39,10 @@ class DisplaySection extends StatelessWidget {
           title: 'BoF.chip',
           child: BoF.chip(
             BoF.text('Filter'),
-            trailing: BoF.chipButton(child: const Icon(material.Icons.close), onPressed: () {}),
+            trailing: BoF.chipButton(
+              child: const Icon(material.Icons.close),
+              onPressed: () {},
+            ),
           ),
         ),
         GalleryEntry(
@@ -62,13 +60,25 @@ class DisplaySection extends StatelessWidget {
           child: SizedBox(
             height: 48,
             child: Row(
-              children: [
-                BoF.text('A'),
-                BoF.verticalDivider(),
-                BoF.text('B'),
-              ],
+              children: [BoF.text('A'), BoF.verticalDivider(), BoF.text('B')],
             ),
           ),
+        ),
+        GalleryEntry(
+          title: 'BoF.metaLine',
+          description:
+              'Resize the window: the date moves to a second line '
+              'when it no longer fits.',
+          child: BoF.metaLine([
+            BoFMetaItem(
+              'jc@gmail.com',
+              prefix: 'by ',
+              highlighted: true,
+              onPressed: () {},
+            ),
+            BoFMetaItem('September 30, 2026'),
+            BoFMetaItem('12:49 PM'),
+          ]),
         ),
         GalleryEntry(
           title: 'BoF.tooltip',
@@ -116,7 +126,10 @@ class DisplaySection extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              BoF.alert(title: BoF.text('Heads up'), content: BoF.text('Something happened.')),
+              BoF.alert(
+                title: BoF.text('Heads up'),
+                content: BoF.text('Something happened.'),
+              ),
               const SizedBox(height: 12),
               BoF.alert(title: BoF.text('Error'), destructive: true),
             ],
@@ -124,7 +137,8 @@ class DisplaySection extends StatelessWidget {
         ),
         GalleryEntry(
           title: 'BoF.accordion',
-          description: 'Custom header/content containers with separators removed.',
+          description:
+              'Custom header/content containers with separators removed.',
           child: BoF.accordion(
             dividerHeight: 0,
             items: [
@@ -153,11 +167,16 @@ class DisplaySection extends StatelessWidget {
         ),
         GalleryEntry(
           title: 'BoF.toast',
-          description: 'Tap to show a toast notification (bottom-right by default).',
+          description:
+              'Tap to show a toast notification (bottom-right by default).',
           child: Builder(
             builder: (context) => BoF.button(
               'Show toast',
-              onPressed: () => BoF.toast(context, title: 'Saved', message: 'Your changes were saved.'),
+              onPressed: () => BoF.toast(
+                context,
+                title: 'Saved',
+                message: 'Your changes were saved.',
+              ),
             ),
           ),
         ),
@@ -167,10 +186,13 @@ class DisplaySection extends StatelessWidget {
           child: Builder(
             builder: (context) => BoF.button(
               'Open menu',
-              onPressed: () => BoF.dropdownMenu(context, items: [
-                BoFMenuItem(child: BoF.text('Edit'), onPressed: () {}),
-                BoFMenuItem(child: BoF.text('Delete'), onPressed: () {}),
-              ]),
+              onPressed: () => BoF.dropdownMenu(
+                context,
+                items: [
+                  BoFMenuItem(child: BoF.text('Edit'), onPressed: () {}),
+                  BoFMenuItem(child: BoF.text('Delete'), onPressed: () {}),
+                ],
+              ),
             ),
           ),
         ),
