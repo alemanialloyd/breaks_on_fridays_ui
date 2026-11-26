@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart' as material show Icons;
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 import 'alert.dart';
@@ -50,7 +49,7 @@ ToastOverlay bofToast(
               trailing: dismissible
                   ? bofButton(
                       null,
-                      icon: const Icon(material.Icons.close),
+                      icon: const Icon(LucideIcons.x),
                       type: BoFButtonType.ghost,
                       onPressed: overlay.close,
                     )

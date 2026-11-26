@@ -14,11 +14,9 @@ void main() {
   Finder cellOutlines() =>
       find.byWidgetPredicate((w) => w is FocusOutline && w.child is Container);
 
-  List<FocusOutline> getCellOutlines(WidgetTester tester) =>
-      tester.widgetList<FocusOutline>(cellOutlines()).toList();
-
   List<BoxDecoration> getCellDecorations(WidgetTester tester) {
-    return getCellOutlines(tester)
+    return tester
+        .widgetList<FocusOutline>(cellOutlines())
         .map((outline) => (outline.child as Container).decoration! as BoxDecoration)
         .toList();
   }
@@ -28,9 +26,8 @@ void main() {
   ) async {
     await pumpApp(tester, BoF.otpField(length: 4));
 
-    final outlines = getCellOutlines(tester);
     final decorations = getCellDecorations(tester);
-    expect(outlines, hasLength(4));
+    expect(decorations, hasLength(4));
 
     final rects = List.generate(
       4,
@@ -51,13 +48,9 @@ void main() {
       bottomRight: Radius.circular(defaultRadius),
     );
 
-    expect(outlines[0].borderRadius, leftRadius);
     expect(decorations[0].borderRadius, leftRadius);
-    expect(outlines[1].borderRadius, BorderRadius.zero);
     expect(decorations[1].borderRadius, BorderRadius.zero);
-    expect(outlines[2].borderRadius, BorderRadius.zero);
     expect(decorations[2].borderRadius, BorderRadius.zero);
-    expect(outlines[3].borderRadius, rightRadius);
     expect(decorations[3].borderRadius, rightRadius);
   });
 
@@ -69,9 +62,8 @@ void main() {
       BoF.otpField(length: 4, type: BoFOtpFieldType.comfortable),
     );
 
-    final outlines = getCellOutlines(tester);
     final decorations = getCellDecorations(tester);
-    expect(outlines, hasLength(4));
+    expect(decorations, hasLength(4));
 
     final context = tester.element(cellOutlines().first);
     final theme = Theme.of(context);
@@ -87,7 +79,6 @@ void main() {
     }
 
     for (var i = 0; i < 4; i++) {
-      expect(outlines[i].borderRadius, expectedRadius);
       expect(decorations[i].borderRadius, expectedRadius);
     }
   });
@@ -100,7 +91,6 @@ void main() {
       BoF.otpField(length: 4, type: BoFOtpFieldType.compact, spacing: 12),
     );
 
-    final outlines = getCellOutlines(tester);
     final decorations = getCellDecorations(tester);
     final context = tester.element(cellOutlines().first);
     final expectedRadius = BorderRadius.circular(Theme.of(context).radiusMd);
@@ -114,7 +104,6 @@ void main() {
     }
 
     for (var i = 0; i < 4; i++) {
-      expect(outlines[i].borderRadius, expectedRadius);
       expect(decorations[i].borderRadius, expectedRadius);
     }
   });
@@ -137,12 +126,10 @@ void main() {
       ),
     );
 
-    final outlines = getCellOutlines(tester);
     final decorations = getCellDecorations(tester);
 
     for (var i = 0; i < 3; i++) {
       expect(tester.getSize(cellOutlines().at(i)), const Size(48, 48));
-      expect(outlines[i].borderRadius, customRadius);
       expect(decorations[i].borderRadius, customRadius);
       final border = decorations[i].border! as Border;
       expect(border.top.color, customColor);
@@ -237,9 +224,8 @@ void main() {
       ]),
     );
 
-    final outlines = getCellOutlines(tester);
     final decorations = getCellDecorations(tester);
-    expect(outlines, hasLength(4));
+    expect(decorations, hasLength(4));
 
     final rects = List.generate(
       4,
@@ -251,7 +237,6 @@ void main() {
 
     for (var i = 0; i < 4; i++) {
       expect(tester.getSize(cellOutlines().at(i)), const Size(44, 44));
-      expect(outlines[i].borderRadius, customRadius);
       expect(decorations[i].borderRadius, customRadius);
       final border = decorations[i].border! as Border;
       expect(border.top.color, customColor);

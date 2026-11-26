@@ -1,4 +1,5 @@
 import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart' as material show Icons;
 import 'package:flutter_test/flutter_test.dart';
 

@@ -1,5 +1,6 @@
 import 'package:breaks_on_fridays_ui/breaks_on_fridays_ui.dart';
 import 'package:flutter/foundation.dart' show SynchronousFuture;
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart' as material show MaterialPage;
 import 'package:flutter/semantics.dart' show SemanticsBinding, SemanticsHandle;
 
