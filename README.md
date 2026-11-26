@@ -25,6 +25,7 @@ See the live docs at
 - [BoF.chip](#bofchip)
 - [BoF.divider](#bofdivider)
 - [BoF.verticalDivider](#bofverticaldivider)
+- [BoF.metaLine](#bofmetaline)
 - [BoF.tooltip](#boftooltip)
 - [BoF.popover](#bofpopover)
 - [BoF.progress](#bofprogress)
@@ -403,6 +404,29 @@ BoF.verticalDivider();
 ```
 
 Same shape as `BoF.divider`, rotated — `width` instead of `height`.
+
+### BoF.metaLine
+
+```dart
+BoF.metaLine([
+  BoFMetaItem(
+    'jc@gmail.com',
+    prefix: 'by ',
+    highlighted: true, // primary color instead of muted
+    onPressed: openProfile, // makes just this entry tappable
+  ),
+  BoFMetaItem('September 30, 2026'),
+  BoFMetaItem('12:49 PM'),
+]); // by jc@gmail.com · September 30, 2026 · 12:49 PM
+```
+
+Entries use small muted text and are joined by `separator`, which takes a
+`String` (default `'·'`) or any `Widget`, e.g.
+`separator: const Icon(LucideIcons.dot)`. The line wraps between entries,
+never inside one, and each separator stays with the entry before it, so a
+narrow screen moves `September 30, 2026 · 12:49 PM` to the next line. Use
+`BoFMetaItem.widget(...)` for non-text entries, and `style`,
+`highlightColor`, `spacing`, `runSpacing` and `alignment` to adjust the line.
 
 ### BoF.tooltip
 
