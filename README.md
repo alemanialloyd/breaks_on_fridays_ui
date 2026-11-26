@@ -132,8 +132,8 @@ override params bridge both the same way:
   padding, and other text-field theming.
 
 - **Theme-drawn widgets** (the select and picker triggers, `BoF.colorField`,
-  `BoF.phoneField`, the segmented `BoF.dateInputField`/`BoF.timeInputField`/
-  `BoF.durationInputField`, and the `BoF.otpField` cells) have no styling
+  `BoF.phoneField`, and the segmented `BoF.dateInputField`/`BoF.timeInputField`/
+  `BoF.durationInputField`) have no styling
   parameters upstream, so BoF scopes a theme around just that field. Trigger
   overrides stop at the trigger: the popover or dialog it opens keeps the
   surrounding look. See [Form field appearance](#form-field-appearance) for
@@ -1279,14 +1279,28 @@ Params: `max`, `step`, `activeColor`, `backgroundColor`, `starSize`,
 
 ### BoF.otpField
 
-`BoFOtpField` — value type `List<int?>` — wraps `InputOTP`.
+`BoFOtpField` — value type `List<int?>` — individual character-cell input.
 
 ```dart
 BoF.otpField(length: 6, onChanged: (v) => print(v));
+BoF.otpField(
+  length: 6,
+  type: BoFOtpFieldType.comfortable,
+  borderRadius: BorderRadius.circular(8),
+  onChanged: (v) => print(v),
+);
 ```
 
-Requires `length`. The upstream widget has no `enabled` param, so
-`BoFOtpField(enabled: false)` blocks input and dims the widget instead. It also has no controller of its own, so this field has no
+Requires `length`. `type` (`BoFOtpFieldType`) switches between connected cells
+(`compact`, default, `spacing` defaults to `0` and `borderRadius` applies only to
+the outer corners of the first and last cells) and separated cells
+(`comfortable`, `spacing` defaults to `8 * theme.scaling` and `borderRadius`
+applies to all four corners of every cell). Setting `spacing > 0` also rounds
+every cell's corners. `height` sets each cell's width and height, `borderRadius`
+overrides the corner radius, and `borderColor` sets each cell's border color.
+`BoFOtpField` forwards `type`, `spacing`, `height`, `borderRadius`, and
+`borderColor`, and `BoFOtpField(enabled: false)` blocks input and dims the
+widget instead. It has no controller of its own, so this field has no
 `controller` param — programmatic updates aren't supported.
 
 ### BoF.autoCompleteField

@@ -487,15 +487,12 @@ void main() {
         ),
       ),
     );
-    expect(_filled(_fill), findsOneWidget);
+    expect(_filled(_fill), findsNWidgets(4));
     expect(_bordered(_borderColor), findsNWidgets(4));
     final digit = tester.widget<RichText>(
-      find
-          .descendant(
-            of: find.byType(InputOTP),
-            matching: find.byType(RichText),
-          )
-          .first,
+      find.byWidgetPredicate(
+        (w) => w is RichText && w.text.toPlainText() == '1',
+      ),
     );
     final style = digit.text.style!;
     expect(style.color, _fg);

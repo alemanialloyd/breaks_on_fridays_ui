@@ -63,13 +63,13 @@ void main() {
       ]),
     );
 
-    for (final type in [PhoneInput, InputOTP]) {
+    for (final finder in [
+      find.byType(PhoneInput),
+      find.byWidgetPredicate((w) => w is FocusOutline && w.child is Container),
+    ]) {
       final blocker = tester.widget<IgnorePointer>(
         find
-            .ancestor(
-              of: find.byType(type),
-              matching: find.byType(IgnorePointer),
-            )
+            .ancestor(of: finder.first, matching: find.byType(IgnorePointer))
             .first,
       );
       expect(blocker.ignoring, isTrue);

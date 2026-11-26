@@ -201,7 +201,22 @@ class FormFieldsSection extends StatelessWidget {
         ),
         GalleryEntry(
           title: 'BoF.otpField',
-          child: BoF.otpField(length: 6, onChanged: (_) {}),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BoF.text('Compact (default)').small.muted,
+              const SizedBox(height: 6),
+              BoF.otpField(length: 6, onChanged: (_) {}),
+              const SizedBox(height: 16),
+              BoF.text('Comfortable').small.muted,
+              const SizedBox(height: 6),
+              BoF.otpField(
+                length: 6,
+                type: BoFOtpFieldType.comfortable,
+                onChanged: (_) {},
+              ),
+            ],
+          ),
         ),
         GalleryEntry(
           title: 'BoF.autoCompleteField',

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "docs",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-I", "C:/Users/LLOYDA~1/AppData/Local/Temp/claude/D--breaks-on-fridays-ui/828a0363-938e-4a86-9bcd-7a6d2dc5adae/scratchpad/spa_server.py", "example/build/web", "8788"],
+      "port": 8788
+    }
+  ]
+}

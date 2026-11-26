@@ -2574,15 +2574,24 @@ class _AccountFormState extends State<AccountForm> {
     group: 'Forms',
     description:
         'Collect a fixed-length one-time password or PIN in individual character cells.',
-    code: '''BoF.otpField(
+    code: '''// Compact (default): connected cells, outer corners rounded
+BoF.otpField(
   length: 6,
+  onChanged: (digits) {},
+);
+
+// Comfortable: separated cells, all four corners rounded per cell
+BoF.otpField(
+  length: 6,
+  type: BoFOtpFieldType.comfortable,
   onChanged: (digits) {},
 );''',
     notes: [
       _standaloneNote,
       'The form spec is BoFOtpField. Values are List<int?>; null represents an empty character slot.',
-      'This field has no controller or enabled parameter. Programmatic updates are not supported by the upstream widget.',
-      'spacing and height size the cells. backgroundColor, foregroundColor, fontSize, fontWeight, borderRadius, and borderColor restyle them; the cell border width is fixed upstream.',
+      'This field has no controller or enabled parameter. Programmatic updates are not supported.',
+      'type switches between connected cells (compact, default) and separated cells (comfortable). Whenever effective spacing is greater than 0, borderRadius applies to all four corners of every cell.',
+      'backgroundColor, foregroundColor, fontSize, fontWeight, borderRadius, and borderColor restyle the cells.',
     ],
     parameters: [
       DocParameter(
@@ -2601,14 +2610,29 @@ class _AccountFormState extends State<AccountForm> {
         description: 'Receives the current character values.',
       ),
       DocParameter(
+        name: 'type',
+        type: 'BoFOtpFieldType',
+        description: 'Cell layout (compact or comfortable). Defaults to compact.',
+      ),
+      DocParameter(
         name: 'spacing',
         type: 'double?',
-        description: 'Gap between cells.',
+        description: 'Gap between cells. Overrides the layout default.',
       ),
       DocParameter(
         name: 'height',
         type: 'double?',
-        description: 'Input cell height.',
+        description: 'Width and height of each cell.',
+      ),
+      DocParameter(
+        name: 'borderRadius',
+        type: 'BorderRadiusGeometry?',
+        description: 'Corner radius for the cells.',
+      ),
+      DocParameter(
+        name: 'borderColor',
+        type: 'Color?',
+        description: 'Border color applied to each cell.',
       ),
       DocParameter(
         name: 'backgroundColor / foregroundColor',
@@ -2621,12 +2645,6 @@ class _AccountFormState extends State<AccountForm> {
         type: 'double? / FontWeight?',
         description:
             'Character size and weight.',
-      ),
-      DocParameter(
-        name: 'borderRadius / borderColor',
-        type: 'BorderRadiusGeometry? / Color?',
-        description:
-            'Outer corner radius (top-left corner) and cell border color.',
       ),
     ],
   ),

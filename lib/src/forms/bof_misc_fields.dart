@@ -217,10 +217,10 @@ class BoFStarRatingField extends BoFField<double> {
   }
 }
 
-/// A one-time-password / PIN input. Maps to shadcn_flutter's `InputOTP`.
+/// A one-time-password / PIN input. Wraps [bofOtpField].
 ///
-/// `InputOTP` has no `enabled` parameter, so a disabled field blocks input
-/// and dims the widget instead.
+/// The underlying widget has no `enabled` parameter, so a disabled field blocks
+/// input and dims the widget instead.
 ///
 /// Shares its appearance options with [bofOtpField].
 class BoFOtpField extends BoFField<List<int?>> {
@@ -228,6 +228,7 @@ class BoFOtpField extends BoFField<List<int?>> {
   final List<int?>? initialValue;
 
   final int length;
+  final BoFOtpFieldType type;
   final double? spacing;
   final double? height;
   final Color? backgroundColor;
@@ -245,6 +246,7 @@ class BoFOtpField extends BoFField<List<int?>> {
     super.enabled,
     required this.length,
     this.initialValue,
+    this.type = BoFOtpFieldType.compact,
     this.spacing,
     this.height,
     this.backgroundColor,
@@ -268,6 +270,7 @@ class BoFOtpField extends BoFField<List<int?>> {
         length: length,
         initialValue: value,
         onChanged: onChanged,
+        type: type,
         spacing: spacing,
         height: height,
         backgroundColor: backgroundColor,
