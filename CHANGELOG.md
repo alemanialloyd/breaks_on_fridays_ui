@@ -1,5 +1,6 @@
-## Unreleased
+## 0.1.29
 
+* Update toast close icon and clean up test and example warnings
 * Added `BoF.metaLine` and `BoFMetaItem` for wrapping metadata lines with highlighted, tappable entries and a String or Widget separator.
 
 ## 0.1.28
